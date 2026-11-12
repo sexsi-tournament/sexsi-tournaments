@@ -96,18 +96,21 @@ section{padding:40px 5%}
 SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-const SUPABASE_URL = "https://fyxlwcoochsuzhqostpe.supabase.co
-SUPABASE_PUBLISHABLE_KEY=sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP
-SUPABASE_SECRET_KEY=
-SUPABASE_JWKS_URL=https://fyxlwcoochsuzhqostpe.supabase.co/auth/v1/.well-known/jwks.json";
+const SUPABASE_URL = "https://fyxlwcoochsuzhqostpe.supabase.co";
 const SUPABASE_KEY = "sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP";
 
 const sexsiSupabase = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+
+window.sexsiSupabase = sexsiSupabase;
+
+console.log("SEXSI Supabase connected");
+</script>
 
 window.sexsiSupabase = sexsiSupabase;
 
