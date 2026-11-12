@@ -1,1 +1,99 @@
 
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090909">
+<title>SIXSI TOURNAMENTS</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090909;color:#fff;font-family:Arial,sans-serif}
+header{padding:20px 7%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #292929}
+.logo{font-size:28px;font-weight:900;letter-spacing:3px}
+.logo span{color:#ed252d}
+nav a{color:#bbb;text-decoration:none;margin-left:20px;font-size:13px}
+.hero{padding:90px 7%;background:radial-gradient(ellipse at 80% 30%,#501015,#090909 65%)}
+.tag{color:#ff454b;letter-spacing:3px;font-size:12px;font-weight:bold}
+h1{font-size:clamp(48px,9vw,90px);line-height:.95;margin:22px 0;font-weight:900}
+h1 span{color:#ed252d}
+.hero p{color:#aaa;max-width:450px;line-height:1.7}
+.btn{display:inline-block;background:#ed252d;color:white;padding:15px 24px;text-decoration:none;border-radius:4px;font-weight:bold;margin-top:20px}
+section{padding:55px 7%}
+.heading{font-size:28px;font-weight:900;margin-bottom:25px}
+.modes,.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.mode,.card{background:#141414;border:1px solid #303030;padding:24px;border-radius:8px}
+.mode strong{font-size:34px}
+.mode p,.card p{color:#999;font-size:13px}
+.card h3{font-size:19px}
+.status{color:#48d98a;font-size:11px;font-weight:bold}
+footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
+@media(max-width:600px){
+header{padding:18px 4%}
+nav a{margin-left:8px;font-size:10px}
+.hero{padding:65px 5%}
+section{padding:40px 5%}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">SIXSI<span>.</span></div>
+<nav>
+<a href="#home">HOME</a>
+<a href="#modes">MODES</a>
+<a href="#tournaments">TOURNAMENTS</a>
+</nav>
+</header>
+
+<main>
+<div class="hero" id="home">
+<div class="tag">STANDOFF 2 ESPORTS PLATFORM</div>
+<h1>PLAY.<br>COMPETE.<br><span>DOMINATE.</span></h1>
+<p>Challenge the best. Build your team. Fight for the top of SIXSI rankings.</p>
+<a class="btn" href="#tournaments">EXPLORE TOURNAMENTS</a>
+</div>
+
+<section id="modes">
+<div class="heading">GAME MODES</div>
+<div class="modes">
+<div class="mode"><strong>1V1</strong><p>ONE AGAINST ONE</p></div>
+<div class="mode"><strong>2V2</strong><p>TEAM BATTLES</p></div>
+<div class="mode"><strong>5V5</strong><p>CLAN WARS</p></div>
+</div>
+</section>
+
+<section id="tournaments">
+<div class="heading">FEATURED TOURNAMENT</div>
+<div class="cards">
+<div class="card">
+<div class="status">● OPEN FOR REGISTRATION</div>
+<h3>SIXSI 1V1 CUP #001</h3>
+<p>GAME: STANDOFF 2</p>
+<p>MODE: 1V1</p>
+<p>PLAYERS: 16</p>
+<p>ENTRY: FREE</p>
+</div>
+<div class="card">
+<div class="status">● COMING SOON</div>
+<h3>SIXSI 2V2 CUP</h3>
+<p>GAME: STANDOFF 2</p>
+<p>MODE: 2V2</p>
+<p>TEAM BATTLE</p>
+</div>
+<div class="card">
+<div class="status">● COMING SOON</div>
+<h3>SIXSI 5V5 CUP</h3>
+<p>GAME: STANDOFF 2</p>
+<p>MODE: 5V5</p>
+<p>CLAN COMPETITION</p>
+</div>
+</div>
+</section>
+</main>
+
+<footer>
+SIXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY
+</footer>
+</body>
+</html>
