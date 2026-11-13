@@ -590,15 +590,17 @@ async function loadBracket() {
 loadBracket();
   <script>
 async function loadParticipantCount() {
-  const db = window.sexsiSupabase;
   const counter = document.getElementById("participantCount");
+  if (!counter) return;
+
+  const db = window.sexsiSupabase;
 
   if (!db) {
-  counter.textContent = "Грешка: няма връзка с базата данни.";
-  return;
-}
+    counter.textContent = "Няма връзка с базата данни.";
+    return;
+  }
 
-if (!counter) return;
+  counter.textContent = "Проверка...";
 
   const { count, error } = await db
     .from("tournament_registrations")
@@ -606,14 +608,14 @@ if (!counter) return;
     .eq("tournament_id", "SEXSI-1V1-001");
 
   if (error) {
-    counter.textContent = "Грешка при зареждане на участниците";
+    counter.textContent = "Грешка: " + error.message;
     return;
   }
 
   counter.textContent = "Записани участници: " + count + "/16";
 }
 
-loadParticipantCount();
+window.addEventListener("load", loadParticipantCount);
 </script>
   
 <script>
