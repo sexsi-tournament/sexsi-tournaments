@@ -232,6 +232,7 @@ window.sexsiSupabase = sexsiSupabase;
     </p>
 
     <p id="joinMessage"></p>
+    <p id="tournamentFullMessage" style="text-align:center;color:#ff4444;font-weight:bold"></p>
   </div>
 </div>
   <button id="logoutButton" type="button">LOG OUT</button>
@@ -378,7 +379,21 @@ document.getElementById("joinTournament").addEventListener("click", async functi
   const message = document.getElementById("joinMessage");
 
   message.textContent = "Registering...";
+const { data: participantCount, error: countError } =
+  await window.sexsiSupabase.rpc("sexsi_get_registration_count");
 
+if (countError) {
+  message.textContent = "Грешка при проверка на свободните места.";
+  return;
+}
+
+if (participantCount >= 16) {
+  message.textContent = "Турнирът е запълнен!";
+  document.getElementById("joinTournament").disabled = true;
+  document.getElementById("tournamentFullMessage").textContent =
+    "ТУРНИРЪТ Е ЗАПЪЛНЕН!";
+  return;
+}
   const { data: { user }, error: userError } =
     await window.sexsiSupabase.auth.getUser();
 
@@ -619,6 +634,7 @@ async function loadParticipantCount() {
 }
 
 loadParticipantCount();
+  setInterval(loadParticipantCount, 5000);
 </script>
   
 <script>
