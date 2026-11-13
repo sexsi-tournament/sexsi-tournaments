@@ -151,14 +151,13 @@ if (!window.sexsiSupabase) {
 
 message.textContent = "Connecting to Supabase...";
   const { data, error } = await window.sexsiSupabase.auth.signUp({
-    email: email,
-    password: password,
-    options: {
-  emailRedirectTo: "https://sexsi-tournament.github.io/sexsi-tournaments/",
-  data: { username: username }
-    }
-    }
-  });
+  email: email,
+  password: password,
+  options: {
+    emailRedirectTo: "https://sexsi-tournament.github.io/sexsi-tournaments/",
+    data: { username: username }
+  }
+});
 
   if (error) {
     message.textContent = "Error: " + error.message;
