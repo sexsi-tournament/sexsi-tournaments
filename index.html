@@ -121,10 +121,16 @@ SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY
 <script>
 const SUPABASE_URL = "https://fyxlwcoochsuzhqostpe.supabase.co";
 const SUPABASE_KEY = "sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP";
-
 const sexsiSupabase = window.supabase.createClient(
   SUPABASE_URL,
-  SUPABASE_KEY
+  SUPABASE_KEY,
+  {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true
+    }
+  }
 );
 
 window.sexsiSupabase = sexsiSupabase;
@@ -198,7 +204,7 @@ window.sexsiSupabase = sexsiSupabase;
 </div>
   
   <h3>РЕГИСТРАЦИЯ ЗА ТУРНИР</h3>
-  <p id="adminMessage">Loading registrations...</p
+  <p id="adminMessage">Зареждане на регистрациите...</p>
 </div>
   <h3 id="playerName">ИГРАЧ</h3>
   <p id="playerEmail"></p>
@@ -330,18 +336,6 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
   document.getElementById("adminPanel").style.display = "block";
   loadAdminRegistrations();
       loadAdminPlayers();
-    
-
-  if (error) {
-    message.textContent = "Грешка: " + error.message;
-    return;
-  }
-
-  message.textContent = "Резултатът е записан успешно! Точките са начислени.";
-
-  document.getElementById("matchCode").value = "";
-  document.getElementById("winnerScore").value = "";
-  document.getElementById("loserScore").value = "";
 
 } else {
   document.getElementById("adminPanel").style.display = "none";
@@ -373,7 +367,9 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
   message.textContent = "Резултатът е записан успешно! Точките са начислени.";
 
   document.getElementById("matchForm").reset();
-  await loadRanking();
+
+await loadRanking();
+await loadAdminPlayers();
 });
 document.getElementById("joinTournament").addEventListener("click", async function() {
   const message = document.getElementById("joinMessage");
