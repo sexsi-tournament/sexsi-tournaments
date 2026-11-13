@@ -593,7 +593,12 @@ async function loadParticipantCount() {
   const db = window.sexsiSupabase;
   const counter = document.getElementById("participantCount");
 
-  if (!db || !counter) return;
+  if (!db) {
+  counter.textContent = "Грешка: няма връзка с базата данни.";
+  return;
+}
+
+if (!counter) return;
 
   const { count, error } = await db
     .from("tournament_registrations")
