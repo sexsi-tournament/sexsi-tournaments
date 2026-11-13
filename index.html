@@ -55,7 +55,7 @@ section{padding:40px 5%}
 </div>
 
 <section id="modes">
-<div class="heading">GAME MODES</div>
+<div class="heading">РЕЖИМИ НА ИГРА</div>
 <div class="modes">
 <div class="mode"><strong>1V1</strong><p>Един срешу един</p></div>
 <div class="mode"><strong>2V2</strong><p>Двама срешу двама</p></div>
@@ -90,6 +90,28 @@ section{padding:40px 5%}
 </div>
 </div>
 </section>
+  
+<section id="ranking" style="padding:50px 7%;background:#090909;">
+  <div class="heading">КЛАСАЦИЯ НА ИГРАЧИТЕ</div>
+
+  <table style="width:100%;border-collapse:collapse;text-align:left;margin-top:25px;">
+    <thead>
+      <tr style="background:#ed252d;color:white;">
+        <th style="padding:12px;">#</th>
+        <th style="padding:12px;">ИГРАЧ</th>
+        <th style="padding:12px;">ПОБЕДИ</th>
+        <th style="padding:12px;">ЗАГУБИ</th>
+        <th style="padding:12px;">ТОЧКИ</th>
+      </tr>
+    </thead>
+    <tbody id="rankingList">
+      <tr>
+        <td colspan="5" style="padding:15px;">Зареждане...</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+  
 </main>
 
 <footer>
@@ -115,7 +137,7 @@ window.sexsiSupabase = sexsiSupabase;
     <input id="username" type="text" placeholder="Username" required>
     <input id="email" type="email" placeholder="Email" required>
     <input id="password" type="password" placeholder="Password (minimum 6 characters)" required>
-    <button type="submit">CREATE ACCOUNT</button>
+    <button type="submit">СЪЗДАЙ АКАУНТ</button>
   </form>
   <p id="registerMessage"></p>
 
@@ -125,7 +147,7 @@ window.sexsiSupabase = sexsiSupabase;
   <form id="loginForm">
     <input id="loginEmail" type="email" placeholder="Email" required>
     <input id="loginPassword" type="password" placeholder="Password" required>
-    <button type="submit">LOGIN</button>
+    <button type="submit">ВЛЕЗ</button>
   </form>
   <p id="loginMessage"></p>
 </section>
@@ -136,18 +158,18 @@ window.sexsiSupabase = sexsiSupabase;
   <table style="width:100%;border-collapse:collapse;text-align:left;min-width:600px;">
     <thead>
       <tr style="background:#ed252d;color:white;">
-        <th style="padding:12px;">PLAYER</th>
-        <th style="padding:12px;">EMAIL</th>
+        <th style="padding:12px;">ИГРАЧ</th>
+        <th style="padding:12px;">ИМЕЙЛ</th>
         <th style="padding:12px;">PLAYER ID</th>
-        <th style="padding:12px;">TOURNAMENT</th>
-        <th style="padding:12px;">DATE</th>
+        <th style="padding:12px;">ТУРНИР</th>
+        <th style="padding:12px;">ДАТА</th>
       </tr>
     </thead>
     <tbody id="registrationsList"></tbody>
   </table>
   </div>
   <hr style="border-color:#ed252d;">
-  <h2 style="color:#ed252d;">ADMIN PANEL</h2>
+  <h2 style="color:#ed252d;">АДМИНИСТРАТОР</h2>
   <h3>РЕГИСТРАЦИЯ ЗА ТУРНИР</h3>
   <p id="adminMessage">Loading registrations...</p
 </div>
