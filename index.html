@@ -131,7 +131,13 @@ window.sexsiSupabase = sexsiSupabase;
 </section>
 <section id="playerDashboard" style="display:none;">
   <h2>PLAYER DASHBOARD</h2>
-
+<div id="adminPanel" style="display:none;margin-top:30px;">
+  <hr style="border-color:#ed252d;">
+  <h2 style="color:#ed252d;">ADMIN PANEL</h2>
+  <h3>TOURNAMENT REGISTRATIONS</h3>
+  <p id="adminMessage">Loading registrations...</p>
+  <div id="registrationsList"></div>
+</div>
   <h3 id="playerName">PLAYER</h3>
   <p id="playerEmail"></p>
 <p style="color:#999;font-size:13px;">
@@ -160,7 +166,55 @@ window.sexsiSupabase = sexsiSupabase;
   <button id="logoutButton" type="button">LOG OUT</button>
 </section>
 
-<script>
+<script>async function loadAdminRegistrations() {
+  const message = document.getElementById("adminMessage");
+  const list = document.getElementById("registrationsList");
+
+  message.textContent = "Loading registrations...";
+  list.innerHTML = "";
+
+  const { data, error } = await window.sexsiSupabase.rpc("sexsi_admin_registrations");
+
+  if (error) {
+    message.textContent = "Error: " + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    message.textContent = "No registrations yet.";
+    return;
+  }
+
+  message.textContent = "Total registrations: " + data.length;
+
+  data.forEach((player) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.marginBottom = "12px";
+
+    const name = document.createElement("h3");
+    name.textContent = player.player_name || "PLAYER";
+    card.appendChild(name);
+
+    const email = document.createElement("p");
+    email.textContent = "EMAIL: " + (player.player_email || "");
+    card.appendChild(email);
+
+    const id = document.createElement("p");
+    id.textContent = "PLAYER ID: " + player.player_id;
+    card.appendChild(id);
+
+    const tournament = document.createElement("p");
+    tournament.textContent = "TOURNAMENT: " + player.tournament_id;
+    card.appendChild(tournament);
+
+    const date = document.createElement("p");
+    date.textContent = "REGISTERED: " + new Date(player.registered_at).toLocaleString();
+    card.appendChild(date);
+
+    list.appendChild(card);
+  });
+}
 document.getElementById("registerForm").addEventListener("submit", async function(event) {
   event.preventDefault();
 
