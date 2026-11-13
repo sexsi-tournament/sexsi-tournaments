@@ -51,42 +51,42 @@ section{padding:40px 5%}
 <div class="tag">STANDOFF 2 ESPORTS PLATFORM</div>
 <h1>ИГРАЙ<br>СПЕЧЕЛИ<br><span>ДОМИНИРАЙ</span></h1>
 <p>Важното е целта. Изгради отбор. БИЙ СЕ ЗА ТОП МЯСТОТО!</p>
-<a class="btn" href="#tournaments">EXPLORE TOURNAMENTS</a>
+<a class="btn" href="#tournaments">Разгледай турнирите</a>
 </div>
 
 <section id="modes">
 <div class="heading">GAME MODES</div>
 <div class="modes">
-<div class="mode"><strong>1V1</strong><p>ONE AGAINST ONE</p></div>
-<div class="mode"><strong>2V2</strong><p>TEAM BATTLES</p></div>
-<div class="mode"><strong>5V5</strong><p>CLAN WARS</p></div>
+<div class="mode"><strong>1V1</strong><p>Един срешу един</p></div>
+<div class="mode"><strong>2V2</strong><p>Двама срешу двама</p></div>
+<div class="mode"><strong>5V5</strong><p>Отборен мач 5vs5</p></div>
 </div>
 </section>
 
 <section id="tournaments">
-<div class="heading">FEATURED TOURNAMENT</div>
+<div class="heading">ПРЕДСТОЯЩИ ТУРНИРИ</div>
 <div class="cards">
 <div class="card">
-<div class="status">● OPEN FOR REGISTRATION</div>
+<div class="status">● ОТВОРЕНО ЗА РЕГИСТРАЦИЯ</div>
 <h3>SEXSI 1V1 CUP #001</h3>
-<p>GAME: STANDOFF 2</p>
-<p>MODE: 1V1</p>
-<p>PLAYERS: 16</p>
-<p>ENTRY: FREE</p>
+<p>Игра: STANDOFF 2</p>
+<p>Режим: 1V1</p>
+<p>Играчи: 16</p>
+<p>Вход: FREE</p>
 </div>
 <div class="card">
-<div class="status">● COMING SOON</div>
+<div class="status">● ОЧАКВАЙТЕ СКОРО</div>
 <h3>SEXSI 2V2 CUP</h3>
-<p>GAME: STANDOFF 2</p>
-<p>MODE: 2V2</p>
-<p>TEAM BATTLE</p>
+<p>ИГРА: STANDOFF 2</p>
+<p>РЕЖИМ: 2V2</p>
+<p>ДВАМА СРЕШУ ДВАМА</p>
 </div>
 <div class="card">
-<div class="status">● COMING SOON</div>
+<div class="status">● ОЧАКВАЙТЕ СКОРО</div>
 <h3>SEXSI 5V5 CUP</h3>
-<p>GAME: STANDOFF 2</p>
-<p>MODE: 5V5</p>
-<p>CLAN COMPETITION</p>
+<p>ИГРА: STANDOFF 2</p>
+<p>РЕЖИМ: 5V5</p>
+<p>ОТБОРЕН МАЧ 5vs5</p>
 </div>
 </div>
 </section>
@@ -108,9 +108,9 @@ const sexsiSupabase = window.supabase.createClient(
 window.sexsiSupabase = sexsiSupabase;
 </script>
 <section id="register">
-  <h2>PLAYER ACCOUNT</h2>
+  <h2>Потребителски профил</h2>
 
-  <h3>CREATE ACCOUNT</h3>
+  <h3>СЪЗДАЙ АКАУНТ</h3>
   <form id="registerForm">
     <input id="username" type="text" placeholder="Username" required>
     <input id="email" type="email" placeholder="Email" required>
@@ -121,7 +121,7 @@ window.sexsiSupabase = sexsiSupabase;
 
   <hr>
 
-  <h3>LOGIN</h3>
+  <h3>ВЛЕЗ</h3>
   <form id="loginForm">
     <input id="loginEmail" type="email" placeholder="Email" required>
     <input id="loginPassword" type="password" placeholder="Password" required>
@@ -130,7 +130,7 @@ window.sexsiSupabase = sexsiSupabase;
   <p id="loginMessage"></p>
 </section>
 <section id="playerDashboard" style="display:none;">
-  <h2>PLAYER DASHBOARD</h2>
+  <h2>ПРОФИЛ НА ИГРАЧА</h2>
 <div id="adminPanel" style="display:none;margin-top:30px;">
   <div style="overflow-x:auto;margin-top:20px;">
   <table style="width:100%;border-collapse:collapse;text-align:left;min-width:600px;">
@@ -148,29 +148,29 @@ window.sexsiSupabase = sexsiSupabase;
   </div>
   <hr style="border-color:#ed252d;">
   <h2 style="color:#ed252d;">ADMIN PANEL</h2>
-  <h3>TOURNAMENT REGISTRATIONS</h3>
+  <h3>РЕГИСТРАЦИЯ ЗА ТУРНИР</h3>
   <p id="adminMessage">Loading registrations...</p
 </div>
-  <h3 id="playerName">PLAYER</h3>
+  <h3 id="playerName">ИГРАЧ</h3>
   <p id="playerEmail"></p>
 <p style="color:#999;font-size:13px;">
-  PLAYER ID: <span id="playerId" style="color:#ed252d;"></span>
+  ИГРАЧ ID: <span id="playerId" style="color:#ed252d;"></span>
 </p>
   <hr style="border-color:#333;">
 
-  <p>WELCOME TO SEXSI TOURNAMENTS!</p>
+  <p>ДОБРЕ ДОШЛИ ВЪВ SEXSI ТУРНИРИТЕ!</p>
 <div style="margin-top:25px;">
-  <h3>AVAILABLE TOURNAMENTS</h3>
+  <h3>НАЛИЧНИ ТУРНИРИ</h3>
 
   <div class="card">
     <h3>SEXSI 1V1 CUP #001</h3>
-    <p>GAME: STANDOFF 2</p>
-    <p>MODE: 1V1</p>
-    <p>PLAYERS: 16</p>
-    <p>ENTRY: FREE</p>
+    <p>ИГРА: STANDOFF 2</p>
+    <p>Режим: 1V1</p>
+    <p>Играчи: 16</p>
+    <p>Вход: FREE</p>
 
     <button id="joinTournament" type="button">
-      JOIN TOURNAMENT
+      ВКЛЮЧИ СЕ В ТУРНИР
     </button>
 
     <p id="joinMessage"></p>
