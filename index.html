@@ -132,11 +132,24 @@ window.sexsiSupabase = sexsiSupabase;
 <section id="playerDashboard" style="display:none;">
   <h2>PLAYER DASHBOARD</h2>
 <div id="adminPanel" style="display:none;margin-top:30px;">
+  <div style="overflow-x:auto;margin-top:20px;">
+  <table style="width:100%;border-collapse:collapse;text-align:left;min-width:600px;">
+    <thead>
+      <tr style="background:#ed252d;color:white;">
+        <th style="padding:12px;">PLAYER</th>
+        <th style="padding:12px;">EMAIL</th>
+        <th style="padding:12px;">PLAYER ID</th>
+        <th style="padding:12px;">TOURNAMENT</th>
+        <th style="padding:12px;">DATE</th>
+      </tr>
+    </thead>
+    <tbody id="registrationsList"></tbody>
+  </table>
+  </div>
   <hr style="border-color:#ed252d;">
   <h2 style="color:#ed252d;">ADMIN PANEL</h2>
   <h3>TOURNAMENT REGISTRATIONS</h3>
-  <p id="adminMessage">Loading registrations...</p>
-  <div id="registrationsList"></div>
+  <p id="adminMessage">Loading registrations...</p
 </div>
   <h3 id="playerName">PLAYER</h3>
   <p id="playerEmail"></p>
@@ -165,8 +178,8 @@ window.sexsiSupabase = sexsiSupabase;
 </div>
   <button id="logoutButton" type="button">LOG OUT</button>
 </section>
-
-<script>async function loadAdminRegistrations() {
+  <script>
+  async function loadAdminRegistrations() {
   const message = document.getElementById("adminMessage");
   const list = document.getElementById("registrationsList");
 
@@ -188,31 +201,25 @@ window.sexsiSupabase = sexsiSupabase;
   message.textContent = "Total registrations: " + data.length;
 
   data.forEach((player) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.style.marginBottom = "12px";
+    const row = document.createElement("tr");
 
-    const name = document.createElement("h3");
-    name.textContent = player.player_name || "PLAYER";
-    card.appendChild(name);
+    const values = [
+      player.player_name || "PLAYER",
+      player.player_email || "",
+      player.player_id || "",
+      player.tournament_id || "",
+      new Date(player.registered_at).toLocaleString()
+    ];
 
-    const email = document.createElement("p");
-    email.textContent = "EMAIL: " + (player.player_email || "");
-    card.appendChild(email);
+    values.forEach((value) => {
+      const cell = document.createElement("td");
+      cell.style.padding = "12px";
+      cell.style.borderBottom = "1px solid #303030";
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
 
-    const id = document.createElement("p");
-    id.textContent = "PLAYER ID: " + player.player_id;
-    card.appendChild(id);
-
-    const tournament = document.createElement("p");
-    tournament.textContent = "TOURNAMENT: " + player.tournament_id;
-    card.appendChild(tournament);
-
-    const date = document.createElement("p");
-    date.textContent = "REGISTERED: " + new Date(player.registered_at).toLocaleString();
-    card.appendChild(date);
-
-    list.appendChild(card);
+    list.appendChild(row);
   });
 }
 document.getElementById("registerForm").addEventListener("submit", async function(event) {
@@ -263,7 +270,6 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
   document.getElementById("register").style.display = "none";
   document.getElementById("playerDashboard").style.display = "block";
-document.getElementById("adminPanel").style.display = "none";
   document.getElementById("playerName").textContent =
     data.user.user_metadata.username || "PLAYER";
 
@@ -318,6 +324,7 @@ document.getElementById("logoutButton").addEventListener("click", async function
   }
 
   document.getElementById("playerDashboard").style.display = "none";
+  document.getElementById("adminPanel").style.display = "none";
   document.getElementById("register").style.display = "block";
 });
 </script>
