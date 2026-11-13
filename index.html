@@ -602,10 +602,9 @@ async function loadParticipantCount() {
 
   counter.textContent = "Проверка...";
 
-  const { count, error } = await db
-    .from("tournament_registrations")
-    .select("*", { count: "exact", head: true })
-    .eq("tournament_id", "SEXSI-1V1-001");
+  const { data: count, error } = await db.rpc(
+  "sexsi_get_registration_count"
+);
 
   if (error) {
     counter.textContent = "Грешка: " + error.message;
