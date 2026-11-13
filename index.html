@@ -484,6 +484,105 @@ async function loadRanking() {
 loadRanking();
     
 </script>
+<section id="bracketSection" style="padding:25px 15px;max-width:1100px;margin:auto">
+  <h2 style="text-align:center">🏆 ТУРНИРНА СХЕМА</h2>
+  <div id="bracketContainer">
+    <p style="text-align:center;color:#aaa">Зареждане на турнирната схема...</p>
+  </div>
+</section>
+  
+<script>
+async function loadBracket() {
+  const container = document.getElementById("bracketContainer");
+  const db = window.sexsiSupabase;
 
+  if (!db) {
+    container.textContent = "Грешка при връзката с базата данни.";
+    return;
+  }
+
+  container.textContent = "Зареждане...";
+
+  const { data, error } = await db.rpc("sexsi_get_bracket");
+
+  if (error) {
+    container.textContent = "Грешка: " + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    container.textContent = "Турнирната схема все още не е създадена.";
+    return;
+  }
+
+  const rounds = [
+    "Първи кръг (осминафинали)",
+    "Четвъртфинали",
+    "Полуфинали",
+    "Финал"
+  ];
+
+  container.innerHTML = "";
+
+  rounds.forEach((roundName, index) => {
+    const matches = data.filter(
+      m => m.round_number === index + 1
+    );
+
+    if (!matches.length) return;
+
+    const section = document.createElement("div");
+    section.style.cssText =
+      "margin:25px 0;padding:15px;background:#151515;border:1px solid #333;border-radius:12px";
+
+    const heading = document.createElement("h3");
+    heading.textContent = roundName;
+    section.appendChild(heading);
+
+    matches.forEach(match => {
+      const card = document.createElement("div");
+      card.style.cssText =
+        "padding:12px;margin:10px 0;background:#090909;border:1px solid #333;border-radius:8px";
+
+      const title = document.createElement("strong");
+      title.textContent = "Мач " + match.match_number;
+      card.appendChild(title);
+
+      const players = document.createElement("p");
+      players.textContent =
+        match.player1_name + "  VS  " + match.player2_name;
+      card.appendChild(players);
+
+      const score = document.createElement("p");
+      score.textContent =
+        match.score_player1 + " : " + match.score_player2;
+      card.appendChild(score);
+
+      const status = document.createElement("small");
+      status.textContent =
+        match.match_status === "completed"
+          ? "Завършен"
+          : match.match_status === "ongoing"
+          ? "В ход"
+          : "Предстои";
+      card.appendChild(status);
+
+      if (match.winner_name) {
+        const winner = document.createElement("p");
+        winner.textContent = "🏆 Победител: " + match.winner_name;
+        winner.style.color = "#00d68f";
+        card.appendChild(winner);
+      }
+
+      section.appendChild(card);
+    });
+
+    container.appendChild(section);
+  });
+}
+
+loadBracket();
+</script>
+  
 </body>
 </html>
