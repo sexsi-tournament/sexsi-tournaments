@@ -140,7 +140,23 @@ window.sexsiSupabase = sexsiSupabase;
   <hr style="border-color:#333;">
 
   <p>WELCOME TO SEXSI TOURNAMENTS!</p>
+<div style="margin-top:25px;">
+  <h3>AVAILABLE TOURNAMENTS</h3>
 
+  <div class="card">
+    <h3>SEXSI 1V1 CUP #001</h3>
+    <p>GAME: STANDOFF 2</p>
+    <p>MODE: 1V1</p>
+    <p>PLAYERS: 16</p>
+    <p>ENTRY: FREE</p>
+
+    <button id="joinTournament" type="button">
+      JOIN TOURNAMENT
+    </button>
+
+    <p id="joinMessage"></p>
+  </div>
+</div>
   <button id="logoutButton" type="button">LOG OUT</button>
 </section>
 
@@ -202,7 +218,37 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
   document.getElementById("playerId").textContent =
     data.user.id;
 });
+document.getElementById("joinTournament").addEventListener("click", async function() {
+  const message = document.getElementById("joinMessage");
 
+  message.textContent = "Registering...";
+
+  const { data: { user }, error: userError } =
+    await window.sexsiSupabase.auth.getUser();
+
+  if (userError || !user) {
+    message.textContent = "Please login first.";
+    return;
+  }
+
+  const { error } = await window.sexsiSupabase
+    .from("tournament_registrations")
+    .insert({
+      tournament_id: "SEXSI-1V1-001",
+      user_id: user.id
+    });
+
+  if (error) {
+    if (error.code === "23505") {
+      message.textContent = "You are already registered!";
+    } else {
+      message.textContent = "Error: " + error.message;
+    }
+    return;
+  }
+
+  message.textContent = "Successfully registered for SEXSI 1V1 CUP #001!";
+});
 document.getElementById("logoutButton").addEventListener("click", async function() {
   const { error } = await window.sexsiSupabase.auth.signOut();
 
