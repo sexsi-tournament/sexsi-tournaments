@@ -349,6 +349,49 @@ document.getElementById("logoutButton").addEventListener("click", async function
   document.getElementById("adminPanel").style.display = "none";
   document.getElementById("register").style.display = "block";
 });
+    
+async function loadRanking() {
+  const list = document.getElementById("rankingList");
+
+  list.innerHTML = "";
+
+  const { data, error } = await window.sexsiSupabase.rpc("sexsi_get_ranking");
+
+  if (error) {
+    list.innerHTML = '<tr><td colspan="5">Грешка при зареждане на класацията.</td></tr>';
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    list.innerHTML = '<tr><td colspan="5">Все още няма класирани играчи.</td></tr>';
+    return;
+  }
+
+  data.forEach((player, index) => {
+    const row = document.createElement("tr");
+
+    const values = [
+      index + 1,
+      player.player_name,
+      player.wins,
+      player.losses,
+      player.points
+    ];
+
+    values.forEach((value) => {
+      const cell = document.createElement("td");
+      cell.style.padding = "12px";
+      cell.style.borderBottom = "1px solid #303030";
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
+
+    list.appendChild(row);
+  });
+}
+
+loadRanking();
+    
 </script>
 
 </body>
