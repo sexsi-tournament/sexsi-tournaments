@@ -404,7 +404,9 @@ document.getElementById("joinTournament").addEventListener("click", async functi
   }
 
   message.textContent = "Successfully registered for SEXSI 1V1 CUP #001!";
+await loadParticipantCount();
 });
+    
 document.getElementById("logoutButton").addEventListener("click", async function() {
   const { error } = await window.sexsiSupabase.auth.signOut();
 
