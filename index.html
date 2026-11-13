@@ -227,6 +227,9 @@ window.sexsiSupabase = sexsiSupabase;
     <button id="joinTournament" type="button">
       ВКЛЮЧИ СЕ В ТУРНИР
     </button>
+    <p id="participantCount" style="text-align:center;color:#00d68f;font-weight:bold;margin-top:10px">
+  Записани участници: зареждане...
+    </p>
 
     <p id="joinMessage"></p>
   </div>
@@ -585,6 +588,27 @@ async function loadBracket() {
 }
 
 loadBracket();
+  <script>
+async function loadParticipantCount() {
+  const db = window.sexsiSupabase;
+  const counter = document.getElementById("participantCount");
+
+  if (!db || !counter) return;
+
+  const { count, error } = await db
+    .from("tournament_registrations")
+    .select("*", { count: "exact", head: true })
+    .eq("tournament_id", "SEXSI-1V1-001");
+
+  if (error) {
+    counter.textContent = "Грешка при зареждане на участниците";
+    return;
+  }
+
+  counter.textContent = "Записани участници: " + count + "/16";
+}
+
+loadParticipantCount();
 </script>
   
 <script>
