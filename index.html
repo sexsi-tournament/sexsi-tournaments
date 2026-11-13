@@ -170,6 +170,33 @@ window.sexsiSupabase = sexsiSupabase;
   </div>
   <hr style="border-color:#ed252d;">
   <h2 style="color:#ed252d;">АДМИНИСТРАТОР</h2>
+  
+<div style="margin:25px 0;padding:20px;background:#151515;border:1px solid #ed252d;border-radius:10px;">
+  <h3 style="color:#ed252d;">ВЪВЕЖДАНЕ НА РЕЗУЛТАТ</h3>
+
+  <form id="matchForm">
+    <input id="matchTournament" type="text" value="SEXSI 1V1 CUP #001" required placeholder="Турнир">
+
+    <input id="matchCode" type="text" required placeholder="Уникален код на мача">
+
+    <select id="matchWinner" required>
+      <option value="">Избери победител</option>
+    </select>
+
+    <select id="matchLoser" required>
+      <option value="">Избери загубил</option>
+    </select>
+
+    <input id="winnerScore" type="number" min="1" required placeholder="Резултат на победителя">
+
+    <input id="loserScore" type="number" min="0" required placeholder="Резултат на загубилия">
+
+    <button type="submit">ЗАПИШИ РЕЗУЛТАТА</button>
+  </form>
+
+  <p id="matchMessage"></p>
+</div>
+  
   <h3>РЕГИСТРАЦИЯ ЗА ТУРНИР</h3>
   <p id="adminMessage">Loading registrations...</p
 </div>
@@ -302,9 +329,51 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
   if (data.user.id === "13f1ada8-cd05-4c31-8940-4fb1790cb90e") {
   document.getElementById("adminPanel").style.display = "block";
   loadAdminRegistrations();
+      loadAdminPlayers();
+    
+
+  if (error) {
+    message.textContent = "Грешка: " + error.message;
+    return;
+  }
+
+  message.textContent = "Резултатът е записан успешно! Точките са начислени.";
+
+  document.getElementById("matchCode").value = "";
+  document.getElementById("winnerScore").value = "";
+  document.getElementById("loserScore").value = "";
+
 } else {
   document.getElementById("adminPanel").style.display = "none";
   }
+});
+    document.getElementById("matchForm").addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const message = document.getElementById("matchMessage");
+  message.textContent = "Записване на резултата...";
+
+  const { data, error } = await window.sexsiSupabase.rpc(
+    "sexsi_admin_add_match_v2",
+    {
+      p_tournament_id: document.getElementById("matchTournament").value.trim(),
+      p_match_code: document.getElementById("matchCode").value.trim(),
+      p_winner_id: document.getElementById("matchWinner").value,
+      p_loser_id: document.getElementById("matchLoser").value,
+      p_winner_score: Number(document.getElementById("winnerScore").value),
+      p_loser_score: Number(document.getElementById("loserScore").value)
+    }
+  );
+
+  if (error) {
+    message.textContent = "Грешка: " + error.message;
+    return;
+  }
+
+  message.textContent = "Резултатът е записан успешно! Точките са начислени.";
+
+  document.getElementById("matchForm").reset();
+  await loadRanking();
 });
 document.getElementById("joinTournament").addEventListener("click", async function() {
   const message = document.getElementById("joinMessage");
@@ -349,7 +418,33 @@ document.getElementById("logoutButton").addEventListener("click", async function
   document.getElementById("adminPanel").style.display = "none";
   document.getElementById("register").style.display = "block";
 });
-    
+ async function loadAdminPlayers() {
+  const winner = document.getElementById("matchWinner");
+  const loser = document.getElementById("matchLoser");
+
+  const { data, error } = await window.sexsiSupabase.rpc("sexsi_admin_players");
+
+  if (error) {
+    document.getElementById("matchMessage").textContent =
+      "Грешка при зареждане на играчите: " + error.message;
+    return;
+  }
+
+  winner.innerHTML = '<option value="">Избери победител</option>';
+  loser.innerHTML = '<option value="">Избери загубил</option>';
+
+  data.forEach((player) => {
+    const option1 = document.createElement("option");
+    option1.value = player.player_id;
+    option1.textContent = player.player_name + " (" + player.player_email + ")";
+    winner.appendChild(option1);
+
+    const option2 = document.createElement("option");
+    option2.value = player.player_id;
+    option2.textContent = player.player_name + " (" + player.player_email + ")";
+    loser.appendChild(option2);
+  });
+ }   
 async function loadRanking() {
   const list = document.getElementById("rankingList");
 
