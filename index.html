@@ -263,7 +263,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
   document.getElementById("register").style.display = "none";
   document.getElementById("playerDashboard").style.display = "block";
-
+document.getElementById("adminPanel").style.display = "none";
   document.getElementById("playerName").textContent =
     data.user.user_metadata.username || "PLAYER";
 
@@ -271,6 +271,12 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     data.user.email || "";
   document.getElementById("playerId").textContent =
     data.user.id;
+  if (data.user.id === "13f1ada8-cd05-4c31-8940-4fb1790cb90e") {
+  document.getElementById("adminPanel").style.display = "block";
+  loadAdminRegistrations();
+} else {
+  document.getElementById("adminPanel").style.display = "none";
+  }
 });
 document.getElementById("joinTournament").addEventListener("click", async function() {
   const message = document.getElementById("joinMessage");
