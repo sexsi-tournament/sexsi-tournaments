@@ -158,6 +158,49 @@ console.log("SEXSI Supabase initialized");
 
 <p id="loginMessage" style="color:#aaa;"></p>
 
+  </section><section id="playerDashboard" style="display:none;padding:50px 7%;background:#090909;color:white;">
+
+  <h2>PLAYER DASHBOARD</h2>
+
+  <p style="color:#ed252d;">WELCOME TO SEXSI</p>
+
+  <div style="background:#151515;padding:25px;border:1px solid #333;border-radius:8px;max-width:450px;">
+
+    <h3 id="playerName">PLAYER</h3>
+
+    <p id="playerEmail" style="color:#aaa;"></p>
+
+    <hr style="border-color:#333;">
+
+    <h3>MY TOURNAMENTS</h3>
+    <p style="color:#aaa;">Your tournament registrations will appear here.</p>
+
+    <button id="logoutButton" style="padding:14px;background:#ed252d;color:white;border:0;border-radius:5px;font-weight:bold;">
+      LOGOUT
+    </button>
+
+  </div>
+
+  </section> id="playerDashboard" style="display:none;padding:50px 7%;background:#090909;color:white;">
+
+  <h2>PLAYER DASHBOARD</h2>
+  <p style="color:#ed252d;">WELCOME TO SEXSI</p>
+
+  <div style="background:#151515;padding:25px;border:1px solid #333;border-radius:8px;max-width:450px;">
+
+    <h3 id="playerName">PLAYER</h3>
+    <p id="playerEmail" style="color:#aaa;"></p>
+
+    <hr style="border-color:#333;">
+
+    <h3>MY TOURNAMENTS</h3>
+    <p style="color:#aaa;">Your tournament registrations will appear here.</p>
+
+    <button id="logoutButton" style="padding:14px;background:#ed252d;color:white;border:0;border-radius:5px;font-weight:bold;">
+      LOGOUT
+    </button>
+
+  </div>
   </section>
   
 
@@ -212,7 +255,22 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     return;
   }
 
-  message.textContent = "Welcome to SEXSI TOURNAMENTS!";
+  message.textContent = "document.getElementById("register").style.display = "none";
+document.getElementById("playerDashboard").style.display = "block";
+document.getElementById("playerName").textContent = data.user.user_metadata.username || "PLAYER";
+document.getElementById("playerEmail").textContent = data.user.email || "";";
+});document.getElementById("logoutButton").addEventListener("click", async function() {
+
+  const { error } = await window.sexsiSupabase.auth.signOut();
+
+  if (error) {
+    alert("Logout error: " + error.message);
+    return;
+  }
+
+  document.getElementById("playerDashboard").style.display = "none";
+  document.getElementById("register").style.display = "block";
+
 });
 </script>
   
