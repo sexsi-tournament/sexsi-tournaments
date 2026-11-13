@@ -96,7 +96,6 @@ section{padding:40px 5%}
 SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 const SUPABASE_URL = "https://fyxlwcoochsuzhqostpe.supabase.co";
@@ -108,7 +107,7 @@ const sexsiSupabase = window.supabase.createClient(
 );
 
 window.sexsiSupabase = sexsiSupabase;
-
+</script>
 console.log("SEXSI Supabase connected");
 </script>
 
@@ -155,7 +154,9 @@ message.textContent = "Connecting to Supabase...";
     email: email,
     password: password,
     options: {
-      data: { username: username }
+  emailRedirectTo: "https://sexsi-tournament.github.io/sexsi-tournaments/",
+  data: { username: username }
+    }
     }
   });
 
