@@ -486,6 +486,9 @@ loadRanking();
 </script>
 <section id="bracketSection" style="padding:25px 15px;max-width:1100px;margin:auto">
   <h2 style="text-align:center">🏆 ТУРНИРНА СХЕМА</h2>
+  <button id="generateBracketButton" style="display:none;margin:15px auto;padding:14px 22px;background:#00d68f;color:#000;font-weight:bold;border:0;border-radius:8px;cursor:pointer">
+  СЪЗДАЙ ТУРНИРНА СХЕМА
+  </button>
   <div id="bracketContainer">
     <p style="text-align:center;color:#aaa">Зареждане на турнирната схема...</p>
   </div>
@@ -582,6 +585,49 @@ async function loadBracket() {
 }
 
 loadBracket();
+</script>
+  
+<script>
+document.addEventListener("DOMContentLoaded", async function() {
+  const db = window.sexsiSupabase;
+  const button = document.getElementById("generateBracketButton");
+
+  if (!db || !button) return;
+
+  const { data } = await db.auth.getSession();
+  const user = data.session?.user;
+
+  if (!user || user.id !== "13f1ada8-cd05-4c31-8940-4fb1790cb90e") {
+    return;
+  }
+
+  button.style.display = "block";
+
+  button.addEventListener("click", async function() {
+    if (!confirm("Сигурен ли си, че искаш да създадеш турнирната схема?")) {
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "СЪЗДАВАНЕ...";
+
+    const { data, error } = await db.rpc(
+      "sexsi_admin_generate_bracket"
+    );
+
+    if (error) {
+      alert("Грешка: " + error.message);
+      button.disabled = false;
+      button.textContent = "СЪЗДАЙ ТУРНИРНА СХЕМА";
+      return;
+    }
+
+    alert(data);
+    await loadBracket();
+
+    button.textContent = "СХЕМАТА Е СЪЗДАДЕНА";
+  });
+});
 </script>
   
 </body>
