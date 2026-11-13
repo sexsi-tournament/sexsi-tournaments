@@ -134,7 +134,9 @@ window.sexsiSupabase = sexsiSupabase;
 
   <h3 id="playerName">PLAYER</h3>
   <p id="playerEmail"></p>
-
+<p style="color:#999;font-size:13px;">
+  PLAYER ID: <span id="playerId" style="color:#ed252d;"></span>
+</p>
   <hr style="border-color:#333;">
 
   <p>WELCOME TO SEXSI TOURNAMENTS!</p>
@@ -197,6 +199,8 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
   document.getElementById("playerEmail").textContent =
     data.user.email || "";
+  document.getElementById("playerId").textContent =
+    data.user.id;
 });
 
 document.getElementById("logoutButton").addEventListener("click", async function() {
