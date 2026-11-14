@@ -432,8 +432,16 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
   document.getElementById("playerEmail").textContent =
     data.user.email || "";
-  document.getElementById("playerId").textContent =
-    data.user.id;
+  const { data: savedPlayerId, error: playerIdError } =
+  await window.sexsiSupabase.rpc("sexsi_get_my_player_id");
+
+const playerIdDisplay = document.getElementById("playerId");
+const playerIdInput = document.getElementById("editPlayerGameId");
+
+playerIdDisplay.textContent =
+  savedPlayerId || "НЯМА ДОБАВЕНО ID";
+
+playerIdInput.value = savedPlayerId || "";
   if (data.user.id === "13f1ada8-cd05-4c31-8940-4fb1790cb90e") {
   document.getElementById("adminPanel").style.display = "block";
     document.getElementById("generateBracketButton").style.display = "block";
