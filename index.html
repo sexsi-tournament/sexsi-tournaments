@@ -582,13 +582,13 @@ async function loadBracket() {
       card.appendChild(score);
 
       const status = document.createElement("small");
-      status.textContent =
-        match.match_status === "completed"
-          ? "Завършен"
-          : match.match_status === "ongoing"
-          ? "В ход"
-          : "Предстои";
-      card.appendChild(status);
+status.textContent =
+  match.status === "completed"
+    ? "Завършен"
+    : match.status === "ongoing"
+    ? "В ход"
+    : "Предстои";
+card.appendChild(status);
 
       if (match.winner_name) {
         const winner = document.createElement("p");
