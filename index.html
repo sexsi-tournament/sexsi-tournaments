@@ -181,23 +181,29 @@ window.sexsiSupabase = sexsiSupabase;
   <h3 style="color:#ed252d;">ВЪВЕЖДАНЕ НА РЕЗУЛТАТ</h3>
 
   <form id="matchForm">
-    <input id="matchTournament" type="text" value="SEXSI 1V1 CUP #001" required placeholder="Турнир">
 
-    <input id="matchCode" type="text" required placeholder="Уникален код на мача">
+  <select id="bracketMatch" required>
+    <option value="">Избери мач</option>
+  </select>
 
-    <select id="matchWinner" required>
-      <option value="">Избери победител</option>
-    </select>
+  <input
+    id="bracketScore1"
+    type="number"
+    min="0"
+    required
+    placeholder="Резултат на първия играч"
+  >
 
-    <select id="matchLoser" required>
-      <option value="">Избери загубил</option>
-    </select>
+  <input
+    id="bracketScore2"
+    type="number"
+    min="0"
+    required
+    placeholder="Резултат на втория играч"
+  >
 
-    <input id="winnerScore" type="number" min="1" required placeholder="Резултат на победителя">
+  <button type="submit">ЗАПИШИ РЕЗУЛТАТА</button>
 
-    <input id="loserScore" type="number" min="0" required placeholder="Резултат на загубилия">
-
-    <button type="submit">ЗАПИШИ РЕЗУЛТАТА</button>
   </form>
 
   <p id="matchMessage"></p>
@@ -347,21 +353,49 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     document.getElementById("generateBracketButton").style.display = "none";
   }
 });
-    document.getElementById("matchForm").addEventListener("submit", async function(event) {
+   
+ document.getElementById("matchForm").addEventListener("submit", async function(event) {
   event.preventDefault();
 
+  const db = window.sexsiSupabase;
   const message = document.getElementById("matchMessage");
-  message.textContent = "Записване на резултата...";
+  const matchId = document.getElementById("bracketMatch").value;
+  const score1 = Number(document.getElementById("bracketScore1").value);
+  const score2 = Number(document.getElementById("bracketScore2").value);
 
-  const { data, error } = await window.sexsiSupabase.rpc(
-    "sexsi_admin_add_match_v2",
+  if (!matchId || score1 === score2) {
+    message.textContent = "Избери мач и въведи различни резултати.";
+    return;
+  }
+
+  const { data: matches, error: loadError } =
+    await db.rpc("sexsi_get_bracket");
+
+  if (loadError) {
+    message.textContent = "Грешка: " + loadError.message;
+    return;
+  }
+
+  const match = matches.find(m => m.id === matchId);
+
+  if (!match) {
+    message.textContent = "Мачът не е намерен.";
+    return;
+  }
+
+  const winnerId = score1 > score2
+    ? match.player1_id
+    : match.player2_id;
+
+  message.textContent = "Записване...";
+
+  const { data, error } = await db.rpc(
+    "sexsi_admin_submit_bracket_result",
     {
-      p_tournament_id: document.getElementById("matchTournament").value.trim(),
-      p_match_code: document.getElementById("matchCode").value.trim(),
-      p_winner_id: document.getElementById("matchWinner").value,
-      p_loser_id: document.getElementById("matchLoser").value,
-      p_winner_score: Number(document.getElementById("winnerScore").value),
-      p_loser_score: Number(document.getElementById("loserScore").value)
+      p_match_id: matchId,
+      p_winner_id: winnerId,
+      p_score_player1: score1,
+      p_score_player2: score2
     }
   );
 
@@ -370,12 +404,12 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     return;
   }
 
-  message.textContent = "Резултатът е записан успешно! Точките са начислени.";
+  message.textContent = data;
 
   document.getElementById("matchForm").reset();
 
-await loadRanking();
-await loadAdminPlayers();
+  await loadBracket();
+  await loadRanking();
 });
 document.getElementById("joinTournament").addEventListener("click", async function() {
   const message = document.getElementById("joinMessage");
@@ -548,7 +582,31 @@ async function loadBracket() {
   ];
 
   container.innerHTML = "";
+const matchSelect = document.getElementById("bracketMatch");
 
+if (matchSelect) {
+  matchSelect.innerHTML = '<option value="">Избери мач</option>';
+
+  data
+    .filter(m =>
+      m.status !== "completed" &&
+      m.player1_id &&
+      m.player2_id
+    )
+    .forEach(match => {
+      const option = document.createElement("option");
+
+      option.value = match.id;
+
+      option.textContent =
+        "Кръг " + match.round_number +
+        " • Мач " + match.match_number +
+        " • " + match.player1_name +
+        " срещу " + match.player2_name;
+
+      matchSelect.appendChild(option);
+    });
+}
   rounds.forEach((roundName, index) => {
     const matches = data.filter(
       m => m.round_number === index + 1
