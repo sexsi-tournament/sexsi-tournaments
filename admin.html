@@ -13,15 +13,22 @@ header{padding:20px 7%;display:flex;justify-content:space-between;align-items:ce
 .logo{font-size:28px;font-weight:900;letter-spacing:3px}
 .logo span{color:#ed252d}
 nav a{color:#bbb;text-decoration:none;margin-left:15px;font-size:13px}
-section{padding:45px 7%}
-h1{font-size:30px;color:#ed252d}
-.card{background:#141414;border:1px solid #303030;padding:24px;border-radius:8px;margin:20px 0}
+section{padding:35px 5%;max-width:1200px;margin:auto}
+h1{color:#ed252d}
+.card{background:#141414;border:1px solid #303030;padding:20px;border-radius:8px;margin:20px 0}
+.table-wrap{overflow-x:auto}
+table{width:100%;min-width:650px;border-collapse:collapse;text-align:left}
+th{background:#ed252d;padding:12px}
+td{padding:12px;border-bottom:1px solid #303030}
+button{background:#ed252d;color:white;border:0;padding:12px 18px;border-radius:5px;font-weight:bold;cursor:pointer}
 .message{color:#aaa}
 footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
-@media(max-width:600px){header{padding:18px 4%}nav a{margin-left:7px;font-size:10px}section{padding:35px 5%}}
+#adminContent{display:none}
+@media(max-width:600px){header{padding:18px 4%}nav a{margin-left:7px;font-size:10px}section{padding:25px 4%}}
 </style>
 </head>
 <body>
+
 <header>
 <div class="logo">SEXSI<span>.</span></div>
 <nav>
@@ -34,12 +41,185 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 
 <section>
 <h1>АДМИНИСТРАТИВЕН ПАНЕЛ</h1>
+
 <div class="card">
-<h2>ДОСТЪП САМО ЗА АДМИНИСТРАТОРИ</h2>
-<p class="message">Административните функции ще бъдат свързани със Supabase в следващата стъпка.</p>
+<p id="accessMessage" class="message">Проверка на достъпа...</p>
+</div>
+
+<div id="adminContent">
+
+<div class="card">
+<h2>РЕГИСТРИРАНИ УЧАСТНИЦИ</h2>
+<p id="registrationMessage" class="message">Зареждане...</p>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>ИГРАЧ</th>
+<th>ИМЕЙЛ</th>
+<th>GAME ID</th>
+<th>ТУРНИР</th>
+<th>ДАТА</th>
+</tr>
+</thead>
+<tbody id="registrationsList"></tbody>
+</table>
+</div>
+</div>
+
+<div class="card">
+<h2>ВСИЧКИ ИГРАЧИ</h2>
+<p id="playersMessage" class="message">Зареждане...</p>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>ИГРАЧ</th>
+<th>ИМЕЙЛ</th>
+<th>GAME ID</th>
+</tr>
+</thead>
+<tbody id="playersList"></tbody>
+</table>
+</div>
+</div>
+
+<button id="refreshButton">ОБНОВИ ДАННИТЕ</button>
+<button id="logoutButton">ИЗХОД</button>
+
 </div>
 </section>
 
 <footer>SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const db = window.supabase.createClient(
+  "https://fyxlwcoochsuzhqostpe.supabase.co",
+  "sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP"
+);
+
+const ADMIN_ID = "13f1ada8-cd05-4c31-8940-4fb1790cb90e";
+
+async function loadRegistrations() {
+  const message = document.getElementById("registrationMessage");
+  const list = document.getElementById("registrationsList");
+
+  message.textContent = "Зареждане...";
+  list.innerHTML = "";
+
+  const { data, error } = await db.rpc("sexsi_admin_registrations");
+
+  if (error) {
+    message.textContent = "Грешка: " + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    message.textContent = "Няма регистрации.";
+    return;
+  }
+
+  message.textContent = "Общо регистрации: " + data.length;
+
+  data.forEach(player => {
+    const row = document.createElement("tr");
+
+    const values = [
+      player.player_name || "PLAYER",
+      player.player_email || "",
+      player.player_id || "",
+      player.tournament_id || "",
+      player.registered_at
+        ? new Date(player.registered_at).toLocaleString("bg-BG")
+        : ""
+    ];
+
+    values.forEach(value => {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
+
+    list.appendChild(row);
+  });
+}
+
+async function loadPlayers() {
+  const message = document.getElementById("playersMessage");
+  const list = document.getElementById("playersList");
+
+  message.textContent = "Зареждане...";
+  list.innerHTML = "";
+
+  const { data, error } = await db.rpc("sexsi_admin_players");
+
+  if (error) {
+    message.textContent = "Грешка: " + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    message.textContent = "Няма намерени играчи.";
+    return;
+  }
+
+  message.textContent = "Общо играчи: " + data.length;
+
+  data.forEach(player => {
+    const row = document.createElement("tr");
+
+    const values = [
+      player.player_name || "PLAYER",
+      player.player_email || "",
+      player.player_id || ""
+    ];
+
+    values.forEach(value => {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
+
+    list.appendChild(row);
+  });
+}
+
+async function loadAdminData() {
+  await loadRegistrations();
+  await loadPlayers();
+}
+
+async function checkAdminAccess() {
+  const message = document.getElementById("accessMessage");
+
+  const { data, error } = await db.auth.getSession();
+
+  if (error || !data.session) {
+    message.textContent = "Нямаш активна сесия. Влез през профила си.";
+    return;
+  }
+
+  if (data.session.user.id !== ADMIN_ID) {
+    message.textContent = "ДОСТЪПЪТ Е ОТКАЗАН. Само администратор може да отвори тази страница.";
+    return;
+  }
+
+  message.textContent = "Администраторски достъп потвърден.";
+  document.getElementById("adminContent").style.display = "block";
+
+  await loadAdminData();
+}
+
+document.getElementById("refreshButton").addEventListener("click", loadAdminData);
+
+document.getElementById("logoutButton").addEventListener("click", async function() {
+  await db.auth.signOut();
+  window.location.href = "profile.html";
+});
+
+checkAdminAccess();
+</script>
+
 </body>
 </html>
