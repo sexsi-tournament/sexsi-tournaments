@@ -38,6 +38,7 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 <section>
 <h1>ПОТРЕБИТЕЛСКИ ПРОФИЛ</h1>
 
+<div id="register">
 <div class="card">
 <h2>СЪЗДАЙ АКАУНТ</h2>
 <form id="registerForm">
@@ -59,7 +60,28 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 </form>
 <p id="loginMessage" class="message"></p>
 </div>
+</div>
+<div id="playerDashboard" class="card" style="display:none">
+  <h2>МОЯТ ПРОФИЛ</h2>
 
+  <p>Потребител: <strong id="playerName"></strong></p>
+  <p>Имейл: <strong id="playerEmail"></strong></p>
+  <p>Standoff 2 ID: <strong id="playerId"></strong></p>
+
+  <h3>ПРОМЯНА НА GAME ID</h3>
+
+  <input id="editPlayerGameId" type="text" placeholder="Ново Standoff 2 ID">
+
+  <button type="button" id="savePlayerGameId">ЗАПАЗИ ID</button>
+  <p id="playerGameIdMessage" class="message"></p>
+
+  <button type="button" id="logoutButton">ИЗХОД ОТ ПРОФИЛА</button>
+</div>
+  <div id="adminPanel" class="card" style="display:none">
+  <h2>АДМИНИСТРАТОРСКИ ПАНЕЛ</h2>
+  <p>Имаш администраторски достъп.</p>
+  <a href="admin.html" style="color:#ed252d">ОТВОРИ АДМИН ПАНЕЛА</a>
+  </div>
 </section>
 
 <footer>SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY</footer>
