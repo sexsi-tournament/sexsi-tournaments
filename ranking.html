@@ -54,5 +54,57 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 <p id="rankingMessage"></p>
 </section>
 <footer>SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY</footer>
+  
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const rankingSupabase = window.supabase.createClient(
+  "https://fyxlwcoochsuzhqostpe.supabase.co",
+  "sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP"
+);
+
+async function loadRanking() {
+  const list = document.getElementById("rankingList");
+  const message = document.getElementById("rankingMessage");
+
+  list.innerHTML = "<tr><td colspan='5'>Зареждане...</td></tr>";
+
+  const { data, error } = await rankingSupabase.rpc("sexsi_get_ranking");
+
+  if (error) {
+    list.innerHTML = "<tr><td colspan='5'>Грешка при зареждане.</td></tr>";
+    message.textContent = error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    list.innerHTML = "<tr><td colspan='5'>Все още няма класирани играчи.</td></tr>";
+    return;
+  }
+
+  list.innerHTML = "";
+
+  data.forEach((player, index) => {
+    const tr = document.createElement("tr");
+
+    [
+      index + 1,
+      player.username || "PLAYER",
+      player.wins,
+      player.losses,
+      player.points
+    ].forEach(value => {
+      const td = document.createElement("td");
+      td.textContent = value ?? 0;
+      tr.appendChild(td);
+    });
+
+    list.appendChild(tr);
+  });
+}
+
+loadRanking();
+</script>
+  
 </body>
 </html>
