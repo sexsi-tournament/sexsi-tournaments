@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090909">
+<title>Класация | SEXSI TOURNAMENTS</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090909;color:#fff;font-family:Arial,sans-serif}
+header{padding:20px 7%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #292929}
+.logo{font-size:28px;font-weight:900;letter-spacing:3px}
+.logo span{color:#ed252d}
+nav a{color:#bbb;text-decoration:none;margin-left:15px;font-size:13px}
+section{padding:55px 7%}
+.heading{font-size:28px;font-weight:900;margin-bottom:25px}
+.table-wrap{overflow-x:auto}
+table{width:100%;min-width:550px;border-collapse:collapse;text-align:left}
+th{background:#ed252d;color:white;padding:14px}
+td{padding:14px;border-bottom:1px solid #303030}
+footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
+@media(max-width:600px){header{padding:18px 4%}nav a{margin-left:7px;font-size:10px}section{padding:40px 5%}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">SEXSI<span>.</span></div>
+<nav>
+<a href="index.html">НАЧАЛО</a>
+<a href="tournaments.html">ТУРНИРИ</a>
+<a href="ranking.html">КЛАСАЦИЯ</a>
+<a href="profile.html">ПРОФИЛ</a>
+</nav>
+</header>
+<section>
+<div class="heading">КЛАСАЦИЯ НА ИГРАЧИТЕ</div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>ИГРАЧ</th>
+<th>ПОБЕДИ</th>
+<th>ЗАГУБИ</th>
+<th>ТОЧКИ</th>
+</tr>
+</thead>
+<tbody id="rankingList">
+<tr><td colspan="5">Зареждане...</td></tr>
+</tbody>
+</table>
+</div>
+<p id="rankingMessage"></p>
+</section>
+<footer>SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY</footer>
+</body>
+</html>
