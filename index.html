@@ -453,6 +453,45 @@ playerIdInput.value = savedPlayerId || "";
     document.getElementById("generateBracketButton").style.display = "none";
   }
 });
+    
+(async function restorePlayerSession() {
+  const { data, error } =
+    await window.sexsiSupabase.auth.getSession();
+
+  if (error || !data.session) return;
+
+  const user = data.session.user;
+
+  document.getElementById("register").style.display = "none";
+  document.getElementById("playerDashboard").style.display = "block";
+
+  document.getElementById("playerName").textContent =
+    user.user_metadata.username || "PLAYER";
+
+  document.getElementById("playerEmail").textContent =
+    user.email || "";
+
+  const { data: savedPlayerId } =
+    await window.sexsiSupabase.rpc("sexsi_get_my_player_id");
+
+  document.getElementById("playerId").textContent =
+    savedPlayerId || "НЯМА ДОБАВЕНО ID";
+
+  document.getElementById("editPlayerGameId").value =
+    savedPlayerId || "";
+
+  if (user.id === "13f1ada8-cd05-4c31-8940-4fb1790cb90e") {
+    document.getElementById("adminPanel").style.display = "block";
+    document.getElementById("generateBracketButton").style.display = "block";
+
+    loadAdminRegistrations();
+    loadAdminPlayers();
+  } else {
+    document.getElementById("adminPanel").style.display = "none";
+    document.getElementById("generateBracketButton").style.display = "none";
+  }
+})();
+    
     document.getElementById("savePlayerGameId").addEventListener("click", async function() {
   const playerGameId = document.getElementById("editPlayerGameId").value.trim();
   const message = document.getElementById("playerGameIdMessage");
