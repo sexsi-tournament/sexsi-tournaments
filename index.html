@@ -212,13 +212,14 @@ window.sexsiSupabase = sexsiSupabase;
 <section id="register">
   <h2>Потребителски профил</h2>
 
-  <h3>СЪЗДАЙ АКАУНТ</h3>
-  <form id="registerForm">
-    <input id="username" type="text" placeholder="Username" required>
-    <input id="email" type="email" placeholder="Email" required>
-    <input id="password" type="password" placeholder="Password (minimum 6 characters)" required>
-    <button type="submit">СЪЗДАЙ АКАУНТ</button>
-  </form>
+<h3>СЪЗДАЙ АКАУНТ</h3>
+<form id="registerForm">
+  <input id="username" type="text" placeholder="Username" required>
+  <input id="playerGameId" type="text" placeholder="Твоето ID в Standoff 2" required>
+  <input id="email" type="email" placeholder="Email" required>
+  <input id="password" type="password" placeholder="Password (minimum 6 characters)" required>
+  <button type="submit">СЪЗДАЙ АКАУНТ</button>
+</form>
   <p id="registerMessage"></p>
 
   <hr>
@@ -365,27 +366,31 @@ document.getElementById("registerForm").addEventListener("submit", async functio
   event.preventDefault();
 
   const username = document.getElementById("username").value.trim();
+  const playerGameId = document.getElementById("playerGameId").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
 
   const message = document.getElementById("registerMessage");
-  message.textContent = "Creating account...";
+  message.textContent = "Създаване на акаунт...";
 
   const { error } = await window.sexsiSupabase.auth.signUp({
     email: email,
     password: password,
     options: {
       emailRedirectTo: "https://sexsi-tournament.github.io/sexsi-tournaments/",
-      data: { username: username }
+      data: {
+        username: username,
+        player_id: playerGameId
+      }
     }
   });
 
   if (error) {
-    message.textContent = "Error: " + error.message;
+    message.textContent = "Грешка: " + error.message;
     return;
   }
 
-  message.textContent = "Registration successful! Check your email to confirm your account.";
+  message.textContent = "Успешна регистрация! Провери имейла си за потвърждение.";
 });
 
 document.getElementById("loginForm").addEventListener("submit", async function(event) {
