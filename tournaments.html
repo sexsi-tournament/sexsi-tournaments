@@ -44,7 +44,7 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 <h3>SEXSI 1V1 CUP #001</h3>
 <p>🎮 Игра: STANDOFF 2</p>
 <p>⚔️ Режим: 1V1 • BO1</p>
-<p>👥 Участници: 16</p>
+<p>👥 Участници: <span id="participantCount">Зареждане...</span> / 16</p>
 <p>💰 Вход: БЕЗПЛАТЕН</p>
 <p>🏆 Награда: 5 000 GOLD</p>
 <p>📅 Краен срок: 25.11.2026</p>
@@ -67,5 +67,41 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 </section>
 
 <footer>SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY</footer>
+  
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const tournamentSupabase = window.supabase.createClient(
+  "https://fyxlwcoochsuzhqostpe.supabase.co",
+  "sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP"
+);
+
+async function loadParticipantCount() {
+  const countElement = document.getElementById("participantCount");
+
+  const { data, error } = await tournamentSupabase.rpc(
+    "sexsi_get_registration_count"
+  );
+
+  if (error) {
+    countElement.textContent = "Грешка";
+    console.error(error);
+    return;
+  }
+
+  let count = data;
+
+  if (Array.isArray(data)) {
+    count = data[0]?.count ?? data[0]?.registration_count;
+  } else if (data && typeof data === "object") {
+    count = data.count ?? data.registration_count;
+  }
+
+  countElement.textContent = count ?? 0;
+}
+
+loadParticipantCount();
+</script>
+  
 </body>
 </html>
