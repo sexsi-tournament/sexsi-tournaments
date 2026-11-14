@@ -288,11 +288,24 @@ window.sexsiSupabase = sexsiSupabase;
   <p id="adminMessage">Зареждане на регистрациите...</p>
 </div>
   <h3 id="playerName">ИГРАЧ</h3>
-  <p id="playerEmail"></p>
+<p id="playerEmail"></p>
+
 <p style="color:#999;font-size:13px;">
-  ИГРАЧ ID: <span id="playerId" style="color:#ed252d;"></span>
+  ТВОЕТО ID В STANDOFF 2:
+  <span id="playerId" style="color:#ed252d;">НЯМА ДОБАВЕНО ID</span>
 </p>
-  <hr style="border-color:#333;">
+
+<div style="margin:15px 0;">
+  <input
+    id="editPlayerGameId"
+    type="text"
+    placeholder="Въведи ID в Standoff 2"
+  >
+  <button id="savePlayerGameId" type="button">ЗАПАЗИ ID</button>
+  <p id="playerGameIdMessage"></p>
+</div>
+
+<hr style="border-color:#333;">
 
   <p>ДОБРЕ ДОШЛИ ВЪВ SEXSI ТУРНИРИТЕ!</p>
 <div style="margin-top:25px;">
@@ -431,6 +444,30 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
   document.getElementById("adminPanel").style.display = "none";
     document.getElementById("generateBracketButton").style.display = "none";
   }
+});
+    document.getElementById("savePlayerGameId").addEventListener("click", async function() {
+  const playerGameId = document.getElementById("editPlayerGameId").value.trim();
+  const message = document.getElementById("playerGameIdMessage");
+  const display = document.getElementById("playerId");
+
+  if (!playerGameId) {
+    message.textContent = "Въведи ID в Standoff 2!";
+    return;
+  }
+
+  message.textContent = "Запазване...";
+
+  const { error } = await window.sexsiSupabase.rpc("sexsi_set_my_player_id", {
+    p_player_id: playerGameId
+  });
+
+  if (error) {
+    message.textContent = "Грешка: " + error.message;
+    return;
+  }
+
+  display.textContent = playerGameId;
+  message.textContent = "ID-то е запазено успешно!";
 });
    
  document.getElementById("matchForm").addEventListener("submit", async function(event) {
