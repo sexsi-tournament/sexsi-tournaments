@@ -9,31 +9,525 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#090909;color:#fff;font-family:Arial,sans-serif}
-header{padding:20px 7%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #292929}
-.logo{font-size:28px;font-weight:900;letter-spacing:3px}
-.logo span{color:#ed252d}
-nav a{color:#bbb;text-decoration:none;margin-left:20px;font-size:13px}
-.hero{padding:90px 7%;background:radial-gradient(ellipse at 80% 30%,#501015,#090909 65%)}
-.tag{color:#ff454b;letter-spacing:3px;font-size:12px;font-weight:bold}
-h1{font-size:clamp(48px,9vw,90px);line-height:.95;margin:22px 0;font-weight:900}
-h1 span{color:#ed252d}
-.hero p{color:#aaa;max-width:450px;line-height:1.7}
-.btn{display:inline-block;background:#ed252d;color:white;padding:15px 24px;text-decoration:none;border-radius:4px;font-weight:bold;margin-top:20px}
-section{padding:55px 7%}
-.heading{font-size:28px;font-weight:900;margin-bottom:25px}
-.modes,.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
-.mode,.card{background:#141414;border:1px solid #303030;padding:24px;border-radius:8px}
-.mode strong{font-size:34px}
-.mode p,.card p{color:#999;font-size:13px}
-.card h3{font-size:19px}
-.status{color:#48d98a;font-size:11px;font-weight:bold}
-footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
+
+:root{
+  --red:#ed252d;
+  --red2:#ff454b;
+  --gold:#e9bd59;
+  --bg:#080808;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:#fff;
+  font-family:Arial,sans-serif;
+  overflow-x:hidden;
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:10;
+  opacity:.12;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:55px 55px;
+}
+
+header{
+  position:relative;
+  z-index:20;
+  padding:20px 7%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background:rgba(8,8,8,.9);
+  backdrop-filter:blur(18px);
+}
+
+.logo{
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:3px;
+}
+
+.logo span{color:var(--red)}
+
+nav{
+  display:flex;
+  flex-wrap:wrap;
+  gap:20px;
+}
+
+nav a{
+  color:#aaa;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:bold;
+  letter-spacing:1px;
+  transition:.3s;
+}
+
+nav a:hover{color:var(--red2)}
+
+.hero{
+  min-height:590px;
+  padding:75px 7%;
+  position:relative;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  align-items:center;
+  gap:30px;
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse at 80% 45%,rgba(120,12,20,.28),transparent 48%),
+    linear-gradient(110deg,#0a090a,#10090b 60%,#090909);
+}
+
+.hero:before{
+  content:"";
+  position:absolute;
+  width:550px;
+  height:550px;
+  right:-150px;
+  top:-180px;
+  border-radius:50%;
+  background:rgba(237,37,45,.12);
+  filter:blur(100px);
+  animation:glow 6s ease-in-out infinite alternate;
+}
+
+.hero:after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:100%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--red),transparent);
+  box-shadow:0 0 20px var(--red);
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+}
+
+.tag{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  color:#ff555c;
+  letter-spacing:3px;
+  font-size:11px;
+  font-weight:bold;
+  padding:10px 14px;
+  border:1px solid rgba(237,37,45,.35);
+  background:rgba(237,37,45,.07);
+  border-radius:4px;
+}
+
+.tag:before{
+  content:"";
+  width:7px;
+  height:7px;
+  background:var(--red);
+  border-radius:50%;
+  box-shadow:0 0 12px var(--red);
+}
+
+h1{
+  font-size:clamp(48px,7vw,88px);
+  line-height:.96;
+  margin:28px 0;
+  font-weight:1000;
+  letter-spacing:-3px;
+}
+
+h1 span{
+  color:var(--red);
+  text-shadow:0 0 35px rgba(237,37,45,.3);
+}
+
+.hero p{
+  color:#aaa;
+  max-width:450px;
+  line-height:1.8;
+  font-size:14px;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#ff353d,#b80d17);
+  color:white;
+  padding:16px 27px;
+  text-decoration:none;
+  border-radius:5px;
+  font-weight:900;
+  font-size:12px;
+  letter-spacing:1px;
+  margin-top:20px;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 8px 30px rgba(237,37,45,.2);
+  transition:.3s;
+}
+
+.btn:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 35px rgba(237,37,45,.4);
+}
+
+/* ВИЗУАЛЕН ТРОФЕЙ */
+
+.hero-visual{
+  position:relative;
+  min-height:410px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:2;
+}
+
+.arena-circle{
+  position:absolute;
+  width:350px;
+  height:350px;
+  border:1px solid rgba(237,37,45,.35);
+  border-radius:50%;
+  box-shadow:0 0 50px rgba(237,37,45,.08),inset 0 0 50px rgba(237,37,45,.05);
+  animation:rotate 35s linear infinite;
+}
+
+.arena-circle:before,
+.arena-circle:after{
+  content:"";
+  position:absolute;
+  border:1px solid rgba(237,37,45,.22);
+  border-radius:50%;
+}
+
+.arena-circle:before{inset:25px}
+.arena-circle:after{inset:55px}
+
+.arena-ring{
+  position:absolute;
+  width:410px;
+  height:170px;
+  border:1px solid rgba(255,70,80,.4);
+  border-radius:50%;
+  transform:rotate(-28deg);
+  box-shadow:0 0 20px rgba(237,37,45,.12);
+}
+
+.trophy{
+  position:relative;
+  z-index:3;
+  width:230px;
+  filter:drop-shadow(0 0 30px rgba(237,37,45,.3));
+  animation:float 4s ease-in-out infinite;
+}
+
+.visual-label{
+  position:absolute;
+  bottom:5px;
+  right:0;
+  padding:13px 18px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(15,15,17,.85);
+  backdrop-filter:blur(15px);
+  border-radius:6px;
+  font-size:10px;
+  letter-spacing:2px;
+  color:#aaa;
+}
+
+.visual-label strong{
+  color:var(--gold);
+  display:block;
+  font-size:18px;
+  margin-top:5px;
+}
+
+.visual-dot{
+  position:absolute;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--red);
+  box-shadow:0 0 18px var(--red);
+}
+
+.dot1{top:40px;left:20%}
+.dot2{bottom:60px;left:15%}
+.dot3{top:90px;right:12%}
+
+/* ОСНОВЕН ТУРНИР */
+
+section{padding:60px 7%}
+
+.featured-wrap{
+  position:relative;
+  overflow:hidden;
+  max-width:1200px;
+  margin:auto;
+  padding:40px;
+  border:1px solid rgba(237,37,45,.35);
+  border-radius:15px;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(237,37,45,.18),transparent 55%),
+    linear-gradient(120deg,#18090b,#090909 70%);
+  box-shadow:0 15px 60px rgba(0,0,0,.4);
+  text-align:center;
+}
+
+.featured-wrap:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(110deg,transparent,rgba(255,255,255,.035),transparent);
+  transform:translateX(-100%);
+  animation:shine 7s infinite;
+  pointer-events:none;
+}
+
+.official{
+  color:#ff555c;
+  letter-spacing:4px;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.featured-wrap h2{
+  font-size:clamp(30px,6vw,58px);
+  margin:18px 0 5px;
+  font-weight:900;
+}
+
+.featured-wrap h2 span{color:var(--red)}
+
+.prize{
+  font-size:clamp(42px,8vw,76px);
+  font-weight:1000;
+  color:var(--gold);
+  text-shadow:0 0 25px rgba(233,189,89,.35);
+}
+
+.prize-label{
+  font-size:14px;
+  font-weight:bold;
+  letter-spacing:4px;
+}
+
+.featured-info{
+  margin:25px 0;
+  color:#ccc;
+  font-size:13px;
+  line-height:2;
+  letter-spacing:1px;
+}
+
+/* СЕКЦИИ */
+
+.heading{
+  font-size:27px;
+  font-weight:900;
+  margin-bottom:27px;
+  letter-spacing:1px;
+}
+
+.heading:after{
+  content:"";
+  display:block;
+  width:55px;
+  height:3px;
+  background:var(--red);
+  margin-top:13px;
+  box-shadow:0 0 12px var(--red);
+}
+
+.modes,.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:18px;
+}
+
+.mode,.card{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(145deg,#171719,#101011);
+  border:1px solid rgba(255,255,255,.09);
+  padding:25px;
+  border-radius:10px;
+  transition:.3s;
+}
+
+.mode:hover,.card:hover{
+  transform:translateY(-5px);
+  border-color:rgba(237,37,45,.5);
+  box-shadow:0 12px 35px rgba(237,37,45,.08);
+}
+
+.mode:before,.card:before{
+  content:"";
+  position:absolute;
+  width:100px;
+  height:100px;
+  top:-60px;
+  right:-50px;
+  background:rgba(237,37,45,.12);
+  filter:blur(35px);
+}
+
+.mode strong{
+  font-size:38px;
+  color:#fff;
+  text-shadow:0 0 20px rgba(237,37,45,.25);
+}
+
+.mode p,.card p{
+  color:#999;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.card h3{
+  font-size:19px;
+  position:relative;
+}
+
+.status{
+  color:#48d98a;
+  font-size:11px;
+  font-weight:bold;
+  letter-spacing:1px;
+}
+
+#registrationCountdown{
+  background:rgba(237,37,45,.06)!important;
+  border:1px solid rgba(237,37,45,.3)!important;
+  border-radius:8px!important;
+}
+
+#countdownTimer{
+  color:white;
+  text-shadow:0 0 15px rgba(237,37,45,.4);
+}
+
+#bracketAccess,#bracketSection{
+  border:1px solid rgba(237,37,45,.2);
+  border-radius:12px;
+  background:linear-gradient(120deg,#130b0c,#0a0a0a);
+}
+
+#bracketContainer>div{
+  box-shadow:0 8px 25px rgba(0,0,0,.2);
+}
+
+footer{
+  padding:30px 7%;
+  border-top:1px solid rgba(255,255,255,.08);
+  color:#777;
+  font-size:11px;
+  letter-spacing:1px;
+  text-align:center;
+  background:#070707;
+}
+
+/* АНИМАЦИИ */
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-15px)}
+}
+
+@keyframes rotate{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+
+@keyframes glow{
+  from{opacity:.5;transform:scale(.9)}
+  to{opacity:1;transform:scale(1.15)}
+}
+
+@keyframes shine{
+  0%,65%{transform:translateX(-100%)}
+  85%,100%{transform:translateX(100%)}
+}
+
+/* МОБИЛНА ВЕРСИЯ */
+
+@media(max-width:800px){
+  .hero{
+    grid-template-columns:1fr;
+    padding:65px 6% 35px;
+    text-align:center;
+  }
+
+  .hero-content{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .hero-visual{min-height:350px}
+  .trophy{width:190px}
+  .arena-circle{width:290px;height:290px}
+  .arena-ring{width:330px;height:140px}
+  .visual-label{right:5%;bottom:0}
+}
+
 @media(max-width:600px){
-header{padding:18px 4%}
-nav a{margin-left:8px;font-size:10px}
-.hero{padding:65px 5%}
-section{padding:40px 5%}
+  header{
+    padding:17px 4%;
+    flex-wrap:wrap;
+    gap:15px;
+  }
+
+  .logo{font-size:24px}
+
+  nav{
+    width:100%;
+    justify-content:space-between;
+    gap:5px;
+  }
+
+  nav a{
+    font-size:9px;
+    letter-spacing:0;
+  }
+
+  h1{
+    font-size:55px;
+    letter-spacing:-2px;
+  }
+
+  .hero{padding:55px 5% 30px}
+  section{padding:42px 5%}
+  .featured-wrap{padding:28px 17px}
+  .heading{font-size:23px}
+  .hero-visual{min-height:310px}
+  .trophy{width:165px}
+  .arena-circle{width:250px;height:250px}
+  .arena-ring{width:280px;height:115px}
+  .visual-label{font-size:9px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+  }
 }
 </style>
 </head>
@@ -53,41 +547,101 @@ section{padding:40px 5%}
 <main>
 
 <div class="hero" id="home">
-  <div class="tag">STANDOFF 2 ESPORTS PLATFORM</div>
-  <h1>ИГРАЙ<br>СПЕЧЕЛИ<br><span>ДОМИНИРАЙ</span></h1>
-  <p>Важното е целта. Изгради отбор. БИЙ СЕ ЗА ТОП МЯСТОТО!</p>
-  <a class="btn" href="#tournaments">Разгледай турнирите</a>
+
+  <div class="hero-content">
+    <div class="tag">STANDOFF 2 ESPORTS PLATFORM</div>
+
+    <h1>
+      ИГРАЙ<br>
+      СПЕЧЕЛИ<br>
+      <span>ДОМИНИРАЙ</span>
+    </h1>
+
+    <p>
+      Важното е целта. Изгради отбор.
+      БИЙ СЕ ЗА ТОП МЯСТОТО!
+    </p>
+
+    <a class="btn" href="#tournaments">
+      РАЗГЛЕДАЙ ТУРНИРИТЕ
+    </a>
+  </div>
+
+  <div class="hero-visual">
+
+    <div class="arena-circle"></div>
+    <div class="arena-ring"></div>
+
+    <div class="visual-dot dot1"></div>
+    <div class="visual-dot dot2"></div>
+    <div class="visual-dot dot3"></div>
+
+    <svg class="trophy" viewBox="0 0 300 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="goldCup" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#fff0ad"/>
+          <stop offset="35%" stop-color="#e9bd59"/>
+          <stop offset="65%" stop-color="#a66b20"/>
+          <stop offset="100%" stop-color="#ffe59a"/>
+        </linearGradient>
+        <linearGradient id="redBase" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ff454b"/>
+          <stop offset="100%" stop-color="#65070d"/>
+        </linearGradient>
+      </defs>
+
+      <ellipse cx="150" cy="310" rx="105" ry="13" fill="#ed252d" opacity=".2"/>
+
+      <path d="M92 55H208L198 165Q190 210 150 225Q110 210 102 165Z"
+        fill="url(#goldCup)" stroke="#fff0ad" stroke-width="3"/>
+
+      <path d="M92 70H58Q50 145 116 164"
+        fill="none" stroke="url(#goldCup)" stroke-width="17" stroke-linecap="round"/>
+
+      <path d="M208 70H242Q250 145 184 164"
+        fill="none" stroke="url(#goldCup)" stroke-width="17" stroke-linecap="round"/>
+
+      <path d="M118 100L150 78L182 100L174 140L150 158L126 140Z"
+        fill="#9a161d" opacity=".85"/>
+
+      <path d="M150 91L157 112L179 112L161 126L168 147L150 134L132 147L139 126L121 112L143 112Z"
+        fill="#ffe59a"/>
+
+      <path d="M132 222H168V260H132Z" fill="url(#goldCup)"/>
+
+      <path d="M112 258H188L202 283H98Z" fill="url(#goldCup)"/>
+
+      <path d="M87 282H213L225 305H75Z"
+        fill="url(#redBase)" stroke="#e9bd59" stroke-width="3"/>
+
+      <path d="M105 294H195" stroke="#ffe59a" stroke-width="2" opacity=".8"/>
+
+      <path d="M150 35V12M90 30L80 14M210 30L220 14"
+        stroke="#e9bd59" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+    </svg>
+
+    <div class="visual-label">
+      ШАМПИОНСКА НАГРАДА
+      <strong>5 000 GOLD</strong>
+    </div>
+
+  </div>
 </div>
 
-<section id="featured-tournament" style="padding:35px 7%;background:#090909;">
-  <div style="
-    max-width:1200px;
-    margin:auto;
-    border:1px solid #7d2529;
-    border-radius:14px;
-    overflow:hidden;
-    background:linear-gradient(120deg,#18090b,#090909 65%);
-    padding:35px;
-    text-align:center;
-    box-shadow:0 0 35px rgba(237,37,45,.12);
-  ">
-    <div style="color:#ff454b;letter-spacing:4px;font-size:12px;font-weight:bold;">
-      OFFICIAL TOURNAMENT
-    </div>
+<section id="featured-tournament">
+  <div class="featured-wrap">
 
-    <h2 style="font-size:clamp(30px,6vw,58px);margin:18px 0 5px;font-weight:900;">
-      SEXSI 1V1 CUP <span style="color:#ed252d">#001</span>
+    <div class="official">OFFICIAL TOURNAMENT</div>
+
+    <h2>
+      SEXSI 1V1 CUP <span>#001</span>
     </h2>
 
-    <div style="font-size:clamp(42px,8vw,76px);font-weight:900;color:#e9bd59;text-shadow:0 0 20px #8c5c19;">
-      5 000 GOLD
-    </div>
+    <div class="prize">5 000 GOLD</div>
 
-    <div style="font-size:17px;font-weight:bold;letter-spacing:3px;">
-      ЗА ПОБЕДИТЕЛЯ
-    </div>
+    <div class="prize-label">ЗА ПОБЕДИТЕЛЯ</div>
 
-    <div style="margin:25px 0;color:#ddd;font-size:14px;line-height:2;">
+    <div class="featured-info">
       16 ИГРАЧИ · БЕЗПЛАТНО УЧАСТИЕ<br>
       BO1 · ЕДНА ИГРА РЕШАВА МАЧА
     </div>
@@ -101,6 +655,7 @@ section{padding:40px 5%}
     </div>
 
     <a class="btn" href="profile.html">РЕГИСТРИРАЙ СЕ</a>
+
   </div>
 </section>
 
@@ -108,6 +663,7 @@ section{padding:40px 5%}
   <div class="heading">РЕЖИМИ НА ИГРА</div>
 
   <div class="modes">
+
     <div class="mode">
       <strong>1V1</strong>
       <p>Един срещу един</p>
@@ -122,6 +678,7 @@ section{padding:40px 5%}
       <strong>5V5</strong>
       <p>Отборен мач 5vs5</p>
     </div>
+
   </div>
 </section>
 
@@ -131,13 +688,14 @@ section{padding:40px 5%}
   <div class="cards">
 
     <div class="card">
-      <div class="status" id="registrationStatus">● ОТВОРЕНО ЗА РЕГИСТРАЦИЯ</div>
+
+      <div class="status" id="registrationStatus">
+        ● ОТВОРЕНО ЗА РЕГИСТРАЦИЯ
+      </div>
 
       <div id="registrationCountdown" style="
         margin:15px 0;
         padding:15px;
-        background:#1a1011;
-        border:1px solid #7d2529;
         border-radius:8px;
         text-align:center;
       ">
@@ -167,13 +725,16 @@ section{padding:40px 5%}
         <div style="color:#e9bd59;font-size:25px;font-weight:900;">
           5 000 GOLD
         </div>
-        <div style="font-size:12px;color:#aaa;">НАГРАДА ЗА ПОБЕДИТЕЛЯ</div>
+        <div style="font-size:12px;color:#aaa;">
+          НАГРАДА ЗА ПОБЕДИТЕЛЯ
+        </div>
       </div>
 
       <p>📅 Краен срок: 25.11.2026</p>
       <p>🏆 Турнир: 02.12.2026</p>
 
       <a class="btn" href="profile.html">РЕГИСТРИРАЙ СЕ</a>
+
     </div>
 
     <div class="card">
@@ -367,51 +928,4 @@ async function initializePage() {
   const { data, error } = await db.auth.getSession();
 
   if (error) {
-    document.getElementById("bracketAccess").style.display = "block";
-    return;
-  }
-
-  await updateBracketAccess(data.session);
-
-  db.auth.onAuthStateChange((_event, session) => {
-    updateBracketAccess(session);
-  });
-}
-
-initializePage();
-loadRegistrationCount();
-
-</script>
-
-<script>
-function updateRegistrationCountdown() {
-  const target = new Date("2026-11-25T23:59:59+02:00").getTime();
-  const now = Date.now();
-  const distance = target - now;
-  const timer = document.getElementById("countdownTimer");
-
-  if (!timer) return;
-
-  if (distance <= 0) {
-    timer.textContent = "РЕГИСТРАЦИЯТА ПРИКЛЮЧИ";
-    return;
-  }
-
-  const days = Math.floor(distance / 86400000);
-  const hours = Math.floor((distance % 86400000) / 3600000);
-  const minutes = Math.floor((distance % 3600000) / 60000);
-  const seconds = Math.floor((distance % 60000) / 1000);
-
-  timer.textContent =
-    days + "д " +
-    hours + "ч " +
-    minutes + "м " +
-    seconds + "с";
-}
-
-updateRegistrationCountdown();
-setInterval(updateRegistrationCountdown, 1000);
-</script>
-
-</body>
-</html>
+   
