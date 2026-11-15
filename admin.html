@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bg">
 <head>
@@ -14,18 +13,204 @@ header{padding:20px 7%;display:flex;justify-content:space-between;align-items:ce
 .logo{font-size:28px;font-weight:900;letter-spacing:3px}
 .logo span{color:#ed252d}
 nav a{color:#bbb;text-decoration:none;margin-left:15px;font-size:13px}
-section{padding:35px 5%;max-width:1200px;margin:auto}
-h1{color:#ed252d}
-.card{background:#141414;border:1px solid #303030;padding:20px;border-radius:8px;margin:20px 0}
+section{padding:30px 5%;max-width:1250px;margin:auto}
+h1{color:#ed252d;margin-top:0}
+.card{background:#141414;border:1px solid #303030;padding:20px;border-radius:9px;margin:18px 0}
 .table-wrap{overflow-x:auto}
 table{width:100%;min-width:650px;border-collapse:collapse;text-align:left}
 th{background:#ed252d;padding:12px}
 td{padding:12px;border-bottom:1px solid #303030}
 button{background:#ed252d;color:white;border:0;padding:12px 18px;border-radius:5px;font-weight:bold;cursor:pointer}
 button:disabled{opacity:.5;cursor:not-allowed}
-.message{color:#aaa}
+.message{color:#aaa;line-height:1.5}
 footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 #adminContent{display:none}
+#accessCard{max-width:1250px;margin:25px auto}
+.admin-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:15px;
+  margin-bottom:22px
+}
+.admin-top h1{margin:0}
+.menu-button{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:#ed252d;
+  padding:13px 20px;
+  font-size:13px;
+  letter-spacing:.5px
+}
+.menu-icon{font-size:19px;line-height:1}
+.dashboard-welcome{
+  background:linear-gradient(120deg,#191919,#101010);
+  border:1px solid #333;
+  border-left:4px solid #ed252d;
+  padding:24px;
+  border-radius:9px;
+  margin-bottom:20px
+}
+.dashboard-welcome h2{margin:0 0 8px;font-size:23px}
+.dashboard-welcome p{color:#999;margin:0;font-size:13px;line-height:1.6}
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+  margin:20px 0
+}
+.dashboard-stat{
+  background:#141414;
+  border:1px solid #303030;
+  border-radius:9px;
+  padding:20px;
+  min-width:0
+}
+.dashboard-stat small{
+  display:block;
+  color:#999;
+  font-size:11px;
+  letter-spacing:.7px;
+  margin-bottom:12px
+}
+.dashboard-stat strong{
+  display:block;
+  font-size:30px;
+  color:#fff;
+  overflow-wrap:anywhere
+}
+.dashboard-stat .stat-icon{
+  color:#ed252d;
+  font-size:20px;
+  margin-bottom:12px
+}
+.dashboard-actions{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-top:20px
+}
+.dashboard-action{
+  background:#151515;
+  border:1px solid #333;
+  color:#fff;
+  text-align:left;
+  padding:17px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:.2s
+}
+.dashboard-action:hover{
+  border-color:#ed252d;
+  background:#1c1112
+}
+.dashboard-action strong{
+  display:block;
+  margin-bottom:6px;
+  font-size:14px
+}
+.dashboard-action span{
+  color:#999;
+  font-size:12px;
+  font-weight:normal
+}
+.admin-view{display:none}
+.admin-view.active{display:block}
+.view-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:15px
+}
+.view-heading h2{margin:0;color:#ed252d;font-size:21px}
+.back-dashboard{
+  background:#252525;
+  border:1px solid #444;
+  padding:10px 14px;
+  font-size:12px
+}
+
+/* SIDE MENU */
+.menu-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  z-index:1000;
+  opacity:0;
+  visibility:hidden;
+  transition:.25s
+}
+.menu-overlay.open{opacity:1;visibility:visible}
+.side-menu{
+  position:fixed;
+  z-index:1001;
+  top:0;
+  left:0;
+  width:min(330px,85vw);
+  height:100%;
+  background:#101010;
+  border-right:1px solid #333;
+  padding:25px 18px;
+  transform:translateX(-105%);
+  transition:transform .28s ease;
+  overflow-y:auto
+}
+.side-menu.open{transform:translateX(0)}
+.menu-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding-bottom:22px;
+  border-bottom:1px solid #333;
+  margin-bottom:20px
+}
+.menu-logo{font-size:22px;font-weight:900;letter-spacing:2px}
+.menu-logo span{color:#ed252d}
+.menu-close{
+  background:#252525;
+  padding:8px 12px;
+  font-size:18px
+}
+.menu-label{
+  color:#777;
+  font-size:10px;
+  letter-spacing:1.5px;
+  margin:20px 10px 10px
+}
+.menu-item{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  width:100%;
+  background:transparent;
+  color:#bbb;
+  text-align:left;
+  padding:14px 12px;
+  border-radius:6px;
+  margin:4px 0;
+  font-size:13px;
+  border:1px solid transparent;
+  transition:.2s
+}
+.menu-item:hover,.menu-item.active{
+  color:#fff;
+  background:#211314;
+  border-color:#562326
+}
+.menu-item.active{color:#ff555b}
+.menu-item .menu-symbol{
+  width:23px;
+  text-align:center;
+  font-size:17px;
+  color:#ed252d
+}
+.menu-divider{height:1px;background:#292929;margin:17px 0}
+
+/* MATCHES */
 .match-card{background:#1b1b1b;border:1px solid #333;padding:16px;border-radius:7px;margin:14px 0}
 .match-title{color:#ed252d;font-weight:bold;margin-bottom:12px}
 .match-players{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -100,13 +285,19 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 @media(max-width:600px){
   header{padding:18px 4%}
   nav a{margin-left:7px;font-size:10px}
-  section{padding:25px 4%}
+  section{padding:23px 4%}
   .match-players{grid-template-columns:1fr}
   .match-controls{grid-template-columns:1fr 1fr}
   .analytics-grid{grid-template-columns:repeat(2,1fr)}
   .analytics-stat strong{font-size:23px}
   .analytics-stat{padding:13px}
   .analytics-chart-wrap{height:220px}
+  .dashboard-grid{grid-template-columns:1fr 1fr;gap:9px}
+  .dashboard-stat{padding:14px}
+  .dashboard-stat strong{font-size:25px}
+  .dashboard-actions{grid-template-columns:1fr}
+  .dashboard-welcome{padding:19px}
+  .admin-top h1{font-size:21px}
 }
 </style>
 </head>
@@ -114,135 +305,296 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 <body>
 
 <header>
-<div class="logo">SEXSI<span>.</span></div>
-<nav>
-<a href="index.html">НАЧАЛО</a>
-<a href="tournaments.html">ТУРНИРИ</a>
-<a href="ranking.html">КЛАСАЦИЯ</a>
-<a href="profile.html">ПРОФИЛ</a>
-</nav>
+  <div class="logo">SEXSI<span>.</span></div>
+  <nav>
+    <a href="index.html">НАЧАЛО</a>
+    <a href="tournaments.html">ТУРНИРИ</a>
+    <a href="ranking.html">КЛАСАЦИЯ</a>
+    <a href="profile.html">ПРОФИЛ</a>
+  </nav>
 </header>
 
 <section>
-<h1>АДМИНИСТРАТИВЕН ПАНЕЛ</h1>
-
-<div class="card">
-<p id="accessMessage" class="message">Проверка на достъпа...</p>
-</div>
-
-<div id="adminContent">
-
-<!-- PRIVATE VISITOR ANALYTICS -->
-<div class="card" id="analyticsSection">
-  <div class="analytics-heading">
-    <h2>СТАТИСТИКА НА ПОСЕЩЕНИЯТА</h2>
-    <button id="refreshAnalyticsButton">ОБНОВИ СТАТИСТИКАТА</button>
+  <div class="admin-top">
+    <h1>АДМИНИСТРАТИВЕН ПАНЕЛ</h1>
+    <button class="menu-button" id="openMenuButton">
+      <span class="menu-icon">☰</span>
+      УПРАВЛЕНИЕ
+    </button>
   </div>
 
-  <p id="analyticsMessage" class="message">Зареждане...</p>
-
-  <div class="analytics-grid">
-    <div class="analytics-stat">
-      <small>ОБЩО ПОСЕЩЕНИЯ</small>
-      <strong id="totalVisits">—</strong>
-    </div>
-    <div class="analytics-stat">
-      <small>УНИКАЛНИ ПОСЕТИТЕЛИ</small>
-      <strong id="uniqueVisitors">—</strong>
-    </div>
-    <div class="analytics-stat">
-      <small>ПОСЕЩЕНИЯ ДНЕС</small>
-      <strong id="todayVisits">—</strong>
-    </div>
-    <div class="analytics-stat">
-      <small>ПОСЛЕДНИТЕ 7 ДНИ</small>
-      <strong id="weekVisits">—</strong>
-    </div>
-    <div class="analytics-stat active">
-      <small>АКТИВНИ В МОМЕНТА</small>
-      <strong id="activeVisitors">—</strong>
-    </div>
+  <div class="card" id="accessCard">
+    <p id="accessMessage" class="message">Проверка на достъпа...</p>
   </div>
 
-  <h3>ПОСЕЩАЕМОСТ ПРЕЗ ПОСЛЕДНИТЕ 30 ДНИ</h3>
-  <div class="analytics-chart-wrap">
-    <canvas id="visitsChart"></canvas>
+  <div id="adminContent">
+
+    <!-- SIDE MENU -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <aside class="side-menu" id="sideMenu">
+      <div class="menu-header">
+        <div class="menu-logo">SEXSI<span>.</span> ADMIN</div>
+        <button class="menu-close" id="closeMenuButton">✕</button>
+      </div>
+
+      <div class="menu-label">ОСНОВНО</div>
+
+      <button class="menu-item active" data-view="dashboard">
+        <span class="menu-symbol">⌂</span> Контролно табло
+      </button>
+
+      <div class="menu-divider"></div>
+      <div class="menu-label">УПРАВЛЕНИЕ</div>
+
+      <button class="menu-item" data-view="bracket">
+        <span class="menu-symbol">🏆</span> Турнирна схема
+      </button>
+
+      <button class="menu-item" data-view="matches">
+        <span class="menu-symbol">⚔</span> Управление на двубоите
+      </button>
+
+      <button class="menu-item" data-view="registrations">
+        <span class="menu-symbol">☷</span> Регистрирани участници
+      </button>
+
+      <button class="menu-item" data-view="players">
+        <span class="menu-symbol">♙</span> Всички играчи
+      </button>
+
+      <div class="menu-divider"></div>
+      <div class="menu-label">СТАТИСТИКА</div>
+
+      <button class="menu-item" data-view="analytics">
+        <span class="menu-symbol">▥</span> Аналитика
+      </button>
+
+      <div class="menu-divider"></div>
+
+      <button class="menu-item" id="menuRefreshButton">
+        <span class="menu-symbol">↻</span> Обнови всички данни
+      </button>
+
+      <button class="menu-item" id="menuLogoutButton">
+        <span class="menu-symbol">⇥</span> Изход
+      </button>
+    </aside>
+
+    <!-- DASHBOARD -->
+    <div class="admin-view active" id="dashboardPanel">
+      <div class="dashboard-welcome">
+        <h2>ДОБРЕ ДОШЪЛ В SEXSI ADMIN</h2>
+        <p>Твоят контролен център за управление на турнирите, играчите и статистиката на SEXSI TOURNAMENTS.</p>
+      </div>
+
+      <h2>ОБЩ ПРЕГЛЕД</h2>
+
+      <div class="dashboard-grid">
+        <div class="dashboard-stat">
+          <div class="stat-icon">♙</div>
+          <small>РЕГИСТРИРАНИ УЧАСТНИЦИ</small>
+          <strong id="overviewRegistrations">—</strong>
+        </div>
+
+        <div class="dashboard-stat">
+          <div class="stat-icon">👥</div>
+          <small>ВСИЧКИ ИГРАЧИ</small>
+          <strong id="overviewPlayers">—</strong>
+        </div>
+
+        <div class="dashboard-stat">
+          <div class="stat-icon">⚔</div>
+          <small>ОБЩО ДВУБОИ</small>
+          <strong id="overviewMatches">—</strong>
+        </div>
+
+        <div class="dashboard-stat">
+          <div class="stat-icon">◉</div>
+          <small>ОБЩО ПОСЕЩЕНИЯ</small>
+          <strong id="overviewVisits">—</strong>
+        </div>
+
+        <div class="dashboard-stat">
+          <div class="stat-icon">●</div>
+          <small>АКТИВНИ ПОСЕТИТЕЛИ</small>
+          <strong id="overviewActive">—</strong>
+        </div>
+      </div>
+
+      <h2>БЪРЗ ДОСТЪП</h2>
+
+      <div class="dashboard-actions">
+        <button class="dashboard-action" data-open-view="registrations">
+          <strong>РЕГИСТРИРАНИ УЧАСТНИЦИ</strong>
+          <span>Преглед на записаните за турнирите играчи</span>
+        </button>
+
+        <button class="dashboard-action" data-open-view="matches">
+          <strong>УПРАВЛЕНИЕ НА ДВУБОИТЕ</strong>
+          <span>Резултати и победители от мачовете</span>
+        </button>
+
+        <button class="dashboard-action" data-open-view="bracket">
+          <strong>ТУРНИРНА СХЕМА</strong>
+          <span>Създаване и преглед на схемата</span>
+        </button>
+
+        <button class="dashboard-action" data-open-view="analytics">
+          <strong>АНАЛИТИКА</strong>
+          <span>Посещения и активност на сайта</span>
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="view-heading">
+          <h2>СЪСТОЯНИЕ НА ПАНЕЛА</h2>
+          <button id="refreshButton">ОБНОВИ ДАННИТЕ</button>
+        </div>
+        <p class="message" id="dashboardMessage">Данните се зареждат...</p>
+      </div>
+    </div>
+
+    <!-- BRACKET PANEL -->
+    <div class="admin-view" id="bracketPanel">
+      <div class="view-heading">
+        <h2>УПРАВЛЕНИЕ НА ТУРНИРНАТА СХЕМА</h2>
+        <button class="back-dashboard">КЪМ ТАБЛОТО</button>
+      </div>
+      <div class="card">
+        <p class="message">Създаване на турнирна схема за регистрираните участници.</p>
+        <button id="generateBracketButton">СЪЗДАЙ ТУРНИРНА СХЕМА</button>
+        <p id="bracketMessage" class="message"></p>
+      </div>
+    </div>
+
+    <!-- MATCHES PANEL -->
+    <div class="admin-view" id="matchesPanel">
+      <div class="view-heading">
+        <h2>УПРАВЛЕНИЕ НА ДВУБОИТЕ</h2>
+        <button class="back-dashboard">КЪМ ТАБЛОТО</button>
+      </div>
+      <div class="card">
+        <p class="message">Въведи резултата от двубоя и избери победителя.</p>
+        <button id="refreshBracketButton">ОБНОВИ ДВУБОИТЕ</button>
+        <p id="matchesMessage" class="message">Зареждане...</p>
+        <div id="matchesContainer"></div>
+      </div>
+    </div>
+
+    <!-- REGISTRATIONS PANEL -->
+    <div class="admin-view" id="registrationsPanel">
+      <div class="view-heading">
+        <h2>РЕГИСТРИРАНИ УЧАСТНИЦИ</h2>
+        <button class="back-dashboard">КЪМ ТАБЛОТО</button>
+      </div>
+      <div class="card">
+        <p id="registrationMessage" class="message">Зареждане...</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ИГРАЧ</th>
+                <th>ИМЕЙЛ</th>
+                <th>GAME ID</th>
+                <th>ТУРНИР</th>
+                <th>ДАТА</th>
+              </tr>
+            </thead>
+            <tbody id="registrationsList"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLAYERS PANEL -->
+    <div class="admin-view" id="playersPanel">
+      <div class="view-heading">
+        <h2>ВСИЧКИ ИГРАЧИ</h2>
+        <button class="back-dashboard">КЪМ ТАБЛОТО</button>
+      </div>
+      <div class="card">
+        <p id="playersMessage" class="message">Зареждане...</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ИГРАЧ</th>
+                <th>ИМЕЙЛ</th>
+                <th>GAME ID</th>
+              </tr>
+            </thead>
+            <tbody id="playersList"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS PANEL -->
+    <div class="admin-view" id="analyticsPanel">
+      <div class="view-heading">
+        <h2>АНАЛИТИКА НА ПОСЕЩЕНИЯТА</h2>
+        <button class="back-dashboard">КЪМ ТАБЛОТО</button>
+      </div>
+
+      <div class="card" id="analyticsSection">
+        <div class="analytics-heading">
+          <h2>СТАТИСТИКА НА ПОСЕЩЕНИЯТА</h2>
+          <button id="refreshAnalyticsButton">ОБНОВИ СТАТИСТИКАТА</button>
+        </div>
+
+        <p id="analyticsMessage" class="message">Зареждане...</p>
+
+        <div class="analytics-grid">
+          <div class="analytics-stat">
+            <small>ОБЩО ПОСЕЩЕНИЯ</small>
+            <strong id="totalVisits">—</strong>
+          </div>
+          <div class="analytics-stat">
+            <small>УНИКАЛНИ ПОСЕТИТЕЛИ</small>
+            <strong id="uniqueVisitors">—</strong>
+          </div>
+          <div class="analytics-stat">
+            <small>ПОСЕЩЕНИЯ ДНЕС</small>
+            <strong id="todayVisits">—</strong>
+          </div>
+          <div class="analytics-stat">
+            <small>ПОСЛЕДНИТЕ 7 ДНИ</small>
+            <strong id="weekVisits">—</strong>
+          </div>
+          <div class="analytics-stat active">
+            <small>АКТИВНИ В МОМЕНТА</small>
+            <strong id="activeVisitors">—</strong>
+          </div>
+        </div>
+
+        <h3>ПОСЕЩАЕМОСТ ПРЕЗ ПОСЛЕДНИТЕ 30 ДНИ</h3>
+        <div class="analytics-chart-wrap">
+          <canvas id="visitsChart"></canvas>
+        </div>
+
+        <h3>ИСТОРИЯ ПО ДАТИ</h3>
+        <div class="table-wrap">
+          <table class="analytics-table">
+            <thead>
+              <tr>
+                <th>ДАТА</th>
+                <th>ПОСЕЩЕНИЯ</th>
+              </tr>
+            </thead>
+            <tbody id="analyticsHistory"></tbody>
+          </table>
+        </div>
+
+        <p class="analytics-note">
+          Уникалните посетители се определят чрез случаен идентификатор
+          в браузъра. Активен посетител означава активност през
+          последните 3 минути.
+        </p>
+      </div>
+    </div>
+
   </div>
-
-  <h3>ИСТОРИЯ ПО ДАТИ</h3>
-  <div class="table-wrap">
-    <table class="analytics-table">
-      <thead>
-        <tr>
-          <th>ДАТА</th>
-          <th>ПОСЕЩЕНИЯ</th>
-        </tr>
-      </thead>
-      <tbody id="analyticsHistory"></tbody>
-    </table>
-  </div>
-
-  <p class="analytics-note">
-    Уникалните посетители се определят чрез случаен идентификатор
-    в браузъра. Активен посетител означава активност през
-    последните 3 минути.
-  </p>
-</div>
-
-<div class="card">
-<h2>УПРАВЛЕНИЕ НА ТУРНИРНАТА СХЕМА</h2>
-<button id="generateBracketButton">СЪЗДАЙ ТУРНИРНА СХЕМА</button>
-<p id="bracketMessage" class="message"></p>
-</div>
-
-<div class="card">
-<h2>УПРАВЛЕНИЕ НА ДВУБОИТЕ</h2>
-<p class="message">Въведи резултата от двубоя и избери победителя.</p>
-<button id="refreshBracketButton">ОБНОВИ ДВУБОИТЕ</button>
-<p id="matchesMessage" class="message">Зареждане...</p>
-<div id="matchesContainer"></div>
-</div>
-
-<div class="card">
-<h2>РЕГИСТРИРАНИ УЧАСТНИЦИ</h2>
-<p id="registrationMessage" class="message">Зареждане...</p>
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>ИГРАЧ</th>
-<th>ИМЕЙЛ</th>
-<th>GAME ID</th>
-<th>ТУРНИР</th>
-<th>ДАТА</th>
-</tr>
-</thead>
-<tbody id="registrationsList"></tbody>
-</table>
-</div>
-</div>
-
-<div class="card">
-<h2>ВСИЧКИ ИГРАЧИ</h2>
-<p id="playersMessage" class="message">Зареждане...</p>
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>ИГРАЧ</th>
-<th>ИМЕЙЛ</th>
-<th>GAME ID</th>
-</tr>
-</thead>
-<tbody id="playersList"></tbody>
-</table>
-</div>
-</div>
-
-<button id="refreshButton">ОБНОВИ ДАННИТЕ</button>
-<button id="logoutButton">ИЗХОД</button>
-
-</div>
 </section>
 
 <footer>SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY</footer>
@@ -262,6 +614,77 @@ function createCell(row,value){
   row.appendChild(cell);
 }
 
+/* ADMIN MENU */
+
+const sideMenu=document.getElementById("sideMenu");
+const menuOverlay=document.getElementById("menuOverlay");
+
+function openAdminMenu(){
+  sideMenu.classList.add("open");
+  menuOverlay.classList.add("open");
+}
+
+function closeAdminMenu(){
+  sideMenu.classList.remove("open");
+  menuOverlay.classList.remove("open");
+}
+
+function showAdminView(viewName){
+  document.querySelectorAll(".admin-view").forEach(panel=>{
+    panel.classList.remove("active");
+  });
+
+  const selected=document.getElementById(viewName+"Panel");
+  if(selected)selected.classList.add("active");
+
+  document.querySelectorAll(".menu-item[data-view]").forEach(item=>{
+    item.classList.toggle("active",item.dataset.view===viewName);
+  });
+
+  closeAdminMenu();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+document.getElementById("openMenuButton")
+  .addEventListener("click",openAdminMenu);
+
+document.getElementById("closeMenuButton")
+  .addEventListener("click",closeAdminMenu);
+
+menuOverlay.addEventListener("click",closeAdminMenu);
+
+document.querySelectorAll(".menu-item[data-view]").forEach(item=>{
+  item.addEventListener("click",()=>{
+    showAdminView(item.dataset.view);
+  });
+});
+
+document.querySelectorAll("[data-open-view]").forEach(button=>{
+  button.addEventListener("click",()=>{
+    showAdminView(button.dataset.openView);
+  });
+});
+
+document.querySelectorAll(".back-dashboard").forEach(button=>{
+  button.addEventListener("click",()=>{
+    showAdminView("dashboard");
+  });
+});
+
+document.getElementById("menuLogoutButton")
+  .addEventListener("click",async()=>{
+    await db.auth.signOut();
+    window.location.href="profile.html";
+  });
+
+document.getElementById("menuRefreshButton")
+  .addEventListener("click",async()=>{
+    closeAdminMenu();
+    await refreshAllAdminData();
+  });
+
+/* REGISTRATIONS */
+
 async function loadRegistrations(){
   const message=document.getElementById("registrationMessage");
   const list=document.getElementById("registrationsList");
@@ -273,15 +696,18 @@ async function loadRegistrations(){
 
   if(error){
     message.textContent="Грешка: "+error.message;
+    document.getElementById("overviewRegistrations").textContent="!";
     return;
   }
 
   if(!data||data.length===0){
     message.textContent="Няма регистрации.";
+    document.getElementById("overviewRegistrations").textContent="0";
     return;
   }
 
   message.textContent="Общо регистрации: "+data.length;
+  document.getElementById("overviewRegistrations").textContent=formatNumber(data.length);
 
   data.forEach(player=>{
     const row=document.createElement("tr");
@@ -297,6 +723,7 @@ async function loadRegistrations(){
     list.appendChild(row);
   });
 }
+  /* ALL PLAYERS */
 
 async function loadPlayers(){
   const message=document.getElementById("playersMessage");
@@ -309,15 +736,18 @@ async function loadPlayers(){
 
   if(error){
     message.textContent="Грешка: "+error.message;
+    document.getElementById("overviewPlayers").textContent="!";
     return;
   }
 
   if(!data||data.length===0){
     message.textContent="Няма намерени играчи.";
+    document.getElementById("overviewPlayers").textContent="0";
     return;
   }
 
   message.textContent="Общо играчи: "+data.length;
+  document.getElementById("overviewPlayers").textContent=formatNumber(data.length);
 
   data.forEach(player=>{
     const row=document.createElement("tr");
@@ -329,6 +759,8 @@ async function loadPlayers(){
     list.appendChild(row);
   });
 }
+
+/* ANALYTICS */
 
 function formatNumber(value){
   return Number(value||0).toLocaleString("bg-BG");
@@ -367,6 +799,9 @@ async function loadAnalytics(){
   document.getElementById("todayVisits").textContent=formatNumber(data.today);
   document.getElementById("weekVisits").textContent=formatNumber(data.last_7_days);
   document.getElementById("activeVisitors").textContent=formatNumber(data.active_now);
+
+  document.getElementById("overviewVisits").textContent=formatNumber(data.total_visits);
+  document.getElementById("overviewActive").textContent=formatNumber(data.active_now);
 
   const daily=Array.isArray(data.daily)?data.daily:[];
   window.lastAnalyticsDaily=daily;
@@ -497,6 +932,8 @@ window.addEventListener("resize",()=>{
   }
 });
 
+/* BRACKET AND MATCHES */
+
 async function loadAdminData(){
   await loadRegistrations();
   await loadPlayers();
@@ -523,15 +960,18 @@ async function loadBracket(){
 
   if(error){
     message.textContent="Грешка при зареждане: "+error.message;
+    document.getElementById("overviewMatches").textContent="!";
     return;
   }
 
   if(!data||data.length===0){
     message.textContent="Все още няма създадена турнирна схема.";
+    document.getElementById("overviewMatches").textContent="0";
     return;
   }
 
   message.textContent="Общо двубои: "+data.length;
+  document.getElementById("overviewMatches").textContent=formatNumber(data.length);
 
   const rounds={};
 
@@ -722,6 +1162,27 @@ function createMatchCard(match){
   return card;
 }
 
+/* REFRESH ALL DATA */
+
+async function refreshAllAdminData(){
+  const message=document.getElementById("dashboardMessage");
+  const button=document.getElementById("refreshButton");
+
+  button.disabled=true;
+  button.textContent="ОБНОВЯВАНЕ...";
+  message.textContent="Обновяване на информацията...";
+
+  await loadAdminData();
+  await loadBracket();
+  await loadAnalytics();
+
+  message.textContent="Данните са обновени.";
+  button.disabled=false;
+  button.textContent="ОБНОВИ ДАННИТЕ";
+}
+
+/* ADMIN ACCESS */
+
 async function checkAdminAccess(){
   const message=document.getElementById("accessMessage");
 
@@ -740,25 +1201,19 @@ async function checkAdminAccess(){
   message.textContent="Администраторски достъп потвърден.";
   document.getElementById("adminContent").style.display="block";
 
-  await loadAdminData();
-  await loadBracket();
-  await loadAnalytics();
+  await refreshAllAdminData();
 }
 
+/* BUTTON EVENTS */
+
 document.getElementById("refreshButton")
-  .addEventListener("click",loadAdminData);
+  .addEventListener("click",refreshAllAdminData);
 
 document.getElementById("refreshBracketButton")
   .addEventListener("click",loadBracket);
 
 document.getElementById("refreshAnalyticsButton")
   .addEventListener("click",loadAnalytics);
-
-document.getElementById("logoutButton")
-  .addEventListener("click",async()=>{
-    await db.auth.signOut();
-    window.location.href="profile.html";
-  });
 
 document.getElementById("generateBracketButton")
   .addEventListener("click",async function(){
@@ -790,5 +1245,4 @@ checkAdminAccess();
 </script>
 
 </body>
-    </html>
-      
+</html>
