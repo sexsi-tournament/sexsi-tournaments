@@ -96,8 +96,8 @@ section{padding:40px 5%}
 <section id="modes">
 <div class="heading">РЕЖИМИ НА ИГРА</div>
 <div class="modes">
-<div class="mode"><strong>1V1</strong><p>Един срешу един</p></div>
-<div class="mode"><strong>2V2</strong><p>Двама срешу двама</p></div>
+<div class="mode"><strong>1V1</strong><p>Един срещу един</p></div>
+<div class="mode"><strong>2V2</strong><p>Двама срещу двама</p></div>
 <div class="mode"><strong>5V5</strong><p>Отборен мач 5vs5</p></div>
 </div>
 </section>
@@ -147,7 +147,7 @@ section{padding:40px 5%}
   <p>📅 Краен срок: 25.11.2026</p>
   <p>🏆 Турнир: 02.12.2026</p>
 
-  <a class="btn" href="#register">РЕГИСТРИРАЙ СЕ</a>
+  <a class="btn" href="register.html">РЕГИСТРИРАЙ СЕ</a>
 </div>
 <div class="card">
 <div class="status">● ОЧАКВАЙТЕ СКОРО</div>
@@ -190,128 +190,8 @@ const sexsiSupabase = window.supabase.createClient(
 
 window.sexsiSupabase = sexsiSupabase;
 </script>
-<section id="register">
-  <h2>Потребителски профил</h2>
 
-<h3>СЪЗДАЙ АКАУНТ</h3>
-<form id="registerForm">
-  <input id="username" type="text" placeholder="Username" required>
-  <input id="playerGameId" type="text" placeholder="Твоето ID в Standoff 2" required>
-  <input id="email" type="email" placeholder="Email" required>
-  <input id="password" type="password" placeholder="Password (minimum 6 characters)" required>
-  <button type="submit">СЪЗДАЙ АКАУНТ</button>
-</form>
-  <p id="registerMessage"></p>
 
-  <hr>
-
-  <h3>ВЛЕЗ</h3>
-  <form id="loginForm">
-    <input id="loginEmail" type="email" placeholder="Email" required>
-    <input id="loginPassword" type="password" placeholder="Password" required>
-    <button type="submit">ВЛЕЗ</button>
-  </form>
-  <p id="loginMessage"></p>
-</section>
-<section id="playerDashboard" style="display:none;">
-  <h2>ПРОФИЛ НА ИГРАЧА</h2>
-<div id="adminPanel" style="display:none;margin-top:30px;">
-  <div style="overflow-x:auto;margin-top:20px;">
-  <table style="width:100%;border-collapse:collapse;text-align:left;min-width:600px;">
-    <thead>
-      <tr style="background:#ed252d;color:white;">
-        <th style="padding:12px;">ИГРАЧ</th>
-        <th style="padding:12px;">ИМЕЙЛ</th>
-        <th style="padding:12px;">PLAYER ID</th>
-        <th style="padding:12px;">ТУРНИР</th>
-        <th style="padding:12px;">ДАТА</th>
-      </tr>
-    </thead>
-    <tbody id="registrationsList"></tbody>
-  </table>
-  </div>
-  <hr style="border-color:#ed252d;">
-  <h2 style="color:#ed252d;">АДМИНИСТРАТОР</h2>
-  
-<div style="margin:25px 0;padding:20px;background:#151515;border:1px solid #ed252d;border-radius:10px;">
-  <h3 style="color:#ed252d;">ВЪВЕЖДАНЕ НА РЕЗУЛТАТ</h3>
-
-  <form id="matchForm">
-
-  <select id="bracketMatch" required>
-    <option value="">Избери мач</option>
-  </select>
-
-  <input
-    id="bracketScore1"
-    type="number"
-    min="0"
-    required
-    placeholder="Резултат на първия играч"
-  >
-
-  <input
-    id="bracketScore2"
-    type="number"
-    min="0"
-    required
-    placeholder="Резултат на втория играч"
-  >
-
-  <button type="submit">ЗАПИШИ РЕЗУЛТАТА</button>
-
-  </form>
-
-  <p id="matchMessage"></p>
-</div>
-  
-  <h3>РЕГИСТРАЦИЯ ЗА ТУРНИР</h3>
-  <p id="adminMessage">Зареждане на регистрациите...</p>
-</div>
-  <h3 id="playerName">ИГРАЧ</h3>
-<p id="playerEmail"></p>
-
-<p style="color:#999;font-size:13px;">
-  ТВОЕТО ID В STANDOFF 2:
-  <span id="playerId" style="color:#ed252d;">НЯМА ДОБАВЕНО ID</span>
-</p>
-
-<div style="margin:15px 0;">
-  <input
-    id="editPlayerGameId"
-    type="text"
-    placeholder="Въведи ID в Standoff 2"
-  >
-  <button id="savePlayerGameId" type="button">ЗАПАЗИ ID</button>
-  <p id="playerGameIdMessage"></p>
-</div>
-
-<hr style="border-color:#333;">
-
-  <p>ДОБРЕ ДОШЛИ ВЪВ SEXSI ТУРНИРИТЕ!</p>
-<div style="margin-top:25px;">
-  <h3>НАЛИЧНИ ТУРНИРИ</h3>
-
-  <div class="card">
-    <h3>SEXSI 1V1 CUP #001</h3>
-    <p>ИГРА: STANDOFF 2</p>
-    <p>Режим: 1V1</p>
-    <p>Играчи: 16</p>
-    <p>Вход: FREE</p>
-
-    <button id="joinTournament" type="button">
-      ВКЛЮЧИ СЕ В ТУРНИР
-    </button>
-    <p id="participantCount" style="text-align:center;color:#00d68f;font-weight:bold;margin-top:10px">
-  Записани участници: зареждане...
-    </p>
-
-    <p id="joinMessage"></p>
-    <p id="tournamentFullMessage" style="text-align:center;color:#ff4444;font-weight:bold"></p>
-  </div>
-</div>
-  <button id="logoutButton" type="button">LOG OUT</button>
-</section>
   <script>
   async function loadAdminRegistrations() {
   const message = document.getElementById("adminMessage");
@@ -435,212 +315,14 @@ playerIdInput.value = savedPlayerId || "";
   }
 });
     
-(async function restorePlayerSession() {
-  const { data, error } =
-    await window.sexsiSupabase.auth.getSession();
 
-  if (error || !data.session) return;
-
-  const user = data.session.user;
-
-  document.getElementById("register").style.display = "none";
-  document.getElementById("playerDashboard").style.display = "block";
-
-  document.getElementById("playerName").textContent =
-    user.user_metadata.username || "PLAYER";
-
-  document.getElementById("playerEmail").textContent =
-    user.email || "";
-
-  const { data: savedPlayerId } =
-    await window.sexsiSupabase.rpc("sexsi_get_my_player_id");
-
-  document.getElementById("playerId").textContent =
-    savedPlayerId || "НЯМА ДОБАВЕНО ID";
-
-  document.getElementById("editPlayerGameId").value =
-    savedPlayerId || "";
-
-  if (user.id === "13f1ada8-cd05-4c31-8940-4fb1790cb90e") {
-    document.getElementById("adminPanel").style.display = "block";
-    document.getElementById("generateBracketButton").style.display = "block";
-
-    loadAdminRegistrations();
-    loadAdminPlayers();
-  } else {
-    document.getElementById("adminPanel").style.display = "none";
-    document.getElementById("generateBracketButton").style.display = "none";
-  }
-})();
     
-    document.getElementById("savePlayerGameId").addEventListener("click", async function() {
-  const playerGameId = document.getElementById("editPlayerGameId").value.trim();
-  const message = document.getElementById("playerGameIdMessage");
-  const display = document.getElementById("playerId");
-
-  if (!playerGameId) {
-    message.textContent = "Въведи ID в Standoff 2!";
-    return;
-  }
-
-  message.textContent = "Запазване...";
-
-  const { error } = await window.sexsiSupabase.rpc("sexsi_set_my_player_id", {
-    p_player_id: playerGameId
-  });
-
-  if (error) {
-    message.textContent = "Грешка: " + error.message;
-    return;
-  }
-
-  display.textContent = playerGameId;
-  message.textContent = "ID-то е запазено успешно!";
-});
    
- document.getElementById("matchForm").addEventListener("submit", async function(event) {
-  event.preventDefault();
+ 
 
-  const db = window.sexsiSupabase;
-  const message = document.getElementById("matchMessage");
-  const matchId = document.getElementById("bracketMatch").value;
-  const score1 = Number(document.getElementById("bracketScore1").value);
-  const score2 = Number(document.getElementById("bracketScore2").value);
-
-  if (!matchId || score1 === score2) {
-    message.textContent = "Избери мач и въведи различни резултати.";
-    return;
-  }
-
-  const { data: matches, error: loadError } =
-    await db.rpc("sexsi_get_bracket");
-
-  if (loadError) {
-    message.textContent = "Грешка: " + loadError.message;
-    return;
-  }
-
-  const match = matches.find(m => m.id === matchId);
-
-  if (!match) {
-    message.textContent = "Мачът не е намерен.";
-    return;
-  }
-
-  const winnerId = score1 > score2
-    ? match.player1_id
-    : match.player2_id;
-
-  message.textContent = "Записване...";
-
-  const { data, error } = await db.rpc(
-    "sexsi_admin_submit_bracket_result",
-    {
-      p_match_id: matchId,
-      p_winner_id: winnerId,
-      p_score_player1: score1,
-      p_score_player2: score2
-    }
-  );
-
-  if (error) {
-    message.textContent = "Грешка: " + error.message;
-    return;
-  }
-
-  message.textContent = data;
-
-  document.getElementById("matchForm").reset();
-
-  await loadBracket();
-  await loadRanking();
-});
-document.getElementById("joinTournament").addEventListener("click", async function() {
-  const message = document.getElementById("joinMessage");
-
-  message.textContent = "Registering...";
-const { data: participantCount, error: countError } =
-  await window.sexsiSupabase.rpc("sexsi_get_registration_count");
-
-if (countError) {
-  message.textContent = "Грешка при проверка на свободните места.";
-  return;
-}
-
-if (participantCount >= 16) {
-  message.textContent = "Турнирът е запълнен!";
-  document.getElementById("joinTournament").disabled = true;
-  document.getElementById("tournamentFullMessage").textContent =
-    "ТУРНИРЪТ Е ЗАПЪЛНЕН!";
-  return;
-}
-  const { data: { user }, error: userError } =
-    await window.sexsiSupabase.auth.getUser();
-
-  if (userError || !user) {
-    message.textContent = "Please login first.";
-    return;
-  }
-
-  const { error } = await window.sexsiSupabase
-    .from("tournament_registrations")
-    .insert({
-      tournament_id: "SEXSI-1V1-001",
-      user_id: user.id
-    });
-
-  if (error) {
-    if (error.code === "23505") {
-      message.textContent = "You are already registered!";
-    } else {
-      message.textContent = "Error: " + error.message;
-    }
-    return;
-  }
-
-  message.textContent = "Successfully registered for SEXSI 1V1 CUP #001!";
-setTimeout(loadParticipantCount, 1000);
-});
     
-document.getElementById("logoutButton").addEventListener("click", async function() {
-  const { error } = await window.sexsiSupabase.auth.signOut();
 
-  if (error) {
-    alert("Logout error: " + error.message);
-    return;
-  }
-
-  document.getElementById("playerDashboard").style.display = "none";
-  document.getElementById("adminPanel").style.display = "none";
-  document.getElementById("register").style.display = "block";
-});
- async function loadAdminPlayers() {
-  const winner = document.getElementById("matchWinner");
-  const loser = document.getElementById("matchLoser");
-
-  const { data, error } = await window.sexsiSupabase.rpc("sexsi_admin_players");
-
-  if (error) {
-    document.getElementById("matchMessage").textContent =
-      "Грешка при зареждане на играчите: " + error.message;
-    return;
-  }
-
-  winner.innerHTML = '<option value="">Избери победител</option>';
-  loser.innerHTML = '<option value="">Избери загубил</option>';
-
-  data.forEach((player) => {
-    const option1 = document.createElement("option");
-    option1.value = player.player_id;
-    option1.textContent = player.player_name + " (" + player.player_email + ")";
-    winner.appendChild(option1);
-
-    const option2 = document.createElement("option");
-    option2.value = player.player_id;
-    option2.textContent = player.player_name + " (" + player.player_email + ")";
-    loser.appendChild(option2);
-  });
- }   
+ 
 async function loadRanking() {
   const list = document.getElementById("rankingList");
 
