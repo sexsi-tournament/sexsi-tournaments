@@ -287,6 +287,14 @@ async function loadRanking() {
   </div>
 </section>
   
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+window.sexsiSupabase = window.supabase.createClient(
+  "https://fyxlwcoochsuzhqostpe.supabase.co",
+  "sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP"
+);
+</script>
+
 <script>
 async function loadBracket() {
   const container = document.getElementById("bracketContainer");
