@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#090909">
 <title>Турнири | SEXSI TOURNAMENTS</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#090909;color:#fff;font-family:Arial,sans-serif}
@@ -21,11 +22,19 @@ section{padding:55px 7%}
 .card p{color:#999;font-size:13px}
 .status{color:#48d98a;font-size:11px;font-weight:bold}
 .btn{display:inline-block;background:#ed252d;color:white;padding:15px 24px;text-decoration:none;border-radius:4px;font-weight:bold;margin-top:20px}
+.btn.disabled{background:#555;pointer-events:none}
 footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
-@media(max-width:600px){header{padding:18px 4%}nav a{margin-left:8px;font-size:10px}section{padding:40px 5%}}
+
+@media(max-width:600px){
+header{padding:18px 4%}
+nav a{margin-left:8px;font-size:10px}
+section{padding:40px 5%}
+}
 </style>
 </head>
+
 <body>
+
 <header>
 <div class="logo">SEXSI<span>.</span></div>
 <nav>
@@ -38,9 +47,12 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 
 <section>
 <div class="heading">ПРЕДСТОЯЩИ ТУРНИРИ</div>
+
 <div class="cards">
+
 <div class="card">
-<div class="status">● ОТВОРЕНО ЗА РЕГИСТРАЦИЯ</div>
+<div class="status" id="tournamentStatus">● ОТВОРЕНО ЗА РЕГИСТРАЦИЯ</div>
+
 <h3>SEXSI 1V1 CUP #001</h3>
 <p>🎮 Игра: STANDOFF 2</p>
 <p>⚔️ Режим: 1V1 • BO1</p>
@@ -49,25 +61,29 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 <p>🏆 Награда: 5 000 GOLD</p>
 <p>📅 Краен срок: 25.11.2026</p>
 <p>🏆 Турнир: 02.12.2026</p>
-<a class="btn" href="profile.html">РЕГИСТРИРАЙ СЕ</a>
+
+<a class="btn" id="registrationButton" href="profile.html">РЕГИСТРИРАЙ СЕ</a>
 </div>
+
 <div class="card">
 <div class="status">● ОЧАКВАЙТЕ СКОРО</div>
 <h3>SEXSI 2V2 CUP</h3>
 <p>Игра: STANDOFF 2</p>
 <p>Режим: 2V2</p>
 </div>
+
 <div class="card">
 <div class="status">● ОЧАКВАЙТЕ СКОРО</div>
 <h3>SEXSI 5V5 CUP</h3>
 <p>Игра: STANDOFF 2</p>
 <p>Режим: 5V5</p>
 </div>
+
 </div>
 </section>
 
 <footer>SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY</footer>
-  
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -78,30 +94,48 @@ const tournamentSupabase = window.supabase.createClient(
 
 async function loadParticipantCount() {
   const countElement = document.getElementById("participantCount");
+  const statusElement = document.getElementById("tournamentStatus");
+  const button = document.getElementById("registrationButton");
 
   const { data, error } = await tournamentSupabase.rpc(
     "sexsi_get_registration_count"
   );
 
   if (error) {
-    countElement.textContent = "Грешка";
-    console.error(error);
+    countElement.textContent = "Временно недостъпно";
+    console.error("Registration count error:", error.message);
     return;
   }
 
-  let count = data;
+  const count = Number(data);
 
-  if (Array.isArray(data)) {
-    count = data[0]?.count ?? data[0]?.registration_count;
-  } else if (data && typeof data === "object") {
-    count = data.count ?? data.registration_count;
+  if (!Number.isInteger(count) || count < 0) {
+    countElement.textContent = "Временно недостъпно";
+    return;
   }
 
-  countElement.textContent = count ?? 0;
+  countElement.textContent = count;
+
+  if (count >= 16) {
+    statusElement.textContent = "● МЕСТАТА СА ЗАПЪЛНЕНИ";
+    statusElement.style.color = "#ff454b";
+
+    button.textContent = "МЕСТАТА СА ЗАПЪЛНЕНИ";
+    button.classList.add("disabled");
+    button.removeAttribute("href");
+  } else {
+    statusElement.textContent = "● ОТВОРЕНО ЗА РЕГИСТРАЦИЯ";
+    statusElement.style.color = "#48d98a";
+
+    button.textContent = "РЕГИСТРИРАЙ СЕ";
+    button.classList.remove("disabled");
+    button.href = "profile.html";
+  }
 }
 
 loadParticipantCount();
+setInterval(loadParticipantCount, 5000);
 </script>
-  
+
 </body>
 </html>
