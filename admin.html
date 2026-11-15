@@ -224,7 +224,29 @@ document.getElementById("logoutButton").addEventListener("click", async function
   await db.auth.signOut();
   window.location.href = "profile.html";
 });
+document.getElementById("generateBracketButton").addEventListener("click", async function() {
+  const button = this;
+  const message = document.getElementById("bracketMessage");
 
+  if (!confirm("Сигурен ли си, че искаш да създадеш турнирната схема?")) {
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "СЪЗДАВАНЕ...";
+  message.textContent = "";
+
+  const { data, error } = await db.rpc("sexsi_admin_generate_bracket");
+
+  if (error) {
+    message.textContent = "Грешка: " + error.message;
+  } else {
+    message.textContent = data;
+  }
+
+  button.disabled = false;
+  button.textContent = "СЪЗДАЙ ТУРНИРНА СХЕМА";
+});
 checkAdminAccess();
 </script>
 
