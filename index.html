@@ -550,7 +550,6 @@ footer{
 <footer>SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
 (function(){
 
@@ -775,6 +774,84 @@ footer{
 
   db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
   window.sexsiSupabase = db;
+
+  /* PRIVATE VISITOR ANALYTICS */
+
+  function getVisitorId(){
+    const storageKey = "sexsi_visitor_id";
+
+    try{
+      let visitorId = localStorage.getItem(storageKey);
+
+      if(!visitorId){
+        if(window.crypto && typeof crypto.randomUUID === "function"){
+          visitorId = crypto.randomUUID();
+        }else{
+          visitorId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,function(c){
+            const r = Math.random()*16|0;
+            const v = c === "x" ? r : (r&0x3|0x8);
+            return v.toString(16);
+          });
+        }
+
+        localStorage.setItem(storageKey,visitorId);
+      }
+
+      return visitorId;
+
+    }catch(error){
+      console.error("Visitor ID error:",error);
+      return null;
+    }
+  }
+
+  const visitorId = getVisitorId();
+
+  async function trackVisit(){
+    if(!visitorId) return;
+
+    try{
+      const {error} = await db.rpc("sexsi_track_visit",{
+        p_visitor_id:visitorId,
+        p_page:"index.html"
+      });
+
+      if(error){
+        console.error("Visit tracking error:",error.message);
+      }
+    }catch(error){
+      console.error("Visit tracking error:",error);
+    }
+  }
+
+  async function trackHeartbeat(){
+    if(!visitorId) return;
+
+    try{
+      const {error} = await db.rpc("sexsi_track_heartbeat",{
+        p_visitor_id:visitorId
+      });
+
+      if(error){
+        console.error("Heartbeat error:",error.message);
+      }
+    }catch(error){
+      console.error("Heartbeat error:",error);
+    }
+  }
+
+  trackVisit();
+  trackHeartbeat();
+
+  setInterval(trackHeartbeat,60000);
+
+  document.addEventListener("visibilitychange",()=>{
+    if(!document.hidden){
+      trackHeartbeat();
+    }
+  });
+
+  /* END PRIVATE VISITOR ANALYTICS */
 
   loadRegistrationCount();
   updateCountdown();
