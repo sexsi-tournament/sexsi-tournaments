@@ -36,12 +36,77 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 .match-save{margin-top:12px;width:100%}
 .match-status{color:#aaa;font-size:13px;margin-top:12px}
 .round-heading{color:#ed252d;margin-top:28px;border-bottom:1px solid #333;padding-bottom:8px}
+
+/* PRIVATE ANALYTICS */
+.analytics-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;
+  margin:20px 0;
+}
+.analytics-stat{
+  background:#101010;
+  border:1px solid #303030;
+  border-radius:7px;
+  padding:17px;
+  min-width:0;
+}
+.analytics-stat small{
+  display:block;
+  color:#999;
+  font-size:11px;
+  margin-bottom:12px;
+  line-height:1.4;
+}
+.analytics-stat strong{
+  display:block;
+  color:#fff;
+  font-size:27px;
+  overflow-wrap:anywhere;
+}
+.analytics-stat.active strong{color:#35d07f}
+.analytics-chart-wrap{
+  width:100%;
+  height:260px;
+  position:relative;
+  margin-top:15px;
+}
+#visitsChart{
+  width:100%;
+  height:100%;
+  display:block;
+}
+.analytics-note{
+  color:#888;
+  font-size:12px;
+  line-height:1.6;
+}
+.analytics-table{min-width:0}
+.analytics-table th{background:#202020}
+.analytics-table td,.analytics-table th{padding:11px}
+.analytics-heading{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.analytics-heading h2{margin:0}
+.analytics-error{color:#ff5555}
+
+@media(max-width:900px){
+  .analytics-grid{grid-template-columns:repeat(3,1fr)}
+}
 @media(max-width:600px){
-header{padding:18px 4%}
-nav a{margin-left:7px;font-size:10px}
-section{padding:25px 4%}
-.match-players{grid-template-columns:1fr}
-.match-controls{grid-template-columns:1fr 1fr}
+  header{padding:18px 4%}
+  nav a{margin-left:7px;font-size:10px}
+  section{padding:25px 4%}
+  .match-players{grid-template-columns:1fr}
+  .match-controls{grid-template-columns:1fr 1fr}
+  .analytics-grid{grid-template-columns:repeat(2,1fr)}
+  .analytics-stat strong{font-size:23px}
+  .analytics-stat{padding:13px}
+  .analytics-chart-wrap{height:220px}
 }
 </style>
 </head>
@@ -66,6 +131,63 @@ section{padding:25px 4%}
 </div>
 
 <div id="adminContent">
+
+<!-- PRIVATE VISITOR ANALYTICS -->
+<div class="card" id="analyticsSection">
+  <div class="analytics-heading">
+    <h2>СТАТИСТИКА НА ПОСЕЩЕНИЯТА</h2>
+    <button id="refreshAnalyticsButton">ОБНОВИ СТАТИСТИКАТА</button>
+  </div>
+
+  <p id="analyticsMessage" class="message">Зареждане...</p>
+
+  <div class="analytics-grid">
+    <div class="analytics-stat">
+      <small>ОБЩО ПОСЕЩЕНИЯ</small>
+      <strong id="totalVisits">—</strong>
+    </div>
+    <div class="analytics-stat">
+      <small>УНИКАЛНИ ПОСЕТИТЕЛИ</small>
+      <strong id="uniqueVisitors">—</strong>
+    </div>
+    <div class="analytics-stat">
+      <small>ПОСЕЩЕНИЯ ДНЕС</small>
+      <strong id="todayVisits">—</strong>
+    </div>
+    <div class="analytics-stat">
+      <small>ПОСЛЕДНИТЕ 7 ДНИ</small>
+      <strong id="weekVisits">—</strong>
+    </div>
+    <div class="analytics-stat active">
+      <small>АКТИВНИ В МОМЕНТА</small>
+      <strong id="activeVisitors">—</strong>
+    </div>
+  </div>
+
+  <h3>ПОСЕЩАЕМОСТ ПРЕЗ ПОСЛЕДНИТЕ 30 ДНИ</h3>
+  <div class="analytics-chart-wrap">
+    <canvas id="visitsChart"></canvas>
+  </div>
+
+  <h3>ИСТОРИЯ ПО ДАТИ</h3>
+  <div class="table-wrap">
+    <table class="analytics-table">
+      <thead>
+        <tr>
+          <th>ДАТА</th>
+          <th>ПОСЕЩЕНИЯ</th>
+        </tr>
+      </thead>
+      <tbody id="analyticsHistory"></tbody>
+    </table>
+  </div>
+
+  <p class="analytics-note">
+    Уникалните посетители се определят чрез случаен идентификатор
+    в браузъра. Активен посетител означава активност през
+    последните 3 минути.
+  </p>
+</div>
 
 <div class="card">
 <h2>УПРАВЛЕНИЕ НА ТУРНИРНАТА СХЕМА</h2>
@@ -208,6 +330,179 @@ async function loadPlayers(){
   });
 }
 
+function formatNumber(value){
+  return Number(value||0).toLocaleString("bg-BG");
+}
+
+function formatDate(dateString){
+  const parts=dateString.split("-");
+  return parts[2]+"."+parts[1]+"."+parts[0];
+}
+
+async function loadAnalytics(){
+  const message=document.getElementById("analyticsMessage");
+  const button=document.getElementById("refreshAnalyticsButton");
+
+  message.textContent="Зареждане на статистиката...";
+  message.classList.remove("analytics-error");
+  button.disabled=true;
+
+  const {data,error}=await db.rpc("sexsi_admin_analytics");
+
+  button.disabled=false;
+
+  if(error){
+    message.textContent="Грешка при зареждане: "+error.message;
+    message.classList.add("analytics-error");
+    return;
+  }
+
+  if(!data){
+    message.textContent="Няма върнати статистически данни.";
+    return;
+  }
+
+  document.getElementById("totalVisits").textContent=formatNumber(data.total_visits);
+  document.getElementById("uniqueVisitors").textContent=formatNumber(data.unique_visitors);
+  document.getElementById("todayVisits").textContent=formatNumber(data.today);
+  document.getElementById("weekVisits").textContent=formatNumber(data.last_7_days);
+  document.getElementById("activeVisitors").textContent=formatNumber(data.active_now);
+
+  const daily=Array.isArray(data.daily)?data.daily:[];
+  window.lastAnalyticsDaily=daily;
+
+  drawVisitsChart(daily);
+  renderAnalyticsHistory(daily);
+
+  message.textContent="Статистиката е обновена успешно.";
+}
+
+function renderAnalyticsHistory(daily){
+  const list=document.getElementById("analyticsHistory");
+  list.innerHTML="";
+
+  [...daily].reverse().forEach(item=>{
+    const row=document.createElement("tr");
+    createCell(row,formatDate(item.date));
+    createCell(row,formatNumber(item.visits));
+    list.appendChild(row);
+  });
+
+  if(daily.length===0){
+    const row=document.createElement("tr");
+    const cell=document.createElement("td");
+    cell.colSpan=2;
+    cell.textContent="Все още няма данни.";
+    row.appendChild(cell);
+    list.appendChild(row);
+  }
+}
+</script>
+
+function drawVisitsChart(daily){
+  const canvas=document.getElementById("visitsChart");
+  if(!canvas)return;
+
+  const ctx=canvas.getContext("2d");
+  const width=canvas.clientWidth;
+  const height=canvas.clientHeight;
+  const ratio=window.devicePixelRatio||1;
+
+  canvas.width=width*ratio;
+  canvas.height=height*ratio;
+  ctx.setTransform(ratio,0,0,ratio,0,0);
+  ctx.clearRect(0,0,width,height);
+
+  const padding={top:15,right:12,bottom:35,left:35};
+  const chartWidth=width-padding.left-padding.right;
+  const chartHeight=height-padding.top-padding.bottom;
+
+  const values=daily.map(item=>Number(item.visits)||0);
+  const maxValue=Math.max(5,...values);
+
+  ctx.font="11px Arial";
+  ctx.textAlign="right";
+  ctx.textBaseline="middle";
+
+  for(let i=0;i<=4;i++){
+    const value=Math.round(maxValue*i/4);
+    const y=padding.top+chartHeight-(chartHeight*i/4);
+
+    ctx.strokeStyle="#303030";
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(padding.left,y);
+    ctx.lineTo(width-padding.right,y);
+    ctx.stroke();
+
+    ctx.fillStyle="#888";
+    ctx.fillText(String(value),padding.left-7,y);
+  }
+
+  if(values.length===0)return;
+
+  const points=values.map((value,index)=>{
+    const x=padding.left+
+      (values.length===1?chartWidth/2:index/(values.length-1)*chartWidth);
+    const y=padding.top+chartHeight-(value/maxValue)*chartHeight;
+    return {x,y};
+  });
+
+  ctx.beginPath();
+  ctx.moveTo(points[0].x,padding.top+chartHeight);
+
+  points.forEach(point=>ctx.lineTo(point.x,point.y));
+
+  ctx.lineTo(points[points.length-1].x,padding.top+chartHeight);
+  ctx.closePath();
+  ctx.fillStyle="rgba(237,37,45,0.12)";
+  ctx.fill();
+
+  ctx.beginPath();
+  points.forEach((point,index)=>{
+    if(index===0)ctx.moveTo(point.x,point.y);
+    else ctx.lineTo(point.x,point.y);
+  });
+
+  ctx.strokeStyle="#ed252d";
+  ctx.lineWidth=2;
+  ctx.stroke();
+
+  points.forEach(point=>{
+    ctx.beginPath();
+    ctx.arc(point.x,point.y,3,0,Math.PI*2);
+    ctx.fillStyle="#ed252d";
+    ctx.fill();
+  });
+
+  ctx.fillStyle="#888";
+  ctx.textAlign="center";
+  ctx.textBaseline="top";
+
+  const labels=[
+    {index:0,label:"30 дни"},
+    {index:Math.floor((daily.length-1)/2),label:"15 дни"},
+    {index:daily.length-1,label:"Днес"}
+  ];
+
+  labels.forEach(item=>{
+    if(points[item.index]){
+      ctx.fillText(item.label,points[item.index].x,height-23);
+    }
+  });
+}
+
+window.addEventListener("resize",()=>{
+  if(window.lastAnalyticsDaily){
+    drawVisitsChart(window.lastAnalyticsDaily);
+  }
+});
+
+async function loadAdminData(){
+  await loadRegistrations();
+  await loadPlayers();
+}
+
 function getRoundName(round){
   const names={
     1:"ОСМИНАФИНАЛИ",
@@ -251,7 +546,6 @@ async function loadBracket(){
   Object.keys(rounds)
     .sort((a,b)=>Number(a)-Number(b))
     .forEach(round=>{
-
       const heading=document.createElement("h3");
       heading.className="round-heading";
       heading.textContent=getRoundName(Number(round));
@@ -422,17 +716,11 @@ function createMatchCard(match){
     }
 
     feedback.textContent=data||"Резултатът е записан успешно.";
-
     await loadBracket();
   });
 
   card.append(controls,save,feedback);
   return card;
-}
-
-async function loadAdminData(){
-  await loadRegistrations();
-  await loadPlayers();
 }
 
 async function checkAdminAccess(){
@@ -455,6 +743,7 @@ async function checkAdminAccess(){
 
   await loadAdminData();
   await loadBracket();
+  await loadAnalytics();
 }
 
 document.getElementById("refreshButton")
@@ -462,6 +751,9 @@ document.getElementById("refreshButton")
 
 document.getElementById("refreshBracketButton")
   .addEventListener("click",loadBracket);
+
+document.getElementById("refreshAnalyticsButton")
+  .addEventListener("click",loadAnalytics);
 
 document.getElementById("logoutButton")
   .addEventListener("click",async()=>{
@@ -499,4 +791,5 @@ checkAdminAccess();
 </script>
 
 </body>
-</html>
+    </html>
+      
