@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bg">
 <head>
@@ -73,7 +72,7 @@ main{position:relative;z-index:2}
 
 .hero{
   min-height:590px;padding:75px 7%;position:relative;
-  display:grid;grid-template-columns:1.1fr .9fr;
+  display:grid;grid-template-columns:1fr;
   align-items:center;gap:30px;overflow:hidden;
   background:
     radial-gradient(ellipse at 80% 45%,rgba(120,12,20,.32),transparent 48%),
@@ -129,136 +128,6 @@ h1 span{color:var(--red);text-shadow:0 0 35px rgba(237,37,45,.7)}
 }
 .btn:hover:before{left:140%}
 .btn:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(237,37,45,.6)}
-
-/* TACTICAL ARENA */
-.hero-visual{
-  position:relative;min-height:430px;
-  display:flex;align-items:center;justify-content:center;
-  z-index:3;overflow:hidden;isolation:isolate;
-}
-.hero-visual:before{
-  content:"";position:absolute;inset:8% 0;
-  background:
-    radial-gradient(ellipse at 50% 80%,rgba(180,15,25,.28),transparent 65%),
-    linear-gradient(90deg,transparent,rgba(255,30,40,.08),transparent);
-  filter:blur(22px);
-  animation:arenaGlow 9s ease-in-out infinite alternate;
-}
-.hero-visual:after{
-  content:"";position:absolute;inset:0;z-index:1;
-  background:
-    radial-gradient(ellipse at 15% 75%,rgba(130,20,25,.2),transparent 48%),
-    radial-gradient(ellipse at 85% 70%,rgba(130,20,25,.2),transparent 48%);
-  animation:smokeDrift 18s ease-in-out infinite alternate;
-  pointer-events:none;
-}
-.arena-floor{
-  position:absolute;bottom:13px;left:5%;width:90%;height:65px;
-  background:radial-gradient(ellipse,rgba(237,37,45,.28),transparent 70%);
-  border-bottom:1px solid rgba(237,37,45,.35);
-  transform:perspective(180px) rotateX(55deg);
-  z-index:1;
-}
-.operator{
-  position:absolute;bottom:22px;width:205px;height:390px;
-  transform-origin:50% 100%;
-  filter:drop-shadow(0 0 22px rgba(255,30,40,.2));
-  animation:operatorBreath 8.5s ease-in-out infinite;
-  z-index:3;
-}
-.operator.left{left:0}
-.operator.right{
-  right:0;transform:scaleX(-1);
-  animation-delay:-4.25s;
-}
-.operator-head{
-  position:absolute;top:28px;left:65px;width:78px;height:88px;
-  background:linear-gradient(115deg,#68686b,#252529 55%,#101012);
-  border:2px solid #66666b;border-radius:42% 42% 32% 32%;
-  z-index:4;box-shadow:inset 0 -12px 12px rgba(0,0,0,.5);
-  animation:headIdle 13s ease-in-out infinite;
-}
-.operator-head:before{
-  content:"";position:absolute;top:-13px;left:-7px;
-  width:86px;height:38px;border-radius:50% 50% 12% 12%;
-  background:linear-gradient(110deg,#858589,#343438 65%,#151517);
-  border:2px solid #77777b;
-}
-.operator-head:after{
-  content:"";position:absolute;top:39px;left:8px;
-  width:58px;height:20px;
-  background:linear-gradient(#a52b31,#241416);
-  border:1px solid #a74449;border-radius:3px;
-  box-shadow:0 0 12px rgba(255,30,40,.3);
-}
-.operator-body{
-  position:absolute;top:112px;left:31px;width:145px;height:190px;
-  background:linear-gradient(90deg,#111214,#55565a 38%,#222326 70%,#09090a);
-  clip-path:polygon(25% 0,75% 0,100% 20%,88% 100%,12% 100%,0 20%);
-  border-top:2px solid #777;z-index:2;
-}
-.operator-body:before{
-  content:"";position:absolute;inset:22px 22px 15px;
-  background:
-    linear-gradient(90deg,transparent 45%,#777 47%,#222 53%,transparent 55%),
-    repeating-linear-gradient(0deg,#292a2d 0 25px,#17181b 26px 29px);
-  border:1px solid #555;
-}
-.operator-shoulder{
-  position:absolute;top:120px;left:15px;width:58px;height:70px;
-  background:linear-gradient(120deg,#55565a,#191a1d);
-  border:1px solid #555;border-radius:18px 10px 15px 12px;
-  transform:rotate(12deg);z-index:3;
-}
-.operator-arm{
-  position:absolute;top:155px;left:23px;width:42px;height:135px;
-  background:linear-gradient(90deg,#171719,#55565a,#202124);
-  border-radius:20px;transform:rotate(13deg);z-index:3;
-}
-.operator-rifle{
-  position:absolute;top:205px;left:12px;width:190px;height:16px;
-  background:linear-gradient(#777,#171719 40%,#050505 75%);
-  border:1px solid #777;border-radius:3px;
-  transform:rotate(-12deg);transform-origin:left center;z-index:5;
-}
-.operator-rifle:before{
-  content:"";position:absolute;top:-9px;left:40px;
-  width:65px;height:9px;background:#292a2d;border:1px solid #666;
-}
-.operator-rifle:after{
-  content:"";position:absolute;top:12px;left:65px;
-  width:12px;height:25px;background:#222;transform:rotate(8deg);
-}
-.operator-glow{
-  position:absolute;bottom:8px;left:15%;width:70%;height:25px;
-  background:#ed252d;filter:blur(35px);opacity:.35;z-index:2;
-}
-.smoke{
-  position:absolute;bottom:15px;width:180px;height:110px;
-  background:radial-gradient(ellipse,rgba(120,120,120,.12),transparent 70%);
-  filter:blur(20px);z-index:2;animation:smokeDrift 17s ease-in-out infinite alternate;
-}
-.smoke.one{left:0}
-.smoke.two{right:0;animation-delay:-8s}
-.visual-label{
-  position:absolute;bottom:5px;right:0;padding:13px 18px;
-  border:1px solid rgba(255,255,255,.15);
-  background:rgba(15,15,17,.85);backdrop-filter:blur(15px);
-  border-radius:6px;font-size:10px;letter-spacing:2px;color:#aaa;
-  box-shadow:0 0 25px rgba(237,37,45,.2);z-index:7;
-}
-.visual-label strong{
-  color:var(--red2);display:block;font-size:15px;margin-top:5px;
-  text-shadow:0 0 15px rgba(237,37,45,.35);
-}
-.visual-dot{
-  position:absolute;width:6px;height:6px;border-radius:50%;
-  background:var(--red);box-shadow:0 0 18px var(--red);
-  animation:pulse 3s infinite;z-index:6;
-}
-.dot1{top:40px;left:20%}
-.dot2{bottom:60px;left:15%}
-.dot3{top:90px;right:12%}
 
 section{padding:60px 7%}
 .featured-wrap{
@@ -345,21 +214,6 @@ footer{
   text-align:center;background:#070707;
 }
 
-@keyframes operatorBreath{
-  0%,100%{translate:0 0}
-  50%{translate:0 -3px}
-}
-@keyframes headIdle{
-  0%,100%{rotate:0deg}
-  45%{rotate:1deg}
-  70%{rotate:-.5deg}
-}
-@keyframes arenaGlow{from{opacity:.45}to{opacity:.9}}
-@keyframes smokeDrift{
-  0%{transform:translate3d(-8px,0,0) scale(1);opacity:.4}
-  50%{opacity:.8}
-  100%{transform:translate3d(12px,-9px,0) scale(1.12);opacity:.5}
-}
 @keyframes glow{from{opacity:.5;transform:scale(.9)}to{opacity:1;transform:scale(1.15)}}
 @keyframes shine{0%,65%{transform:translateX(-100%)}85%,100%{transform:translateX(100%)}}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.65)}}
@@ -372,10 +226,6 @@ footer{
 @media(max-width:800px){
   .hero{grid-template-columns:1fr;padding:65px 6% 35px;text-align:center}
   .hero-content{display:flex;flex-direction:column;align-items:center}
-  .hero-visual{min-height:350px}
-  .operator{transform:scale(.85);transform-origin:bottom center}
-  .operator.right{transform:scaleX(-1) scale(.85)}
-  .visual-label{right:5%;bottom:0}
 }
 @media(max-width:600px){
   header{padding:17px 4%;flex-wrap:wrap;gap:15px}
@@ -387,10 +237,6 @@ footer{
   section{padding:42px 5%}
   .featured-wrap{padding:28px 17px}
   .heading{font-size:23px}
-  .hero-visual{min-height:310px}
-  .operator{transform:scale(.72);transform-origin:bottom center}
-  .operator.right{transform:scaleX(-1) scale(.72)}
-  .visual-label{font-size:9px}
 }
 @media(prefers-reduced-motion:reduce){
   *,*:before,*:after{
@@ -423,34 +269,6 @@ footer{
     <a class="btn" href="#tournaments">РАЗГЛЕДАЙ ТУРНИРИТЕ</a>
   </div>
 
-  <div class="hero-visual">
-    <div class="arena-floor"></div>
-    <div class="smoke one"></div>
-    <div class="smoke two"></div>
-
-    <div class="operator left">
-      <div class="operator-head"></div>
-      <div class="operator-shoulder"></div>
-      <div class="operator-body"></div>
-      <div class="operator-arm"></div>
-      <div class="operator-rifle"></div>
-    </div>
-
-    <div class="operator right">
-      <div class="operator-head"></div>
-      <div class="operator-shoulder"></div>
-      <div class="operator-body"></div>
-      <div class="operator-arm"></div>
-      <div class="operator-rifle"></div>
-    </div>
-
-    <div class="operator-glow"></div>
-    <div class="visual-dot dot1"></div>
-    <div class="visual-dot dot2"></div>
-    <div class="visual-dot dot3"></div>
-
-    <div class="visual-label">TACTICAL OPERATORS<strong>READY FOR BATTLE</strong></div>
-  </div>
 </div>
 
 <section id="featured-tournament">
@@ -479,7 +297,7 @@ footer{
 </section>
 
 <section id="tournaments">
-  <div class="heading">ПРЕДСТОЯЩИ ТУРНИРИ</div>
+    <div class="heading">ПРЕДСТОЯЩИ ТУРНИРИ</div>
   <div class="cards">
     <div class="card">
       <div class="status" id="registrationStatus">● ОТВОРЕНО ЗА РЕГИСТРАЦИЯ</div>
