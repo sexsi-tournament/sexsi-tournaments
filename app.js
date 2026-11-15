@@ -41,6 +41,67 @@ function showPlayerDashboard(user, playerId) {
     isAdmin ? "block" : "none";
 
   loadTournamentRegistration(playerId);
+  loadPlayerXP();
+}
+
+async function loadPlayerXP() {
+  const rankBadge = document.getElementById("playerRankBadge");
+  const totalElement = document.getElementById("playerTotalXP");
+  const progressElement = document.getElementById("playerXPProgress");
+  const progressText = document.getElementById("playerXPProgressText");
+  const remainingElement = document.getElementById("playerXPRemaining");
+  const message = document.getElementById("playerXPMessage");
+
+  if (!rankBadge || !totalElement || !progressElement ||
+      !progressText || !remainingElement || !message) return;
+
+  message.textContent = "Зареждане на нивото...";
+
+  const { data, error } = await db.rpc("sexsi_get_my_xp");
+
+  if (error) {
+    console.error("Player XP error:", error.message);
+    message.textContent = "XP информацията временно не е достъпна.";
+    return;
+  }
+
+  const xpData = Array.isArray(data) ? data[0] : data;
+
+  if (!xpData) {
+    message.textContent = "Все още няма налична XP информация.";
+    return;
+  }
+
+  const totalXP = Math.max(0, Number(xpData.total_xp) || 0);
+  const progress = Math.min(100, Math.max(0, Number(xpData.progress_percent) || 0));
+  const rank = xpData.rank_name || "Rookie";
+  const nextRankXP = xpData.next_rank_xp;
+  const xpRemaining = Math.max(0, Number(xpData.xp_to_next) || 0);
+
+  const nextRankNames = {
+    Rookie: "AMATEUR",
+    Amateur: "PRO",
+    Pro: "ELITE",
+    Elite: "LEGEND"
+  };
+
+  rankBadge.textContent = String(rank).toUpperCase();
+  totalElement.textContent = totalXP.toLocaleString("bg-BG") + " XP";
+  progressElement.style.width = progress + "%";
+
+  if (nextRankXP === null || nextRankXP === undefined) {
+    progressText.textContent = "МАКСИМАЛНО НИВО";
+    remainingElement.textContent = "Достигнат е ранг LEGEND";
+  } else {
+    progressText.textContent =
+      totalXP.toLocaleString("bg-BG") + " / " +
+      Number(nextRankXP).toLocaleString("bg-BG") + " XP";
+    remainingElement.textContent =
+      xpRemaining.toLocaleString("bg-BG") + " XP до " +
+      (nextRankNames[rank] || "СЛЕДВАЩИЯ РАНГ");
+  }
+
+  message.textContent = "";
 }
 
 async function loadPlayerProfile(user) {
