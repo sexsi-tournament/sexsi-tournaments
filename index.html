@@ -494,33 +494,7 @@ loadBracket();
 </script>
 
 <script>
-async function loadParticipantCount() {
-  const counter = document.getElementById("participantCount");
-  if (!counter) return;
 
-  const db = window.sexsiSupabase;
-
-  if (!db) {
-    counter.textContent = "Няма връзка с базата данни.";
-    return;
-  }
-
-  counter.textContent = "Проверка...";
-
-  const { data: count, error } = await db.rpc(
-  "sexsi_get_registration_count"
-);
-
-  if (error) {
-    counter.textContent = "Грешка: " + error.message;
-    return;
-  }
-
-  counter.textContent = "Записани участници: " + count + "/16";
-}
-
-loadParticipantCount();
-  setInterval(loadParticipantCount, 5000);
 </script>
   
 <script>
