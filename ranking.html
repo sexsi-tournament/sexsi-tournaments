@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#090909">
 <title>Класация | SEXSI TOURNAMENTS</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#090909;color:#fff;font-family:Arial,sans-serif}
@@ -20,10 +21,17 @@ table{width:100%;min-width:550px;border-collapse:collapse;text-align:left}
 th{background:#ed252d;color:white;padding:14px}
 td{padding:14px;border-bottom:1px solid #303030}
 footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
-@media(max-width:600px){header{padding:18px 4%}nav a{margin-left:7px;font-size:10px}section{padding:40px 5%}}
+#rankingMessage{color:#aaa;font-size:13px}
+@media(max-width:600px){
+header{padding:18px 4%}
+nav a{margin-left:7px;font-size:10px}
+section{padding:40px 5%}
+}
 </style>
 </head>
+
 <body>
+
 <header>
 <div class="logo">SEXSI<span>.</span></div>
 <nav>
@@ -33,8 +41,10 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 <a href="profile.html">ПРОФИЛ</a>
 </nav>
 </header>
+
 <section>
 <div class="heading">КЛАСАЦИЯ НА ИГРАЧИТЕ</div>
+
 <div class="table-wrap">
 <table>
 <thead>
@@ -46,15 +56,18 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 <th>ТОЧКИ</th>
 </tr>
 </thead>
+
 <tbody id="rankingList">
 <tr><td colspan="5">Зареждане...</td></tr>
 </tbody>
 </table>
 </div>
+
 <p id="rankingMessage"></p>
 </section>
+
 <footer>SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY</footer>
-  
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -68,6 +81,7 @@ async function loadRanking() {
   const message = document.getElementById("rankingMessage");
 
   list.innerHTML = "<tr><td colspan='5'>Зареждане...</td></tr>";
+  message.textContent = "";
 
   const { data, error } = await rankingSupabase.rpc("sexsi_get_ranking");
 
@@ -89,7 +103,7 @@ async function loadRanking() {
 
     [
       index + 1,
-      player.username || "PLAYER",
+      player.player_name || "PLAYER",
       player.wins,
       player.losses,
       player.points
@@ -105,6 +119,6 @@ async function loadRanking() {
 
 loadRanking();
 </script>
-  
+
 </body>
 </html>
