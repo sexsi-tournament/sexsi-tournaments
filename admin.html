@@ -23,7 +23,6 @@
   margin:0;
   padding:0;
 }
-
 body{
   background:var(--bg);
   color:var(--text);
@@ -57,7 +56,6 @@ header{
   font-weight:900;
   letter-spacing:1px;
 }
-
 .logo span{
   color:var(--red);
 }
@@ -92,7 +90,6 @@ header{
 .menu-overlay.open{
   display:block;
 }
-
 .side-menu{
   position:fixed;
   top:0;
@@ -127,7 +124,6 @@ header{
 .menu-title span{
   color:var(--red);
 }
-
 .menu-close{
   background:#222;
   border:1px solid var(--border);
@@ -155,7 +151,6 @@ header{
   border-color:var(--red);
   color:white;
 }
-
 .menu-divider{
   height:1px;
   background:var(--border);
@@ -199,7 +194,6 @@ main{
   font-weight:900;
   margin-bottom:18px;
 }
-
 .section-description{
   color:var(--muted);
   font-size:13px;
@@ -228,7 +222,6 @@ main{
   font-weight:bold;
   letter-spacing:.5px;
 }
-
 .overview-card strong{
   display:block;
   font-size:29px;
@@ -255,7 +248,6 @@ main{
   color:white;
   transition:.2s;
 }
-
 .dashboard-action:hover{
   border-color:var(--red);
   transform:translateY(-2px);
@@ -285,7 +277,6 @@ main{
   font-size:15px;
   margin-bottom:15px;
 }
-
 .table-wrap{
   width:100%;
   overflow-x:auto;
@@ -326,7 +317,6 @@ tr:last-child td{
   font-size:13px;
   margin:12px 0;
 }
-
 .primary-button{
   background:var(--red);
   color:white;
@@ -352,7 +342,6 @@ tr:last-child td{
 .back-dashboard{
   margin-bottom:20px;
 }
-
 .search-input{
   width:100%;
   max-width:450px;
@@ -382,7 +371,6 @@ tr:last-child td{
   border-radius:8px;
   padding:16px;
 }
-
 .analytics-stat small{
   display:block;
   color:var(--muted);
@@ -409,7 +397,6 @@ tr:last-child td{
   padding:12px;
   margin:15px 0 25px;
 }
-
 #visitsChart{
   width:100%;
   height:100%;
@@ -443,7 +430,6 @@ tr:last-child td{
   background:rgba(39,200,121,.12);
   color:var(--green);
 }
-
 .player-status.blocked{
   background:rgba(237,37,45,.14);
   color:#ff6268;
@@ -481,7 +467,6 @@ tr:last-child td{
   color:var(--muted);
   padding:25px;
 }
-
 .round-heading{
   color:var(--gold);
   font-size:15px;
@@ -514,7 +499,6 @@ tr:last-child td{
   border-radius:6px;
   font-size:13px;
 }
-
 .match-status{
   color:var(--muted);
   font-size:12px;
@@ -546,7 +530,6 @@ tr:last-child td{
   color:white;
   padding:11px;
 }
-
 .save-match-button{
   background:var(--red);
   color:white;
@@ -586,14 +569,12 @@ footer{
   .panel{
     padding:14px;
   }
-
   .match-players{
     grid-template-columns:1fr;
   }
 }
 </style>
 </head>
-
 <body>
 
 <header>
@@ -605,13 +586,11 @@ footer{
 </header>
 
 <div class="menu-overlay" id="menuOverlay"></div>
-
 <nav class="side-menu" id="sideMenu">
   <div class="menu-top">
     <div class="menu-title">SEXSI <span>ADMIN</span></div>
     <button class="menu-close" id="closeMenuButton">✕</button>
   </div>
-
   <button class="menu-item active" data-view="dashboard">НАЧАЛО</button>
   <button class="menu-item" data-view="registrations">РЕГИСТРАЦИИ</button>
   <button class="menu-item" data-view="players">ВСИЧКИ ИГРАЧИ</button>
@@ -620,7 +599,6 @@ footer{
   <button class="menu-item" data-view="analytics">АНАЛИЗИ И ПОСЕЩЕНИЯ</button>
 
   <div class="menu-divider"></div>
-
   <button class="menu-item" id="menuRefreshButton">ОБНОВИ ДАННИТЕ</button>
   <button class="menu-item menu-logout" id="menuLogoutButton">ИЗХОД</button>
 </nav>
@@ -637,7 +615,6 @@ footer{
     <div class="section-title">ОБЩ ПРЕГЛЕД</div>
 
     <div class="overview-grid">
-
       <div class="overview-card highlight">
         <small>ОБЩО РЕГИСТРАЦИИ</small>
         <strong id="overviewRegistrations">—</strong>
@@ -652,7 +629,6 @@ footer{
         <small>ОБЩО ДВУБОИ</small>
         <strong id="overviewMatches">—</strong>
       </div>
-
       <div class="overview-card">
         <small>ОБЩО ПОСЕЩЕНИЯ</small>
         <strong id="overviewVisits">—</strong>
@@ -668,7 +644,6 @@ footer{
     <div class="section-title">БЪРЗ ДОСТЪП</div>
 
     <div class="dashboard-grid">
-
       <button class="dashboard-action" data-open-view="registrations">
         <strong>РЕГИСТРАЦИИ</strong>
         <span>Преглед на записаните участници в турнирите.</span>
@@ -678,7 +653,6 @@ footer{
         <strong>ВСИЧКИ ИГРАЧИ</strong>
         <span>Преглед на профилите и GAME ID на играчите.</span>
       </button>
-
       <button class="dashboard-action" data-open-view="player-management">
         <strong>УПРАВЛЕНИЕ НА ИГРАЧИ</strong>
         <span>Редактиране на GAME ID и блокиране на профили.</span>
@@ -688,7 +662,6 @@ footer{
         <strong>ТУРНИРНА СХЕМА</strong>
         <span>Преглед на двубоите и резултатите.</span>
       </button>
-
       <button class="dashboard-action" data-open-view="analytics">
         <strong>АНАЛИЗИ И ПОСЕЩЕНИЯ</strong>
         <span>Статистика за посещенията на сайта.</span>
@@ -702,7 +675,6 @@ footer{
 
     <div class="section-title">РЕГИСТРАЦИИ</div>
     <p class="section-description">Всички записани участници в турнирите.</p>
-
     <div class="panel">
       <p class="message" id="registrationMessage">Зареждане...</p>
 
@@ -722,7 +694,6 @@ footer{
       </div>
     </div>
   </section>
-
   <section class="admin-view" id="playersPanel">
     <button class="secondary-button back-dashboard">← НАЗАД</button>
 
@@ -731,7 +702,6 @@ footer{
 
     <div class="panel">
       <p class="message" id="playersMessage">Зареждане...</p>
-
       <div class="table-wrap">
         <table>
           <thead>
@@ -749,7 +719,6 @@ footer{
 
   <section class="admin-view" id="player-managementPanel">
     <button class="secondary-button back-dashboard">← НАЗАД</button>
-
     <div class="section-title">УПРАВЛЕНИЕ НА ИГРАЧИ</div>
     <p class="section-description">
       Търсене, редактиране на GAME ID и управление на достъпа на играчите.
@@ -765,7 +734,6 @@ footer{
 
       <p class="message" id="managementPlayersMessage">Зареждане...</p>
       <p class="message" id="managementPlayersCount"></p>
-
       <div class="table-wrap">
         <table>
           <thead>
@@ -783,7 +751,6 @@ footer{
       </div>
     </div>
   </section>
-
   <section class="admin-view" id="matchesPanel">
     <button class="secondary-button back-dashboard">← НАЗАД</button>
 
@@ -793,11 +760,20 @@ footer{
     </p>
 
     <div class="panel">
+      <div class="panel" style="margin-bottom:20px;">
+        <h3>УПРАВЛЕНИЕ НА ТУРНИРНАТА СХЕМА</h3>
+
+        <button class="primary-button" id="generateBracketButton">
+          СЪЗДАЙ ТУРНИРНА СХЕМА
+        </button>
+
+        <p class="message" id="bracketMessage"></p>
+      </div>
+
       <p class="message" id="matchesMessage">Зареждане...</p>
       <div id="matchesContainer"></div>
     </div>
   </section>
-
   <section class="admin-view" id="analyticsPanel">
     <button class="secondary-button back-dashboard">← НАЗАД</button>
 
@@ -812,7 +788,6 @@ footer{
       <button class="primary-button" id="refreshAnalyticsButton">
         ОБНОВИ СТАТИСТИКАТА
       </button>
-
       <div class="analytics-stats" style="margin-top:20px;">
 
         <div class="analytics-stat">
@@ -829,7 +804,6 @@ footer{
           <small>ПОСЕЩЕНИЯ ДНЕС</small>
           <strong id="todayVisits">—</strong>
         </div>
-
         <div class="analytics-stat">
           <small>ПОСЛЕДНИТЕ 7 ДНИ</small>
           <strong id="weekVisits">—</strong>
@@ -849,7 +823,6 @@ footer{
       </div>
 
       <h3>ИСТОРИЯ ПО ДАТИ</h3>
-
       <div class="table-wrap">
         <table class="analytics-table">
           <thead>
@@ -861,7 +834,6 @@ footer{
           <tbody id="analyticsHistory"></tbody>
         </table>
       </div>
-
       <p class="analytics-note">
         Уникалните посетители се определят чрез случаен идентификатор
         в браузъра. Активен посетител означава активност през
@@ -875,7 +847,6 @@ footer{
 <footer>SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
 const db = window.supabase.createClient(
   "https://fyxlwcoochsuzhqostpe.supabase.co",
@@ -894,7 +865,6 @@ function createCell(row,value){
 
 const sideMenu=document.getElementById("sideMenu");
 const menuOverlay=document.getElementById("menuOverlay");
-
 function openAdminMenu(){
   sideMenu.classList.add("open");
   menuOverlay.classList.add("open");
@@ -904,7 +874,6 @@ function closeAdminMenu(){
   sideMenu.classList.remove("open");
   menuOverlay.classList.remove("open");
 }
-
 function showAdminView(viewName){
   document.querySelectorAll(".admin-view").forEach(panel=>{
     panel.classList.remove("active");
@@ -912,7 +881,6 @@ function showAdminView(viewName){
 
   const selected=document.getElementById(viewName+"Panel");
   if(selected)selected.classList.add("active");
-
   document.querySelectorAll(".menu-item[data-view]").forEach(item=>{
     item.classList.toggle("active",item.dataset.view===viewName);
   });
@@ -932,7 +900,6 @@ document.getElementById("closeMenuButton")
   .addEventListener("click",closeAdminMenu);
 
 menuOverlay.addEventListener("click",closeAdminMenu);
-
 document.querySelectorAll(".menu-item[data-view]").forEach(item=>{
   item.addEventListener("click",()=>{
     showAdminView(item.dataset.view);
@@ -950,7 +917,6 @@ document.querySelectorAll(".back-dashboard").forEach(button=>{
     showAdminView("dashboard");
   });
 });
-
 document.getElementById("menuLogoutButton")
   .addEventListener("click",async()=>{
     await db.auth.signOut();
@@ -968,7 +934,6 @@ document.getElementById("menuRefreshButton")
 async function loadRegistrations(){
   const message=document.getElementById("registrationMessage");
   const list=document.getElementById("registrationsList");
-
   message.textContent="Зареждане...";
   list.innerHTML="";
 
@@ -985,13 +950,11 @@ async function loadRegistrations(){
     document.getElementById("overviewRegistrations").textContent="0";
     return;
   }
-
   message.textContent="Общо регистрации: "+data.length;
   document.getElementById("overviewRegistrations").textContent=formatNumber(data.length);
 
   data.forEach(player=>{
     const row=document.createElement("tr");
-
     createCell(row,player.player_name||"PLAYER");
     createCell(row,player.player_email||"");
     createCell(row,player.player_id||"");
@@ -1009,7 +972,6 @@ async function loadRegistrations(){
 async function loadPlayers(){
   const message=document.getElementById("playersMessage");
   const list=document.getElementById("playersList");
-
   message.textContent="Зареждане...";
   list.innerHTML="";
 
@@ -1026,7 +988,6 @@ async function loadPlayers(){
     document.getElementById("overviewPlayers").textContent="0";
     return;
   }
-
   message.textContent="Общо играчи: "+data.length;
   document.getElementById("overviewPlayers").textContent=formatNumber(data.length);
 
@@ -1043,7 +1004,6 @@ async function loadPlayers(){
   /* PLAYER MANAGEMENT */
 
 let managedPlayers=[];
-
 async function loadManagedPlayers(){
   const message=document.getElementById("managementPlayersMessage");
   const list=document.getElementById("managementPlayersList");
@@ -1058,7 +1018,6 @@ async function loadManagedPlayers(){
     document.getElementById("managementPlayersCount").textContent="";
     return;
   }
-
   managedPlayers=Array.isArray(data)?data:[];
   renderManagedPlayers();
 }
@@ -1070,7 +1029,6 @@ function renderManagedPlayers(){
   const search=document.getElementById("playerSearchInput");
 
   const term=(search.value||"").trim().toLowerCase();
-
   const filtered=managedPlayers.filter(player=>{
     return [
       player.username,
@@ -1088,7 +1046,6 @@ function renderManagedPlayers(){
     message.textContent=managedPlayers.length===0
       ?"Няма намерени играчи."
       :"Няма играчи, отговарящи на търсенето.";
-
     const row=document.createElement("tr");
     const cell=document.createElement("td");
     cell.colSpan=6;
@@ -1103,7 +1060,6 @@ function renderManagedPlayers(){
 
   filtered.forEach(player=>{
     const row=document.createElement("tr");
-
     createCell(row,player.username||"PLAYER");
     createCell(row,player.email||"");
     createCell(row,player.player_id||"Няма GAME ID");
@@ -1120,7 +1076,6 @@ function renderManagedPlayers(){
 
     status.className="player-status "+
       (player.is_blocked?"blocked":"active");
-
     status.textContent=player.is_blocked
       ?"БЛОКИРАН"
       :"АКТИВЕН";
@@ -1135,7 +1090,6 @@ function renderManagedPlayers(){
     const editButton=document.createElement("button");
     editButton.className="player-edit-button";
     editButton.textContent="РЕДАКТИРАЙ ID";
-
     editButton.addEventListener("click",()=>{
       editPlayerGameId(player);
     });
@@ -1154,7 +1108,6 @@ function renderManagedPlayers(){
     }else{
       blockButton.className="player-block-button";
       blockButton.textContent="БЛОКИРАЙ";
-
       blockButton.addEventListener("click",()=>{
         blockPlayer(player);
       });
@@ -1173,7 +1126,6 @@ document.getElementById("playerSearchInput")
 
 async function editPlayerGameId(player){
   const currentId=player.player_id||"";
-
   const newId=prompt(
     "Въведи нов GAME ID за "+(player.username||"играча")+":",
     currentId
@@ -1195,7 +1147,6 @@ async function editPlayerGameId(player){
   if(!confirm("Сигурен ли си, че искаш да промениш GAME ID?")){
     return;
   }
-
   const {data,error}=await db.rpc(
     "sexsi_admin_update_player_id",
     {
@@ -1219,7 +1170,6 @@ async function blockPlayer(player){
     "Причина за блокиране на "+(player.username||"играча")+":",
     "Нарушение на правилата"
   );
-
   if(reason===null)return;
 
   const cleanReason=reason.trim()||"Няма посочена причина";
@@ -1243,7 +1193,6 @@ async function blockPlayer(player){
     alert("Грешка при блокирането: "+error.message);
     return;
   }
-
   alert(data||"Играчът е блокиран успешно.");
   await loadManagedPlayers();
 }
@@ -1267,11 +1216,9 @@ async function unblockPlayer(player){
     alert("Грешка при разблокирането: "+error.message);
     return;
   }
-
   alert(data||"Играчът е разблокиран успешно.");
   await loadManagedPlayers();
 }
-
 /* ANALYTICS */
 
 function formatNumber(value){
@@ -1286,7 +1233,6 @@ function formatDate(dateString){
 async function loadAnalytics(){
   const message=document.getElementById("analyticsMessage");
   const button=document.getElementById("refreshAnalyticsButton");
-
   message.textContent="Зареждане на статистиката...";
   message.classList.remove("analytics-error");
   button.disabled=true;
@@ -1305,13 +1251,11 @@ async function loadAnalytics(){
     message.textContent="Няма върнати статистически данни.";
     return;
   }
-
   document.getElementById("totalVisits").textContent=formatNumber(data.total_visits);
   document.getElementById("uniqueVisitors").textContent=formatNumber(data.unique_visitors);
   document.getElementById("todayVisits").textContent=formatNumber(data.today);
   document.getElementById("weekVisits").textContent=formatNumber(data.last_7_days);
   document.getElementById("activeVisitors").textContent=formatNumber(data.active_now);
-
   document.getElementById("overviewVisits").textContent=formatNumber(data.total_visits);
   document.getElementById("overviewActive").textContent=formatNumber(data.active_now);
 
@@ -1327,7 +1271,6 @@ async function loadAnalytics(){
 function renderAnalyticsHistory(daily){
   const list=document.getElementById("analyticsHistory");
   list.innerHTML="";
-
   [...daily].reverse().forEach(item=>{
     const row=document.createElement("tr");
     createCell(row,formatDate(item.date));
@@ -1344,7 +1287,6 @@ function renderAnalyticsHistory(daily){
     list.appendChild(row);
   }
 }
-
 function drawVisitsChart(daily){
   const canvas=document.getElementById("visitsChart");
   if(!canvas)return;
@@ -1358,7 +1300,6 @@ function drawVisitsChart(daily){
   canvas.height=height*ratio;
   ctx.setTransform(ratio,0,0,ratio,0,0);
   ctx.clearRect(0,0,width,height);
-
   const padding={top:15,right:12,bottom:35,left:35};
   const chartWidth=width-padding.left-padding.right;
   const chartHeight=height-padding.top-padding.bottom;
@@ -1373,7 +1314,6 @@ function drawVisitsChart(daily){
   for(let i=0;i<=4;i++){
     const value=Math.round(maxValue*i/4);
     const y=padding.top+chartHeight-(chartHeight*i/4);
-
     ctx.strokeStyle="#303030";
     ctx.lineWidth=1;
     ctx.beginPath();
@@ -1393,7 +1333,6 @@ function drawVisitsChart(daily){
     const y=padding.top+chartHeight-(value/maxValue)*chartHeight;
     return {x,y};
   });
-
   ctx.beginPath();
   ctx.moveTo(points[0].x,padding.top+chartHeight);
 
@@ -1413,7 +1352,6 @@ function drawVisitsChart(daily){
   ctx.strokeStyle="#ed252d";
   ctx.lineWidth=2;
   ctx.stroke();
-
   points.forEach(point=>{
     ctx.beginPath();
     ctx.arc(point.x,point.y,3,0,Math.PI*2);
@@ -1430,7 +1368,6 @@ function drawVisitsChart(daily){
     {index:Math.floor((daily.length-1)/2),label:"15 дни"},
     {index:daily.length-1,label:"Днес"}
   ];
-
   labels.forEach(item=>{
     if(points[item.index]){
       ctx.fillText(item.label,points[item.index].x,height-23);
@@ -1449,7 +1386,6 @@ async function loadAdminData(){
   await loadRegistrations();
   await loadPlayers();
 }
-
 function getRoundName(round){
   const names={
     1:"ОСМИНАФИНАЛИ",
@@ -1468,7 +1404,6 @@ async function loadBracket(){
   container.innerHTML="";
 
   const {data,error}=await db.rpc("sexsi_get_bracket");
-
   if(error){
     message.textContent="Грешка при зареждане: "+error.message;
     document.getElementById("overviewMatches").textContent="!";
@@ -1485,7 +1420,6 @@ async function loadBracket(){
   document.getElementById("overviewMatches").textContent=formatNumber(data.length);
 
   const rounds={};
-
   data.forEach(match=>{
     if(!rounds[match.round_number]){
       rounds[match.round_number]=[];
@@ -1500,12 +1434,52 @@ async function loadBracket(){
       heading.className="round-heading";
       heading.textContent=getRoundName(Number(round));
       container.appendChild(heading);
-
       rounds[round].forEach(match=>{
         container.appendChild(createMatchCard(match));
       });
     });
 }
+
+/* GENERATE TOURNAMENT BRACKET */
+
+document.getElementById("generateBracketButton")
+  .addEventListener("click",async()=>{
+
+    const button=document.getElementById("generateBracketButton");
+    const message=document.getElementById("bracketMessage");
+
+    if(!confirm(
+      "Сигурен ли си, че искаш да създадеш турнирната схема?\n\n"+
+      "Ще бъдат създадени 15 двубоя."
+    )){
+      return;
+    }
+
+    button.disabled=true;
+    button.textContent="СЪЗДАВАНЕ...";
+    message.textContent="Създаване на турнирната схема...";
+
+    try{
+      const {data,error}=await db.rpc(
+        "sexsi_admin_generate_bracket"
+      );
+
+      if(error){
+        message.textContent="Грешка: "+error.message;
+        return;
+      }
+
+      message.textContent=data||"Турнирната схема е създадена успешно.";
+
+      await loadBracket();
+
+    }catch(error){
+      message.textContent="Грешка: "+error.message;
+    }finally{
+      button.disabled=false;
+      button.textContent="СЪЗДАЙ ТУРНИРНА СХЕМА";
+    }
+  });
 
 function createMatchCard(match){
   const card=document.createElement("div");
@@ -1517,7 +1491,6 @@ function createMatchCard(match){
 
   const players=document.createElement("div");
   players.className="match-players";
-
   const player1=document.createElement("div");
   player1.className="match-player";
   player1.textContent="ИГРАЧ 1: "+(match.player1_name||"Очаква се");
@@ -1531,7 +1504,6 @@ function createMatchCard(match){
   const status=document.createElement("p");
   status.className="match-status";
   status.textContent="СТАТУС: "+(match.status||"неизвестен");
-
   card.append(title,players,status);
 
   if(match.status==="completed"){
@@ -1545,7 +1517,6 @@ function createMatchCard(match){
     card.appendChild(result);
     return card;
   }
-
   if(!match.player1_id||!match.player2_id){
     const waiting=document.createElement("p");
     waiting.className="message";
@@ -1559,7 +1530,6 @@ function createMatchCard(match){
 
   const score1Label=document.createElement("label");
   score1Label.textContent="РЕЗУЛТАТ ИГРАЧ 1";
-
   const score1=document.createElement("input");
   score1.type="number";
   score1.min="0";
@@ -1570,7 +1540,6 @@ function createMatchCard(match){
 
   const score2Label=document.createElement("label");
   score2Label.textContent="РЕЗУЛТАТ ИГРАЧ 2";
-
   const score2=document.createElement("input");
   score2.type="number";
   score2.min="0";
@@ -1583,7 +1552,6 @@ function createMatchCard(match){
   winnerLabel.textContent="ПОБЕДИТЕЛ";
 
   const winner=document.createElement("select");
-
   const emptyOption=document.createElement("option");
   emptyOption.value="";
   emptyOption.textContent="Избери победител";
@@ -1598,7 +1566,6 @@ function createMatchCard(match){
   option2.value=match.player2_id;
   option2.textContent=match.player2_name||"ИГРАЧ 2";
   winner.appendChild(option2);
-
   if(match.winner_id){
     winner.value=match.winner_id;
   }
@@ -1617,7 +1584,6 @@ function createMatchCard(match){
       alert("Въведи резултат и за двамата играчи.");
       return;
     }
-
     if(!Number.isInteger(result1)||!Number.isInteger(result2)||
        result1<0||result2<0){
       alert("Резултатите трябва да са цели положителни числа.");
@@ -1637,7 +1603,6 @@ function createMatchCard(match){
     const expectedWinner=result1>result2
       ?match.player1_id
       :match.player2_id;
-
     if(winner.value!==expectedWinner){
       alert("Избраният победител не съответства на резултата.");
       return;
@@ -1656,7 +1621,6 @@ function createMatchCard(match){
           p_score_player2:result2
         }
       );
-
       if(error){
         alert("Грешка при записване: "+error.message);
         return;
@@ -1680,7 +1644,6 @@ function createMatchCard(match){
 }
 
 /* REFRESH ALL DATA */
-
 async function refreshAllAdminData(){
   await loadAdminData();
   await loadBracket();
@@ -1698,7 +1661,6 @@ async function checkAdminAccess(){
   }
 
   const user=data.session.user;
-
   if(user.id!==ADMIN_ID){
     alert("Нямаш достъп до административния панел.");
     await db.auth.signOut();
