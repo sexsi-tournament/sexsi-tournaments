@@ -172,24 +172,7 @@ section{padding:40px 5%}
 <footer>
 SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = "https://fyxlwcoochsuzhqostpe.supabase.co";
-const SUPABASE_KEY = "sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP";
-const sexsiSupabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY,
-  {
-    auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true
-    }
-  }
-);
 
-window.sexsiSupabase = sexsiSupabase;
-</script>
 
 
   <script>
@@ -281,41 +264,6 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     password: password
   });
 
-  if (error) {
-    message.textContent = "Error: " + error.message;
-    return;
-  }
-
-  document.getElementById("register").style.display = "none";
-  document.getElementById("playerDashboard").style.display = "block";
-  document.getElementById("playerName").textContent =
-    data.user.user_metadata.username || "PLAYER";
-
-  document.getElementById("playerEmail").textContent =
-    data.user.email || "";
-  const { data: savedPlayerId, error: playerIdError } =
-  await window.sexsiSupabase.rpc("sexsi_get_my_player_id");
-
-const playerIdDisplay = document.getElementById("playerId");
-const playerIdInput = document.getElementById("editPlayerGameId");
-
-playerIdDisplay.textContent =
-  savedPlayerId || "НЯМА ДОБАВЕНО ID";
-
-playerIdInput.value = savedPlayerId || "";
-  if (data.user.id === "13f1ada8-cd05-4c31-8940-4fb1790cb90e") {
-  document.getElementById("adminPanel").style.display = "block";
-    document.getElementById("generateBracketButton").style.display = "block";
-  loadAdminRegistrations();
-      loadAdminPlayers();
-
-} else {
-  document.getElementById("adminPanel").style.display = "none";
-    document.getElementById("generateBracketButton").style.display = "none";
-  }
-});
-    
-
     
    
  
@@ -330,47 +278,10 @@ async function loadRanking() {
 
   const { data, error } = await window.sexsiSupabase.rpc("sexsi_get_ranking");
 
-  if (error) {
-    list.innerHTML = '<tr><td colspan="5">Грешка при зареждане на класацията.</td></tr>';
-    return;
-  }
-
-  if (!data || data.length === 0) {
-    list.innerHTML = '<tr><td colspan="5">Все още няма класирани играчи.</td></tr>';
-    return;
-  }
-
-  data.forEach((player, index) => {
-    const row = document.createElement("tr");
-
-    const values = [
-      index + 1,
-      player.player_name,
-      player.wins,
-      player.losses,
-      player.points
-    ];
-
-    values.forEach((value) => {
-      const cell = document.createElement("td");
-      cell.style.padding = "12px";
-      cell.style.borderBottom = "1px solid #303030";
-      cell.textContent = value;
-      row.appendChild(cell);
-    });
-
-    list.appendChild(row);
-  });
-}
-
-
-    
-</script>
 <section id="bracketSection" style="padding:25px 15px;max-width:1100px;margin:auto">
   <h2 style="text-align:center">🏆 ТУРНИРНА СХЕМА</h2>
-  <button id="generateBracketButton" style="display:none;margin:15px auto;padding:14px 22px;background:#00d68f;color:#000;font-weight:bold;border:0;border-radius:8px;cursor:pointer">
-  СЪЗДАЙ ТУРНИРНА СХЕМА
-  </button>
+  
+
   <div id="bracketContainer">
     <p style="text-align:center;color:#aaa">Зареждане на турнирната схема...</p>
   </div>
@@ -497,49 +408,7 @@ loadBracket();
 
 </script>
   
-<script>
-document.addEventListener("DOMContentLoaded", async function() {
-  const db = window.sexsiSupabase;
-  const button = document.getElementById("generateBracketButton");
 
-  if (!db || !button) return;
-
-  const { data } = await db.auth.getSession();
-  const user = data.session?.user;
-
-  if (!user || user.id !== "13f1ada8-cd05-4c31-8940-4fb1790cb90e") {
-    return;
-  }
-
-  button.style.display = "block";
-
-  button.addEventListener("click", async function() {
-    if (!confirm("Сигурен ли си, че искаш да създадеш турнирната схема?")) {
-      return;
-    }
-
-    button.disabled = true;
-    button.textContent = "СЪЗДАВАНЕ...";
-
-    const { data, error } = await db.rpc(
-      "sexsi_admin_generate_bracket"
-    );
-
-    if (error) {
-      alert("Грешка: " + error.message);
-      button.disabled = false;
-      button.textContent = "СЪЗДАЙ ТУРНИРНА СХЕМА";
-      return;
-    }
-
-    alert(data);
-    await loadBracket();
-
-    button.disabled = false;
-    button.textContent = "СЪЗДАЙ ТУРНИРНА СХЕМА";
-  });
-});
-</script>
   <script>
 function updateRegistrationCountdown() {
   const target = new Date("2026-11-25T23:59:59+02:00").getTime();
