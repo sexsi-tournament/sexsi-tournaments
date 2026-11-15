@@ -39,6 +39,8 @@ function showPlayerDashboard(user, playerId) {
 
   document.getElementById("adminPanel").style.display =
     isAdmin ? "block" : "none";
+
+  loadTournamentRegistration(playerId);
 }
 
 async function loadPlayerProfile(user) {
@@ -67,7 +69,9 @@ document.getElementById("registerForm").addEventListener("submit", async functio
     email: email,
     password: password,
     options: {
-      emailRedirectTo: "https://sexsi-tournament.github.io/sexsi-tournaments/",
+      emailRedirectTo: new URLSearchParams(window.location.search).get("join") === "SEXSI-1V1-001"
+        ? "https://sexsi-tournament.github.io/sexsi-tournaments/profile.html?join=SEXSI-1V1-001"
+        : "https://sexsi-tournament.github.io/sexsi-tournaments/",
       data: {
         username: username,
         player_id: playerGameId
@@ -117,6 +121,101 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
   await loadPlayerProfile(data.session.user);
 })();
+
+
+/* ЗАПИСВАНЕ ЗА SEXSI 1V1 CUP #001 */
+async function loadTournamentRegistration(playerId) {
+  const button = document.getElementById("tournamentSignupButton");
+  const message = document.getElementById("tournamentSignupMessage");
+  const countElement = document.getElementById("tournamentSignupCount");
+  if (!button || !message || !countElement) return;
+
+  button.disabled = true;
+  button.textContent = "ПРОВЕРКА...";
+
+  const [{ data: status, error: statusError }, { data: count, error: countError }] =
+    await Promise.all([
+      db.rpc("sexsi_get_my_tournament_status"),
+      db.rpc("sexsi_get_registration_count")
+    ]);
+
+  if (countError || !Number.isInteger(Number(count))) {
+    countElement.textContent = "Временно недостъпно";
+  } else {
+    countElement.textContent = String(count);
+  }
+
+  if (statusError) {
+    message.textContent = "Не успяхме да проверим записването. Опитай отново.";
+    button.disabled = false;
+    button.textContent = "ПРОВЕРИ ОТНОВО";
+    return;
+  }
+
+  if (status === "registered") {
+    button.textContent = "ВЕЧЕ СИ ЗАПИСАН";
+    button.disabled = true;
+    message.textContent = "Участието ти в SEXSI 1V1 CUP #001 е потвърдено.";
+    return;
+  }
+
+  if (!playerId) {
+    button.textContent = "ДОБАВИ GAME ID";
+    button.disabled = true;
+    message.textContent = "Първо добави валидно Standoff 2 ID в профила си.";
+    return;
+  }
+
+  if (!countError && Number(count) >= 16) {
+    button.textContent = "МЕСТАТА СА ЗАПЪЛНЕНИ";
+    button.disabled = true;
+    message.textContent = "Турнирът вече има 16 участници.";
+    return;
+  }
+
+  button.disabled = false;
+  button.textContent = "ЗАПИШИ СЕ ЗА ТУРНИРА";
+  message.textContent = "Все още не си записан за турнира.";
+
+  if (new URLSearchParams(window.location.search).get("join") === "SEXSI-1V1-001") {
+    document.getElementById("tournamentSignupCard").scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
+
+const tournamentSignupButton = document.getElementById("tournamentSignupButton");
+if (tournamentSignupButton) {
+  tournamentSignupButton.addEventListener("click", async function() {
+    const message = document.getElementById("tournamentSignupMessage");
+    tournamentSignupButton.disabled = true;
+    tournamentSignupButton.textContent = "ЗАПИСВАНЕ...";
+
+    const { data, error } = await db.rpc("sexsi_register_for_tournament");
+
+    if (error) {
+      message.textContent = "Грешка при записването: " + error.message;
+      tournamentSignupButton.disabled = false;
+      tournamentSignupButton.textContent = "ОПИТАЙ ОТНОВО";
+      return;
+    }
+
+    const playerId = document.getElementById("playerId").textContent;
+    await loadTournamentRegistration(playerId === "НЯМА ДОБАВЕНО ID" ? "" : playerId);
+
+    if (data === "registered") {
+      message.textContent = "Успешно се записа за SEXSI 1V1 CUP #001!";
+    } else if (data === "already_registered") {
+      message.textContent = "Вече си записан за този турнир.";
+    } else if (data === "full") {
+      message.textContent = "Местата са запълнени. Турнирът е с максимум 16 участници.";
+    } else if (data === "missing_player_id") {
+      message.textContent = "Първо добави валидно Standoff 2 ID в профила си.";
+    } else if (data === "not_logged_in") {
+      message.textContent = "Трябва да влезеш в профила си.";
+    } else {
+      message.textContent = "Получен е неочакван отговор от сървъра.";
+    }
+  });
+}
 
 // ПРОМЯНА НА STANDOFF 2 ID
 document.getElementById("savePlayerGameId").addEventListener("click", async function() {
