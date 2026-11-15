@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#090909">
 <title>Администратор | SEXSI TOURNAMENTS</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#090909;color:#fff;font-family:Arial,sans-serif}
@@ -21,12 +22,30 @@ table{width:100%;min-width:650px;border-collapse:collapse;text-align:left}
 th{background:#ed252d;padding:12px}
 td{padding:12px;border-bottom:1px solid #303030}
 button{background:#ed252d;color:white;border:0;padding:12px 18px;border-radius:5px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
 .message{color:#aaa}
 footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 #adminContent{display:none}
-@media(max-width:600px){header{padding:18px 4%}nav a{margin-left:7px;font-size:10px}section{padding:25px 4%}}
+.match-card{background:#1b1b1b;border:1px solid #333;padding:16px;border-radius:7px;margin:14px 0}
+.match-title{color:#ed252d;font-weight:bold;margin-bottom:12px}
+.match-players{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.match-player{background:#111;padding:12px;border-radius:5px;overflow-wrap:anywhere}
+.match-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.match-controls label{font-size:12px;color:#aaa}
+.match-controls input,.match-controls select{width:100%;padding:11px;margin-top:6px;background:#090909;color:white;border:1px solid #444;border-radius:5px}
+.match-save{margin-top:12px;width:100%}
+.match-status{color:#aaa;font-size:13px;margin-top:12px}
+.round-heading{color:#ed252d;margin-top:28px;border-bottom:1px solid #333;padding-bottom:8px}
+@media(max-width:600px){
+header{padding:18px 4%}
+nav a{margin-left:7px;font-size:10px}
+section{padding:25px 4%}
+.match-players{grid-template-columns:1fr}
+.match-controls{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -47,13 +66,20 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 </div>
 
 <div id="adminContent">
-  <div class="card">
-  <h2>УПРАВЛЕНИЕ НА ТУРНИРНАТА СХЕМА</h2>
-  <button id="generateBracketButton">
-    СЪЗДАЙ ТУРНИРНА СХЕМА
-  </button>
-  <p id="bracketMessage" class="message"></p>
-  </div>
+
+<div class="card">
+<h2>УПРАВЛЕНИЕ НА ТУРНИРНАТА СХЕМА</h2>
+<button id="generateBracketButton">СЪЗДАЙ ТУРНИРНА СХЕМА</button>
+<p id="bracketMessage" class="message"></p>
+</div>
+
+<div class="card">
+<h2>УПРАВЛЕНИЕ НА ДВУБОИТЕ</h2>
+<p class="message">Въведи резултата от двубоя и избери победителя.</p>
+<button id="refreshBracketButton">ОБНОВИ ДВУБОИТЕ</button>
+<p id="matchesMessage" class="message">Зареждане...</p>
+<div id="matchesContainer"></div>
+</div>
 
 <div class="card">
 <h2>РЕГИСТРИРАНИ УЧАСТНИЦИ</h2>
@@ -108,145 +134,367 @@ const db = window.supabase.createClient(
 
 const ADMIN_ID = "13f1ada8-cd05-4c31-8940-4fb1790cb90e";
 
-async function loadRegistrations() {
-  const message = document.getElementById("registrationMessage");
-  const list = document.getElementById("registrationsList");
+function createCell(row,value){
+  const cell=document.createElement("td");
+  cell.textContent=value;
+  row.appendChild(cell);
+}
 
-  message.textContent = "Зареждане...";
-  list.innerHTML = "";
+async function loadRegistrations(){
+  const message=document.getElementById("registrationMessage");
+  const list=document.getElementById("registrationsList");
 
-  const { data, error } = await db.rpc("sexsi_admin_registrations");
+  message.textContent="Зареждане...";
+  list.innerHTML="";
 
-  if (error) {
-    message.textContent = "Грешка: " + error.message;
+  const {data,error}=await db.rpc("sexsi_admin_registrations");
+
+  if(error){
+    message.textContent="Грешка: "+error.message;
     return;
   }
 
-  if (!data || data.length === 0) {
-    message.textContent = "Няма регистрации.";
+  if(!data||data.length===0){
+    message.textContent="Няма регистрации.";
     return;
   }
 
-  message.textContent = "Общо регистрации: " + data.length;
+  message.textContent="Общо регистрации: "+data.length;
 
-  data.forEach(player => {
-    const row = document.createElement("tr");
+  data.forEach(player=>{
+    const row=document.createElement("tr");
 
-    const values = [
-      player.player_name || "PLAYER",
-      player.player_email || "",
-      player.player_id || "",
-      player.tournament_id || "",
-      player.registered_at
-        ? new Date(player.registered_at).toLocaleString("bg-BG")
-        : ""
-    ];
-
-    values.forEach(value => {
-      const cell = document.createElement("td");
-      cell.textContent = value;
-      row.appendChild(cell);
-    });
+    createCell(row,player.player_name||"PLAYER");
+    createCell(row,player.player_email||"");
+    createCell(row,player.player_id||"");
+    createCell(row,player.tournament_id||"");
+    createCell(row,player.registered_at
+      ?new Date(player.registered_at).toLocaleString("bg-BG")
+      :"");
 
     list.appendChild(row);
   });
 }
 
-async function loadPlayers() {
-  const message = document.getElementById("playersMessage");
-  const list = document.getElementById("playersList");
+async function loadPlayers(){
+  const message=document.getElementById("playersMessage");
+  const list=document.getElementById("playersList");
 
-  message.textContent = "Зареждане...";
-  list.innerHTML = "";
+  message.textContent="Зареждане...";
+  list.innerHTML="";
 
-  const { data, error } = await db.rpc("sexsi_admin_players");
+  const {data,error}=await db.rpc("sexsi_admin_players");
 
-  if (error) {
-    message.textContent = "Грешка: " + error.message;
+  if(error){
+    message.textContent="Грешка: "+error.message;
     return;
   }
 
-  if (!data || data.length === 0) {
-    message.textContent = "Няма намерени играчи.";
+  if(!data||data.length===0){
+    message.textContent="Няма намерени играчи.";
     return;
   }
 
-  message.textContent = "Общо играчи: " + data.length;
+  message.textContent="Общо играчи: "+data.length;
 
-  data.forEach(player => {
-    const row = document.createElement("tr");
+  data.forEach(player=>{
+    const row=document.createElement("tr");
 
-    const values = [
-      player.player_name || "PLAYER",
-      player.player_email || "",
-      player.player_id || ""
-    ];
-
-    values.forEach(value => {
-      const cell = document.createElement("td");
-      cell.textContent = value;
-      row.appendChild(cell);
-    });
+    createCell(row,player.player_name||"PLAYER");
+    createCell(row,player.player_email||"");
+    createCell(row,player.player_id||"");
 
     list.appendChild(row);
   });
 }
 
-async function loadAdminData() {
+function getRoundName(round){
+  const names={
+    1:"ОСМИНАФИНАЛИ",
+    2:"ЧЕТВЪРТФИНАЛИ",
+    3:"ПОЛУФИНАЛИ",
+    4:"ФИНАЛ"
+  };
+  return names[round]||("КРЪГ "+round);
+}
+
+async function loadBracket(){
+  const message=document.getElementById("matchesMessage");
+  const container=document.getElementById("matchesContainer");
+
+  message.textContent="Зареждане на двубоите...";
+  container.innerHTML="";
+
+  const {data,error}=await db.rpc("sexsi_get_bracket");
+
+  if(error){
+    message.textContent="Грешка при зареждане: "+error.message;
+    return;
+  }
+
+  if(!data||data.length===0){
+    message.textContent="Все още няма създадена турнирна схема.";
+    return;
+  }
+
+  message.textContent="Общо двубои: "+data.length;
+
+  const rounds={};
+
+  data.forEach(match=>{
+    if(!rounds[match.round_number]){
+      rounds[match.round_number]=[];
+    }
+    rounds[match.round_number].push(match);
+  });
+
+  Object.keys(rounds)
+    .sort((a,b)=>Number(a)-Number(b))
+    .forEach(round=>{
+
+      const heading=document.createElement("h3");
+      heading.className="round-heading";
+      heading.textContent=getRoundName(Number(round));
+      container.appendChild(heading);
+
+      rounds[round].forEach(match=>{
+        container.appendChild(createMatchCard(match));
+      });
+    });
+}
+
+function createMatchCard(match){
+  const card=document.createElement("div");
+  card.className="match-card";
+
+  const title=document.createElement("div");
+  title.className="match-title";
+  title.textContent="МАЧ №"+match.match_number;
+
+  const players=document.createElement("div");
+  players.className="match-players";
+
+  const player1=document.createElement("div");
+  player1.className="match-player";
+  player1.textContent="ИГРАЧ 1: "+(match.player1_name||"Очаква се");
+
+  const player2=document.createElement("div");
+  player2.className="match-player";
+  player2.textContent="ИГРАЧ 2: "+(match.player2_name||"Очаква се");
+
+  players.append(player1,player2);
+
+  const status=document.createElement("p");
+  status.className="match-status";
+  status.textContent="СТАТУС: "+(match.status||"неизвестен");
+
+  card.append(title,players,status);
+
+  if(match.status==="completed"){
+    const result=document.createElement("p");
+    result.className="message";
+    result.textContent="РЕЗУЛТАТ: "+
+      (match.score_player1??"-")+" : "+
+      (match.score_player2??"-")+
+      " | ПОБЕДИТЕЛ: "+(match.winner_name||"неизвестен");
+
+    card.appendChild(result);
+    return card;
+  }
+
+  if(!match.player1_id||!match.player2_id){
+    const waiting=document.createElement("p");
+    waiting.className="message";
+    waiting.textContent="Очаква се да бъдат определени и двамата участници.";
+    card.appendChild(waiting);
+    return card;
+  }
+
+  const controls=document.createElement("div");
+  controls.className="match-controls";
+
+  const score1Label=document.createElement("label");
+  score1Label.textContent="РЕЗУЛТАТ ИГРАЧ 1";
+
+  const score1=document.createElement("input");
+  score1.type="number";
+  score1.min="0";
+  score1.step="1";
+  score1.placeholder="Резултат";
+  score1.value=match.score_player1??"";
+  score1Label.appendChild(score1);
+
+  const score2Label=document.createElement("label");
+  score2Label.textContent="РЕЗУЛТАТ ИГРАЧ 2";
+
+  const score2=document.createElement("input");
+  score2.type="number";
+  score2.min="0";
+  score2.step="1";
+  score2.placeholder="Резултат";
+  score2.value=match.score_player2??"";
+  score2Label.appendChild(score2);
+
+  const winnerLabel=document.createElement("label");
+  winnerLabel.textContent="ПОБЕДИТЕЛ";
+
+  const winner=document.createElement("select");
+
+  const emptyOption=document.createElement("option");
+  emptyOption.value="";
+  emptyOption.textContent="Избери победител";
+  winner.appendChild(emptyOption);
+
+  const option1=document.createElement("option");
+  option1.value=match.player1_id;
+  option1.textContent=match.player1_name||"Играч 1";
+
+  const option2=document.createElement("option");
+  option2.value=match.player2_id;
+  option2.textContent=match.player2_name||"Играч 2";
+
+  winner.append(option1,option2);
+  winnerLabel.appendChild(winner);
+
+  controls.append(score1Label,score2Label,winnerLabel);
+
+  const save=document.createElement("button");
+  save.className="match-save";
+  save.textContent="ЗАПАЗИ РЕЗУЛТАТА";
+
+  const feedback=document.createElement("p");
+  feedback.className="message";
+
+  save.addEventListener("click",async()=>{
+    const s1=Number(score1.value);
+    const s2=Number(score2.value);
+
+    if(score1.value===""||score2.value===""){
+      feedback.textContent="Въведи резултатите и на двамата играчи.";
+      return;
+    }
+
+    if(!Number.isInteger(s1)||!Number.isInteger(s2)||s1<0||s2<0){
+      feedback.textContent="Резултатите трябва да са цели неотрицателни числа.";
+      return;
+    }
+
+    if(s1===s2){
+      feedback.textContent="Резултатът не може да бъде равен.";
+      return;
+    }
+
+    if(!winner.value){
+      feedback.textContent="Избери победител.";
+      return;
+    }
+
+    const expectedWinner=s1>s2?match.player1_id:match.player2_id;
+
+    if(winner.value!==expectedWinner){
+      feedback.textContent="Избраният победител не съответства на резултата.";
+      return;
+    }
+
+    if(!confirm("Сигурен ли си, че искаш да запишеш този резултат?")){
+      return;
+    }
+
+    save.disabled=true;
+    save.textContent="ЗАПАЗВАНЕ...";
+    feedback.textContent="Записване на резултата...";
+
+    const {data,error}=await db.rpc(
+      "sexsi_admin_submit_bracket_result",
+      {
+        p_match_id:match.id,
+        p_winner_id:winner.value,
+        p_score_player1:s1,
+        p_score_player2:s2
+      }
+    );
+
+    if(error){
+      feedback.textContent="Грешка: "+error.message;
+      save.disabled=false;
+      save.textContent="ЗАПАЗИ РЕЗУЛТАТА";
+      return;
+    }
+
+    feedback.textContent=data||"Резултатът е записан успешно.";
+
+    await loadBracket();
+  });
+
+  card.append(controls,save,feedback);
+  return card;
+}
+
+async function loadAdminData(){
   await loadRegistrations();
   await loadPlayers();
 }
 
-async function checkAdminAccess() {
-  const message = document.getElementById("accessMessage");
+async function checkAdminAccess(){
+  const message=document.getElementById("accessMessage");
 
-  const { data, error } = await db.auth.getSession();
+  const {data,error}=await db.auth.getSession();
 
-  if (error || !data.session) {
-    message.textContent = "Нямаш активна сесия. Влез през профила си.";
+  if(error||!data.session){
+    message.textContent="Нямаш активна сесия. Влез през профила си.";
     return;
   }
 
-  if (data.session.user.id !== ADMIN_ID) {
-    message.textContent = "ДОСТЪПЪТ Е ОТКАЗАН. Само администратор може да отвори тази страница.";
+  if(data.session.user.id!==ADMIN_ID){
+    message.textContent="ДОСТЪПЪТ Е ОТКАЗАН. Само администратор може да отвори тази страница.";
     return;
   }
 
-  message.textContent = "Администраторски достъп потвърден.";
-  document.getElementById("adminContent").style.display = "block";
+  message.textContent="Администраторски достъп потвърден.";
+  document.getElementById("adminContent").style.display="block";
 
   await loadAdminData();
+  await loadBracket();
 }
 
-document.getElementById("refreshButton").addEventListener("click", loadAdminData);
+document.getElementById("refreshButton")
+  .addEventListener("click",loadAdminData);
 
-document.getElementById("logoutButton").addEventListener("click", async function() {
-  await db.auth.signOut();
-  window.location.href = "profile.html";
-});
-document.getElementById("generateBracketButton").addEventListener("click", async function() {
-  const button = this;
-  const message = document.getElementById("bracketMessage");
+document.getElementById("refreshBracketButton")
+  .addEventListener("click",loadBracket);
 
-  if (!confirm("Сигурен ли си, че искаш да създадеш турнирната схема?")) {
-    return;
-  }
+document.getElementById("logoutButton")
+  .addEventListener("click",async()=>{
+    await db.auth.signOut();
+    window.location.href="profile.html";
+  });
 
-  button.disabled = true;
-  button.textContent = "СЪЗДАВАНЕ...";
-  message.textContent = "";
+document.getElementById("generateBracketButton")
+  .addEventListener("click",async function(){
+    const button=this;
+    const message=document.getElementById("bracketMessage");
 
-  const { data, error } = await db.rpc("sexsi_admin_generate_bracket");
+    if(!confirm("Сигурен ли си, че искаш да създадеш турнирната схема?")){
+      return;
+    }
 
-  if (error) {
-    message.textContent = "Грешка: " + error.message;
-  } else {
-    message.textContent = data;
-  }
+    button.disabled=true;
+    button.textContent="СЪЗДАВАНЕ...";
+    message.textContent="";
 
-  button.disabled = false;
-  button.textContent = "СЪЗДАЙ ТУРНИРНА СХЕМА";
-});
+    const {data,error}=await db.rpc("sexsi_admin_generate_bracket");
+
+    if(error){
+      message.textContent="Грешка: "+error.message;
+    }else{
+      message.textContent=data||"Схемата е създадена.";
+      await loadBracket();
+    }
+
+    button.disabled=false;
+    button.textContent="СЪЗДАЙ ТУРНИРНА СХЕМА";
+  });
+
 checkAdminAccess();
 </script>
 
