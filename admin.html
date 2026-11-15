@@ -695,7 +695,7 @@ footer{
       </button>
 
     </div>
-  </section>
+      </section>
 
   <section class="admin-view" id="registrationsPanel">
     <button class="secondary-button back-dashboard">← НАЗАД</button>
@@ -818,57 +818,64 @@ footer{
         <div class="analytics-stat">
           <small>ОБЩО ПОСЕЩЕНИЯ</small>
           <strong id="totalVisits">—</strong>
-                    </div>
-          <div class="analytics-stat">
-            <small>УНИКАЛНИ ПОСЕТИТЕЛИ</small>
-            <strong id="uniqueVisitors">—</strong>
-          </div>
-          <div class="analytics-stat">
-            <small>ПОСЕЩЕНИЯ ДНЕС</small>
-            <strong id="todayVisits">—</strong>
-          </div>
-          <div class="analytics-stat">
-            <small>ПОСЛЕДНИТЕ 7 ДНИ</small>
-            <strong id="weekVisits">—</strong>
-          </div>
-          <div class="analytics-stat active">
-            <small>АКТИВНИ В МОМЕНТА</small>
-            <strong id="activeVisitors">—</strong>
-          </div>
         </div>
 
-        <h3>ПОСЕЩАЕМОСТ ПРЕЗ ПОСЛЕДНИТЕ 30 ДНИ</h3>
-        <div class="analytics-chart-wrap">
-          <canvas id="visitsChart"></canvas>
+        <div class="analytics-stat">
+          <small>УНИКАЛНИ ПОСЕТИТЕЛИ</small>
+          <strong id="uniqueVisitors">—</strong>
         </div>
 
-        <h3>ИСТОРИЯ ПО ДАТИ</h3>
-        <div class="table-wrap">
-          <table class="analytics-table">
-            <thead>
-              <tr>
-                <th>ДАТА</th>
-                <th>ПОСЕЩЕНИЯ</th>
-              </tr>
-            </thead>
-            <tbody id="analyticsHistory"></tbody>
-          </table>
+        <div class="analytics-stat">
+          <small>ПОСЕЩЕНИЯ ДНЕС</small>
+          <strong id="todayVisits">—</strong>
         </div>
 
-        <p class="analytics-note">
-          Уникалните посетители се определят чрез случаен идентификатор
-          в браузъра. Активен посетител означава активност през
-          последните 3 минути.
-        </p>
+        <div class="analytics-stat">
+          <small>ПОСЛЕДНИТЕ 7 ДНИ</small>
+          <strong id="weekVisits">—</strong>
+        </div>
+
+        <div class="analytics-stat active">
+          <small>АКТИВНИ В МОМЕНТА</small>
+          <strong id="activeVisitors">—</strong>
+        </div>
+
       </div>
-    </div>
 
-  </div>
-</section>
+      <h3>ПОСЕЩАЕМОСТ ПРЕЗ ПОСЛЕДНИТЕ 30 ДНИ</h3>
+
+      <div class="analytics-chart-wrap">
+        <canvas id="visitsChart"></canvas>
+      </div>
+
+      <h3>ИСТОРИЯ ПО ДАТИ</h3>
+
+      <div class="table-wrap">
+        <table class="analytics-table">
+          <thead>
+            <tr>
+              <th>ДАТА</th>
+              <th>ПОСЕЩЕНИЯ</th>
+            </tr>
+          </thead>
+          <tbody id="analyticsHistory"></tbody>
+        </table>
+      </div>
+
+      <p class="analytics-note">
+        Уникалните посетители се определят чрез случаен идентификатор
+        в браузъра. Активен посетител означава активност през
+        последните 3 минути.
+      </p>
+    </div>
+  </section>
+
+</main>
 
 <footer>SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 const db = window.supabase.createClient(
   "https://fyxlwcoochsuzhqostpe.supabase.co",
@@ -1033,8 +1040,7 @@ async function loadPlayers(){
     list.appendChild(row);
   });
 }
-
-/* PLAYER MANAGEMENT */
+  /* PLAYER MANAGEMENT */
 
 let managedPlayers=[];
 
@@ -1430,14 +1436,14 @@ function drawVisitsChart(daily){
       ctx.fillText(item.label,points[item.index].x,height-23);
     }
   });
-}
-
-window.addEventListener("resize",()=>{
+    }
+  window.addEventListener("resize",()=>{
   if(window.lastAnalyticsDaily){
     drawVisitsChart(window.lastAnalyticsDaily);
   }
 });
-  /* BRACKET AND MATCHES */
+
+/* BRACKET AND MATCHES */
 
 async function loadAdminData(){
   await loadRegistrations();
@@ -1623,6 +1629,11 @@ function createMatchCard(match){
       return;
     }
 
+    if(!winner.value){
+      alert("Избери победител.");
+      return;
+    }
+
     const expectedWinner=result1>result2
       ?match.player1_id
       :match.player2_id;
@@ -1632,7 +1643,34 @@ function createMatchCard(match){
       return;
     }
 
-    alert("Тук трябва да се свърже функцията за запис на резултата.");
+    saveButton.disabled=true;
+    saveButton.textContent="ЗАПИСВАНЕ...";
+
+    try{
+      const {data,error}=await db.rpc(
+        "sexsi_admin_submit_bracket_result",
+        {
+          p_match_id:match.id,
+          p_winner_id:winner.value,
+          p_score_player1:result1,
+          p_score_player2:result2
+        }
+      );
+
+      if(error){
+        alert("Грешка при записване: "+error.message);
+        return;
+      }
+
+      alert(data||"Резултатът е записан успешно.");
+      await loadBracket();
+
+    }catch(error){
+      alert("Възникна грешка: "+error.message);
+    }finally{
+      saveButton.disabled=false;
+      saveButton.textContent="ЗАПАЗИ РЕЗУЛТАТА";
+    }
   });
 
   controls.append(score1Label,score2Label,winnerLabel,saveButton);
