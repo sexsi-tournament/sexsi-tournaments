@@ -21,6 +21,135 @@ body{
   margin:0;background:var(--bg);color:#fff;
   font-family:Arial,sans-serif;overflow-x:hidden;
 }
+body.intro-active{overflow:hidden}
+
+/* SEXSI INTRO */
+#sexsiIntro{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  overflow:hidden;
+  background:#050505;
+  opacity:1;
+  visibility:visible;
+  animation:introFadeOut .65s ease 1.55s forwards;
+}
+#sexsiIntro:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  opacity:.16;
+  background:
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:55px 55px;
+}
+#sexsiIntro:after{
+  content:"";
+  position:absolute;
+  width:550px;
+  height:550px;
+  border-radius:50%;
+  background:rgba(237,37,45,.15);
+  filter:blur(120px);
+  animation:introAmbient 2.2s ease forwards;
+}
+.intro-content{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  opacity:0;
+  transform:scale(.88);
+  animation:introReveal .8s cubic-bezier(.2,.8,.2,1) .35s forwards;
+}
+.intro-logo{
+  position:relative;
+  color:#fff;
+  font-size:clamp(58px,12vw,100px);
+  font-weight:1000;
+  font-style:italic;
+  letter-spacing:3px;
+  line-height:1;
+  transform:skewX(-8deg);
+  text-shadow:
+    0 0 12px rgba(255,255,255,.2),
+    0 0 30px rgba(237,37,45,.65),
+    0 0 65px rgba(237,37,45,.4);
+}
+.intro-logo sup{
+  position:relative;
+  top:-.75em;
+  margin-left:3px;
+  color:var(--red2);
+  font-size:15px;
+  font-style:normal;
+  text-shadow:0 0 12px var(--red);
+}
+.intro-line{
+  width:min(320px,70vw);
+  height:2px;
+  margin:22px 0 18px;
+  position:relative;
+  overflow:hidden;
+  background:rgba(237,37,45,.15);
+  box-shadow:0 0 15px rgba(237,37,45,.35);
+}
+.intro-line:before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-100%;
+  width:100%;
+  height:100%;
+  background:linear-gradient(90deg,transparent,#fff,var(--red),transparent);
+  box-shadow:0 0 18px var(--red);
+  animation:introLaser .8s ease .2s forwards;
+}
+.intro-subtitle{
+  color:#fff;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:7px;
+  opacity:0;
+  transform:translateY(8px);
+  animation:introText .5s ease .85s forwards;
+}
+.intro-caption{
+  margin-top:13px;
+  color:#777;
+  font-size:9px;
+  font-weight:bold;
+  letter-spacing:4px;
+  opacity:0;
+  animation:introText .5s ease 1.05s forwards;
+}
+@keyframes introReveal{
+  0%{opacity:0;transform:scale(.88);filter:blur(12px)}
+  65%{opacity:1;transform:scale(1.04);filter:blur(0)}
+  100%{opacity:1;transform:scale(1);filter:blur(0)}
+}
+@keyframes introLaser{
+  0%{left:-100%}
+  100%{left:100%}
+}
+@keyframes introText{
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes introAmbient{
+  0%{transform:scale(.5);opacity:0}
+  50%{opacity:1}
+  100%{transform:scale(1.3);opacity:.65}
+}
+@keyframes introFadeOut{
+  to{opacity:0;visibility:hidden}
+}
+
 body:before{
   content:"";position:fixed;inset:0;pointer-events:none;
   z-index:10;opacity:.13;
@@ -276,11 +405,39 @@ footer{
     animation-duration:.01ms!important;animation-iteration-count:1!important;
     scroll-behavior:auto!important;
   }
+  #sexsiIntro{animation:none;opacity:0;visibility:hidden}
 }
 </style>
 </head>
 
-<body>
+<body class="intro-active">
+
+<div id="sexsiIntro" aria-label="SEXSI TOURNAMENTS intro">
+  <div class="intro-content">
+    <div class="intro-logo">SEXSI<sup>®</sup></div>
+    <div class="intro-line"></div>
+    <div class="intro-subtitle">TOURNAMENTS</div>
+    <div class="intro-caption">COMPETE · DOMINATE · CONQUER</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const intro = document.getElementById("sexsiIntro");
+
+  function closeIntro(){
+    document.body.classList.remove("intro-active");
+    if(intro) intro.remove();
+  }
+
+  if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+    closeIntro();
+  }else{
+    setTimeout(closeIntro,2200);
+  }
+})();
+</script>
+
 <div class="ambient"></div>
 
 <header>
@@ -318,7 +475,6 @@ footer{
     <a class="btn" href="profile.html">РЕГИСТРИРАЙ СЕ</a>
   </div>
 </section>
-
 <section id="modes">
   <div class="heading">РЕЖИМИ НА ИГРА</div>
   <div class="modes">
