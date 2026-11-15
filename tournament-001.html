@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<title>SEXSI 1V1 CUP #001 | SEXSI TOURNAMENTS</title>
+<style>
+*{box-sizing:border-box}
+:root{--red:#ed252d;--red2:#ff454b;--gold:#e9bd59;--bg:#080808;--panel:#131316;--muted:#aaa}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif;line-height:1.65}
+a{color:inherit}
+header{padding:18px 7%;display:flex;justify-content:space-between;align-items:center;gap:18px;border-bottom:1px solid #292929;background:#090909}
+.logo{font-size:28px;font-weight:1000;font-style:italic;letter-spacing:2px;text-decoration:none;text-shadow:0 0 20px #7d171c}
+nav{display:flex;gap:20px;flex-wrap:wrap}
+nav a{color:#aaa;text-decoration:none;font-size:11px;font-weight:900;letter-spacing:1px}
+nav a:hover{color:#fff}
+main{max-width:1180px;margin:auto}
+.hero{margin:38px 7% 25px;padding:42px 30px;text-align:center;border:1px solid rgba(237,37,45,.55);border-radius:14px;background:radial-gradient(circle at 50% 0,rgba(237,37,45,.23),transparent 60%),linear-gradient(120deg,#19090b,#090909 70%);box-shadow:0 15px 55px #000}
+.eyebrow{color:#ff6268;font-size:11px;font-weight:900;letter-spacing:4px}
+h1{font-size:clamp(34px,7vw,65px);line-height:1.05;margin:14px 0}
+h1 span{color:var(--red)}
+.subtitle{color:#aaa;max-width:700px;margin:0 auto 20px;font-size:14px}
+.status{display:inline-block;padding:6px 12px;border:1px solid #347e55;border-radius:30px;color:#65e69a;font-size:10px;font-weight:900;letter-spacing:1px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:25px auto 0;max-width:850px}
+.stat{padding:15px 10px;background:rgba(255,255,255,.045);border:1px solid #302326;border-radius:8px}
+.stat strong{display:block;font-size:17px;color:#fff}
+.stat span{display:block;color:#999;font-size:10px;letter-spacing:1px;margin-top:4px}
+.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:25px}
+.btn{display:inline-flex;justify-content:center;align-items:center;padding:13px 20px;border-radius:5px;text-decoration:none;font-size:11px;font-weight:900;letter-spacing:1px;background:linear-gradient(135deg,#ff353d,#b80d17);box-shadow:0 7px 24px rgba(237,37,45,.25)}
+.btn.secondary{background:#171719;border:1px solid #484044;box-shadow:none;color:#ddd}
+section.content{padding:22px 7%}
+.heading{font-size:22px;font-weight:900;margin:0 0 18px}
+.heading:after{content:"";display:block;width:48px;height:3px;background:var(--red);margin-top:9px;box-shadow:0 0 10px var(--red)}
+.intro{padding:22px;background:linear-gradient(145deg,#171719,#0e0e10);border:1px solid #292929;border-radius:10px;color:#ccc}
+.rule-list{display:grid;gap:10px}
+details{background:linear-gradient(145deg,#171719,#0e0e10);border:1px solid #303034;border-radius:9px;overflow:hidden}
+details[open]{border-color:rgba(237,37,45,.55)}
+summary{cursor:pointer;list-style:none;padding:17px 19px;font-size:13px;font-weight:900;letter-spacing:.4px;display:flex;justify-content:space-between;gap:15px}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"＋";color:var(--red2);font-size:18px}
+details[open] summary:after{content:"−"}
+.rule-body{padding:0 20px 18px;color:#bbb;font-size:13px}
+.rule-body p{margin:8px 0}
+.rule-body ul{padding-left:20px}
+.rule-body li{margin:6px 0}
+.note{padding:16px;border-left:3px solid var(--red);background:#1a1113;color:#bbb;border-radius:4px;font-size:12px}
+footer{margin-top:40px;padding:28px 7%;text-align:center;border-top:1px solid #292929;color:#777;font-size:11px;letter-spacing:1px}
+@media(max-width:650px){header{padding:16px 5%;align-items:flex-start;flex-direction:column}nav{gap:13px}.hero{margin:24px 5% 15px;padding:30px 17px}.stats{grid-template-columns:repeat(2,1fr)}section.content{padding:20px 5%}summary{padding:15px;font-size:12px}.rule-body{padding:0 15px 15px}}
+</style>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">SEXSI<sup style="color:#ff454b;font-size:10px">®</sup></a>
+<nav>
+<a href="index.html">НАЧАЛО</a>
+<a href="tournaments.html">ТУРНИРИ</a>
+<a href="ranking.html">КЛАСАЦИЯ</a>
+<a href="profile.html">ПРОФИЛ</a>
+</nav>
+</header>
+<main>
+<div class="hero">
+<div class="eyebrow">OFFICIAL TOURNAMENT INFORMATION</div>
+<h1>SEXSI 1V1 CUP <span>#001</span></h1>
+<div class="status">● ОФИЦИАЛЕН ТУРНИР</div>
+<p class="subtitle">Пълна информация, условия за участие и официален правилник на първия турнир на SEXSI TOURNAMENTS.</p>
+<div class="stats">
+<div class="stat"><strong>STANDOFF 2</strong><span>ИГРА</span></div>
+<div class="stat"><strong>1 VS 1</strong><span>ДИСЦИПЛИНА</span></div>
+<div class="stat"><strong>BO1</strong><span>ФОРМАТ НА МАЧА</span></div>
+<div class="stat"><strong>16</strong><span>МАКС. УЧАСТНИЦИ</span></div>
+<div class="stat"><strong>25.11.2026</strong><span>КРАЙ НА РЕГИСТРАЦИЯТА</span></div>
+<div class="stat"><strong>02.12.2026</strong><span>ДАТА НА ТУРНИРА</span></div>
+<div class="stat"><strong>5 000 GOLD</strong><span>НАГРАДА ЗА ПОБЕДИТЕЛЯ</span></div>
+<div class="stat"><strong>БЕЗПЛАТНО</strong><span>УЧАСТИЕ</span></div>
+</div>
+<div class="actions">
+<a class="btn" href="profile.html?join=SEXSI-1V1-001">ЗАПИШИ СЕ ЗА ТУРНИРА</a>
+<a class="btn secondary" href="index.html#bracketSection">ТУРНИРНА СХЕМА</a>
+</div>
+</div>
+
+<section class="content">
+<h2 class="heading">ИНФОРМАЦИЯ ЗА ТУРНИРА</h2>
+<div class="intro">
+SEXSI 1V1 CUP #001 е индивидуален турнир по Standoff 2, организиран от SEXSI TOURNAMENTS. Състезанието се провежда във формат един срещу един и използва система Single Elimination. Всеки двубой е BO1, като победителят продължава към следващия кръг, а загубилият отпада. Участието е безплатно, а обявената награда за победителя е 5 000 GOLD.
+</div>
+</section>
+
+<section class="content" id="rules">
+<h2 class="heading">ОФИЦИАЛЕН ПРАВИЛНИК</h2>
+<p style="color:#999;font-size:12px;margin-top:-8px">Версия 1.0 · Организатор: SEXSI TOURNAMENTS</p>
+<div class="rule-list">
+<details open>
+<summary>1. ОБЩА ИНФОРМАЦИЯ</summary>
+<div class="rule-body">
+<p>1.1. SEXSI 1V1 CUP #001 е официален индивидуален турнир, организиран от SEXSI TOURNAMENTS.</p>
+<p>1.2. Турнирът се провежда в Standoff 2 във формат 1 срещу 1.</p>
+<p>1.3. Всички участници се състезават при еднакви условия и са длъжни да спазват настоящия правилник.</p>
+<p>1.4. С регистрацията си всеки участник потвърждава, че е запознат с правилата и приема условията за участие.</p>
+<p>1.5. Организаторът следи за спазването на правилника през целия период на турнира.</p>
+</div>
+</details>
+<details>
+<summary>2. УСЛОВИЯ ЗА УЧАСТИЕ</summary>
+<div class="rule-body">
+<p>2.1. Всеки участник трябва да притежава регистриран профил в SEXSI TOURNAMENTS.</p>
+<p>2.2. Един играч има право на само една регистрация за турнира.</p>
+<p>2.3. Всеки участник е длъжен да предостави правилен и актуален игрови ID.</p>
+<p>2.4. Участниците носят лична отговорност за достоверността на предоставената информация.</p>
+<p>2.5. Забранява се използването на чужд игрови акаунт.</p>
+<p>2.6. След приключване на регистрацията промени в игровия ID се допускат само след одобрение от организатора.</p>
+<p>2.7. Организаторът има право да откаже или анулира регистрация при установени нарушения или предоставени неверни данни.</p>
+</div>
+</details>
+<details>
+<summary>3. ТУРНИРНА СИСТЕМА</summary>
+<div class="rule-body">
+<p>3.1. Турнирът се провежда по системата Single Elimination.</p>
+<p>3.2. Всеки двубой се играе във формат BO1 (Best of 1), което означава една игра.</p>
+<p>3.3. Победителят от двубоя продължава към следващия кръг.</p>
+<p>3.4. Загубилият участник отпада от турнира.</p>
+<p>3.5. Турнирната схема се генерира след приключване на регистрацията.</p>
+<p>3.6. При нечетен брой участници се допуска служебно преминаване към следващ кръг (BYE).</p>
+<p>3.7. Разпределението на участниците в турнирната схема се извършва от организатора.</p>
+<p>3.8. Организаторът определя реда и графика на двубоите.</p>
+</div>
+</details>
+<details>
+<summary>4. КАРТИ И ИГРОВИ РЕЖИМ</summary>
+<div class="rule-body">
+<p>4.1. Играчите имат право взаимно да се договорят за картата, на която ще се проведе двубоят.</p>
+<p>4.2. Изборът на карта трябва да бъде направен преди началото на срещата.</p>
+<p>4.3. При липса на съгласие относно картата организаторът определя картата.</p>
+<p>4.4. Игровият режим се определя от организатора и е задължителен за всички участници.</p>
+<p>4.5. Забранява се самоволна промяна на определения игрови режим.</p>
+<p>4.6. Всички двубои трябва да се провеждат при условията, определени за съответния турнир.</p>
+</div>
+</details>
+<details>
+<summary>5. ПРОВЕЖДАНЕ НА ДВУБОИТЕ</summary>
+<div class="rule-body">
+<p>5.1. Участниците са длъжни самостоятелно да следят информацията за своите двубои.</p>
+<p>5.2. Всеки играч трябва да бъде готов за срещата в определения ден и час.</p>
+<p>5.3. Допуска се закъснение до 10 минути от определения начален час.</p>
+<p>5.4. При закъснение играчът трябва да уведоми организатора.</p>
+<p>5.5. Участник, който не се яви в рамките на допустимото време и не предостави основателна причина, може да бъде обявен за служебно загубил.</p>
+<p>5.6. При неявяване на двамата участници организаторът разглежда ситуацията и определя начина за приключване на двубоя.</p>
+<p>5.7. Всеки играч носи отговорност за собственото си устройство и интернет връзка.</p>
+<p>5.8. При технически проблем участникът трябва незабавно да уведоми организатора.</p>
+<p>5.9. Повторно изиграване на двубой се допуска само след изрично решение на организатора.</p>
+</div>
+</details>
+<details>
+<summary>6. РЕЗУЛТАТИ И ДОКАЗАТЕЛСТВА</summary>
+<div class="rule-body">
+<p>6.1. След приключване на всеки двубой трябва да бъде направена екранна снимка, показваща крайния резултат.</p>
+<p>6.2. Екранната снимка е задължително доказателство за резултата.</p>
+<p>6.3. Участниците са длъжни да предоставят доказателството по определения от организатора канал.</p>
+<p>6.4. Организаторът има право да поиска допълнителна информация или доказателства при съмнение за нередност.</p>
+<p>6.5. Резултатът се счита за официален след проверка и потвърждение от администрацията.</p>
+<p>6.6. Умишленото предоставяне на фалшиви или манипулирани доказателства може да доведе до дисквалификация.</p>
+</div>
+</details>
+<details>
+<summary>7. ВЪЗРАЖЕНИЯ И СПОРОВЕ</summary>
+<div class="rule-body">
+<p>7.1. Всеки участник има право да подаде възражение при съмнение за нарушение или неправилно отчетен резултат.</p>
+<p>7.2. Възраженията трябва да бъдат подадени в срок до 30 минути след приключване на съответния двубой.</p>
+<p>7.3. Всяко възражение трябва да съдържа ясно описание на проблема и наличните доказателства.</p>
+<p>7.4. Организаторът разглежда подадените възражения и може да поиска допълнителна информация от участниците.</p>
+<p>7.5. След проверка организаторът взема решение относно конкретния случай.</p>
+<p>7.6. Възражения, подадени след изтичане на срока, могат да бъдат разгледани само при наличие на основателни причини.</p>
+</div>
+</details>
+<details>
+<summary>8. ЧЕСТНА ИГРА И ЗАБРАНЕНИ ДЕЙСТВИЯ</summary>
+<div class="rule-body">
+<p>8.1. Всички участници са длъжни да спазват принципите на честната игра.</p>
+<p>8.2. Строго се забраняват:</p>
+<ul>
+<li>Използване на хакове, чийтове, скриптове и други забранени помощни средства.</li>
+<li>Използване на модифицирани файлове с цел получаване на нечестно предимство.</li>
+<li>Умишлено манипулиране на резултати.</li>
+<li>Уговаряне на предварително определени резултати.</li>
+<li>Използване на чужд акаунт или представяне за друг участник.</li>
+<li>Умишлено саботиране на двубои.</li>
+<li>Заплахи, тормоз и неспортсменско поведение към други участници или администрацията.</li>
+</ul>
+<p>8.3. При установено нарушение организаторът има право да предприеме съответните дисциплинарни мерки.</p>
+</div>
+</details>
+<details>
+<summary>9. ДИСКВАЛИФИКАЦИЯ И САНКЦИИ</summary>
+<div class="rule-body">
+<p>9.1. В зависимост от тежестта на нарушението могат да бъдат наложени следните санкции:</p>
+<ul>
+<li>Официално предупреждение.</li>
+<li>Служебна загуба на двубой.</li>
+<li>Дисквалификация от турнира.</li>
+<li>Временно ограничаване на достъпа до бъдещи турнири.</li>
+<li>Постоянно отстраняване от платформата при тежки или повторни нарушения.</li>
+</ul>
+<p>9.2. Всеки случай се разглежда индивидуално.</p>
+<p>9.3. При налагане на сериозна санкция организаторът трябва да разполага с достатъчно основания и доказателства.</p>
+<p>9.4. Дисквалифициран участник няма право да продължи участието си в текущия турнир.</p>
+</div>
+</details>
+<details>
+<summary>10. ПРАВОМОЩИЯ НА ОРГАНИЗАТОРА</summary>
+<div class="rule-body">
+<p>10.1. SEXSI TOURNAMENTS отговаря за организацията и провеждането на турнира.</p>
+<p>10.2. Организаторът има право да проверява регистрациите, участниците и резултатите.</p>
+<p>10.3. Организаторът може да променя графика на двубоите при възникване на основателни обстоятелства.</p>
+<p>10.4. Всяка съществена промяна в правилника или организацията трябва да бъде публично обявена.</p>
+<p>10.5. Организаторът има право да разглежда спорове и да взема решения въз основа на наличните доказателства.</p>
+<p>10.6. Не се допуска произволно прилагане на санкции или промяна на резултати без основание.</p>
+</div>
+</details>
+<details>
+<summary>11. ЗАКЛЮЧИТЕЛНИ РАЗПОРЕДБИ</summary>
+<div class="rule-body">
+<p>11.1. Настоящият правилник влиза в сила от момента на официалното му публикуване.</p>
+<p>11.2. Всички участници са длъжни да спазват правилата през целия период на турнира.</p>
+<p>11.3. Организаторът може да разрешава неуредени в правилника организационни ситуации, като решенията трябва да бъдат обосновани и еднакво приложими към участниците.</p>
+<p>11.4. С участието си в SEXSI 1V1 CUP #001 всеки играч декларира, че приема настоящия правилник.</p>
+</div>
+</details>
+</div>
+</section>
+<section class="content">
+<div class="note"><strong>SEXSI TOURNAMENTS</strong><br>Официален правилник на SEXSI 1V1 CUP #001 · Версия 1.0</div>
+<div class="actions"><a class="btn secondary" href="tournaments.html">НАЗАД КЪМ ТУРНИРИТЕ</a><a class="btn" href="profile.html?join=SEXSI-1V1-001">ЗАПИШИ СЕ</a></div>
+</section>
+</main>
+<footer>SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY</footer>
+</body>
+</html>
