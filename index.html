@@ -211,6 +211,32 @@ header{
   text-shadow:0 0 7px var(--red),0 0 15px rgba(237,37,45,.8);
 }
 nav{display:flex;flex-wrap:wrap;gap:20px}
+#guestNav[hidden],#playerNav[hidden]{display:none!important}
+.player-nav{position:relative;display:flex;align-items:center}
+.player-menu-button{
+  display:flex;align-items:center;gap:10px;padding:11px 15px;
+  color:#fff;background:linear-gradient(135deg,#241012,#111);
+  border:1px solid rgba(237,37,45,.55);border-radius:7px;
+  font-size:11px;font-weight:900;letter-spacing:1px;cursor:pointer;
+  box-shadow:0 0 20px rgba(237,37,45,.12);
+}
+.player-menu-button:after{content:"▾";color:var(--red2);font-size:14px}
+.player-menu-button:hover{border-color:var(--red2);box-shadow:0 0 22px rgba(237,37,45,.25)}
+.player-menu{
+  position:absolute;right:0;top:calc(100% + 12px);z-index:100;
+  width:230px;padding:8px;background:#111114;
+  border:1px solid rgba(237,37,45,.45);border-radius:10px;
+  box-shadow:0 18px 45px rgba(0,0,0,.65),0 0 25px rgba(237,37,45,.13);
+}
+.player-menu[hidden]{display:none!important}
+.player-menu a,.player-menu button{
+  display:block;width:100%;padding:12px 13px;text-align:left;
+  color:#ccc;background:none;border:0;border-radius:6px;
+  text-decoration:none;font-size:11px;font-weight:800;letter-spacing:.5px;
+  cursor:pointer;
+}
+.player-menu a:hover,.player-menu button:hover{color:#fff;background:rgba(237,37,45,.13)}
+.player-menu .menu-logout{color:#ff6268;border-top:1px solid #292929;margin-top:5px}
 nav a{
   color:#aaa;text-decoration:none;font-size:12px;
   font-weight:bold;letter-spacing:1px;transition:.3s;
@@ -394,6 +420,8 @@ footer{
   .logo{font-size:27px}
   nav{width:100%;justify-content:space-between;gap:5px}
   nav a{font-size:9px;letter-spacing:0}
+  .player-nav{width:100%;justify-content:flex-end}
+  .player-menu{right:0;max-width:calc(100vw - 30px)}
   h1{font-size:55px;letter-spacing:-2px}
   .hero{padding:55px 5% 30px}
   section{padding:42px 5%}
@@ -442,12 +470,24 @@ footer{
 
 <header>
   <div class="logo">SEXSI<sup>®</sup></div>
-  <nav>
+  <nav id="guestNav">
     <a href="index.html">НАЧАЛО</a>
     <a href="tournaments.html">ТУРНИРИ</a>
     <a href="ranking.html">КЛАСАЦИЯ</a>
     <a href="profile.html">ПРОФИЛ</a>
   </nav>
+  <div class="player-nav" id="playerNav" hidden>
+    <button class="player-menu-button" id="playerMenuButton" type="button"
+      aria-expanded="false" aria-controls="playerMenu">МОЕТО МЕНЮ</button>
+    <div class="player-menu" id="playerMenu" hidden>
+      <a href="profile.html#playerDashboard">МОЕТО ТАБЛО</a>
+      <a href="profile.html#playerDashboard">МОЯТ ПРОФИЛ</a>
+      <a href="tournaments.html">ТУРНИРИ</a>
+      <a href="#bracketSection">МОИТЕ ДВУБОИ / СХЕМА</a>
+      <a href="ranking.html">КЛАСАЦИЯ И СТАТИСТИКА</a>
+      <button class="menu-logout" id="playerLogout" type="button">ИЗХОД ОТ ПРОФИЛА</button>
+    </div>
+  </div>
 </header>
 
 <main>
@@ -475,6 +515,16 @@ footer{
     <a class="btn" href="profile.html">РЕГИСТРИРАЙ СЕ</a>
   </div>
 </section>
+
+<section id="home-ranking">
+  <div class="heading">ТОП ИГРАЧИ</div>
+  <div class="cards" id="homeRankingList">
+    <div class="card"><p>Зареждане на класацията...</p></div>
+  </div>
+  <p id="homeRankingMessage" style="color:#888;font-size:12px;margin-top:14px"></p>
+  <a class="btn" href="ranking.html">ЦЯЛАТА КЛАСАЦИЯ</a>
+</section>
+
 <section id="modes">
   <div class="heading">РЕЖИМИ НА ИГРА</div>
   <div class="modes">
@@ -562,6 +612,14 @@ footer{
   const bracketSection = document.getElementById("bracketSection");
   const bracketAccess = document.getElementById("bracketAccess");
   const bracketContainer = document.getElementById("bracketContainer");
+  const guestNav = document.getElementById("guestNav");
+  const playerNav = document.getElementById("playerNav");
+  const playerMenuButton = document.getElementById("playerMenuButton");
+  const playerMenu = document.getElementById("playerMenu");
+  const playerLogout = document.getElementById("playerLogout");
+  const homeRankingList = document.getElementById("homeRankingList");
+  const homeRankingMessage = document.getElementById("homeRankingMessage");
+  const ADMIN_ID = "13f1ada8-cd05-4c31-8940-4fb1790cb90e";
 
   const deadline = new Date("2026-11-25T23:59:59+02:00").getTime();
 
@@ -636,6 +694,98 @@ footer{
       </div>
     `;
   }
+
+  async function loadHomeRanking(){
+    try{
+      const {data,error} = await db.rpc("sexsi_get_ranking");
+      if(error) throw error;
+
+      homeRankingList.innerHTML = "";
+      const players = Array.isArray(data) ? data.slice(0,3) : [];
+
+      if(!players.length){
+        homeRankingMessage.textContent = "Все още няма играчи в класацията.";
+        homeRankingList.innerHTML = '<div class="card"><p>Класацията ще се появи тук, когато има резултати.</p></div>';
+        return;
+      }
+
+      players.forEach((player,index)=>{
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const rank = document.createElement("div");
+        rank.className = "status";
+        rank.textContent = index === 0 ? "🥇 1ВО МЯСТО" : index === 1 ? "🥈 2РО МЯСТО" : "🥉 3ТО МЯСТО";
+
+        const name = document.createElement("h3");
+        name.textContent = player.player_name || "Играч";
+
+        const stats = document.createElement("p");
+        stats.textContent = "Победи: " + (player.wins ?? 0) +
+          " · Загуби: " + (player.losses ?? 0);
+
+        const points = document.createElement("p");
+        points.textContent = "Точки: " + (player.points ?? 0);
+        points.style.color = "#e9bd59";
+        points.style.fontWeight = "900";
+
+        card.append(rank,name,stats,points);
+        homeRankingList.appendChild(card);
+      });
+      homeRankingMessage.textContent = "Класацията е заредена от реалните резултати.";
+    }catch(error){
+      homeRankingList.innerHTML = '<div class="card"><p>Класацията временно не е достъпна.</p></div>';
+      homeRankingMessage.textContent = "";
+      console.error("Home ranking error:",error.message);
+    }
+  }
+
+  function updatePlayerMenu(session){
+    const user = session && session.user;
+    const isAdmin = !!user && user.id === ADMIN_ID;
+    const isRegularPlayer = !!user && !isAdmin;
+
+    playerNav.hidden = !isRegularPlayer;
+    guestNav.hidden = isRegularPlayer;
+
+    if(!isRegularPlayer){
+      playerMenu.hidden = true;
+      playerMenuButton.setAttribute("aria-expanded","false");
+    }
+  }
+
+  playerMenuButton.addEventListener("click",()=>{
+    const opening = playerMenu.hidden;
+    playerMenu.hidden = !opening;
+    playerMenuButton.setAttribute("aria-expanded",String(opening));
+  });
+
+  document.addEventListener("click",(event)=>{
+    if(!playerNav.contains(event.target)){
+      playerMenu.hidden = true;
+      playerMenuButton.setAttribute("aria-expanded","false");
+    }
+  });
+
+  playerMenu.addEventListener("click",(event)=>{
+    if(event.target.closest("a")){
+      playerMenu.hidden = true;
+      playerMenuButton.setAttribute("aria-expanded","false");
+    }
+  });
+
+  playerLogout.addEventListener("click",async()=>{
+    playerLogout.disabled = true;
+    playerLogout.textContent = "ИЗЛИЗАНЕ...";
+    const {error} = await db.auth.signOut();
+    if(error){
+      playerLogout.disabled = false;
+      playerLogout.textContent = "ГРЕШКА ПРИ ИЗХОД";
+      console.error("Logout error:",error.message);
+      return;
+    }
+    window.location.href = "profile.html";
+  });
 
   async function loadBracket(){
     bracketContainer.textContent = "Зареждане на турнирната схема...";
@@ -757,6 +907,7 @@ footer{
         return;
       }
 
+      updatePlayerMenu(data.session);
       await updateBracketAccess(data.session);
 
     }catch(error){
@@ -854,6 +1005,7 @@ footer{
   /* END PRIVATE VISITOR ANALYTICS */
 
   loadRegistrationCount();
+  loadHomeRanking();
   updateCountdown();
   setInterval(updateCountdown,1000);
   setInterval(loadRegistrationCount,15000);
@@ -861,6 +1013,7 @@ footer{
   initializePage();
 
   db.auth.onAuthStateChange((event,session)=>{
+    updatePlayerMenu(session);
     updateBracketAccess(session);
   });
 
