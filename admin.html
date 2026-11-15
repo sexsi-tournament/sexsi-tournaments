@@ -3,301 +3,593 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#090909">
-<title>Администратор | SEXSI TOURNAMENTS</title>
+<title>SEXSI TOURNAMENTS | ADMIN</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#090909;color:#fff;font-family:Arial,sans-serif}
-header{padding:20px 7%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #292929}
-.logo{font-size:28px;font-weight:900;letter-spacing:3px}
-.logo span{color:#ed252d}
-nav a{color:#bbb;text-decoration:none;margin-left:15px;font-size:13px}
-section{padding:30px 5%;max-width:1250px;margin:auto}
-h1{color:#ed252d;margin-top:0}
-.card{background:#141414;border:1px solid #303030;padding:20px;border-radius:9px;margin:18px 0}
-.table-wrap{overflow-x:auto}
-table{width:100%;min-width:650px;border-collapse:collapse;text-align:left}
-th{background:#ed252d;padding:12px}
-td{padding:12px;border-bottom:1px solid #303030}
-button{background:#ed252d;color:white;border:0;padding:12px 18px;border-radius:5px;font-weight:bold;cursor:pointer}
-button:disabled{opacity:.5;cursor:not-allowed}
-.message{color:#aaa;line-height:1.5}
-footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
-#adminContent{display:none}
-#accessCard{max-width:1250px;margin:25px auto}
-.admin-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:15px;
-  margin-bottom:22px
+:root{
+  --bg:#090909;
+  --panel:#141414;
+  --panel2:#1b1b1b;
+  --red:#ed252d;
+  --gold:#e7bd55;
+  --text:#f5f5f5;
+  --muted:#929292;
+  --border:#292929;
+  --green:#27c879;
 }
-.admin-top h1{margin:0}
-.menu-button{
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  min-height:100vh;
+}
+
+button,input,select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+header{
+  min-height:70px;
+  padding:15px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  background:#101010;
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+.logo{
+  font-size:20px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.logo span{
+  color:var(--red);
+}
+
+.header-right{
   display:flex;
   align-items:center;
   gap:10px;
-  background:#ed252d;
-  padding:13px 20px;
-  font-size:13px;
-  letter-spacing:.5px
-}
-.menu-icon{font-size:19px;line-height:1}
-.dashboard-welcome{
-  background:linear-gradient(120deg,#191919,#101010);
-  border:1px solid #333;
-  border-left:4px solid #ed252d;
-  padding:24px;
-  border-radius:9px;
-  margin-bottom:20px
-}
-.dashboard-welcome h2{margin:0 0 8px;font-size:23px}
-.dashboard-welcome p{color:#999;margin:0;font-size:13px;line-height:1.6}
-.dashboard-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
-  margin:20px 0
-}
-.dashboard-stat{
-  background:#141414;
-  border:1px solid #303030;
-  border-radius:9px;
-  padding:20px;
-  min-width:0
-}
-.dashboard-stat small{
-  display:block;
-  color:#999;
-  font-size:11px;
-  letter-spacing:.7px;
-  margin-bottom:12px
-}
-.dashboard-stat strong{
-  display:block;
-  font-size:30px;
-  color:#fff;
-  overflow-wrap:anywhere
-}
-.dashboard-stat .stat-icon{
-  color:#ed252d;
-  font-size:20px;
-  margin-bottom:12px
-}
-.dashboard-actions{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-  margin-top:20px
-}
-.dashboard-action{
-  background:#151515;
-  border:1px solid #333;
-  color:#fff;
-  text-align:left;
-  padding:17px;
-  border-radius:8px;
-  cursor:pointer;
-  transition:.2s
-}
-.dashboard-action:hover{
-  border-color:#ed252d;
-  background:#1c1112
-}
-.dashboard-action strong{
-  display:block;
-  margin-bottom:6px;
-  font-size:14px
-}
-.dashboard-action span{
-  color:#999;
-  font-size:12px;
-  font-weight:normal
-}
-.admin-view{display:none}
-.admin-view.active{display:block}
-.view-heading{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:12px;
-  margin-bottom:15px
-}
-.view-heading h2{margin:0;color:#ed252d;font-size:21px}
-.back-dashboard{
-  background:#252525;
-  border:1px solid #444;
-  padding:10px 14px;
-  font-size:12px
 }
 
-/* SIDE MENU */
+.header-button{
+  border:1px solid var(--border);
+  background:#1b1b1b;
+  color:white;
+  padding:10px 13px;
+  border-radius:7px;
+  font-weight:bold;
+}
+
+.header-button:hover{
+  border-color:var(--red);
+}
+
 .menu-overlay{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,.75);
-  z-index:1000;
-  opacity:0;
-  visibility:hidden;
-  transition:.25s
+  z-index:29;
+  display:none;
 }
-.menu-overlay.open{opacity:1;visibility:visible}
+
+.menu-overlay.open{
+  display:block;
+}
+
 .side-menu{
   position:fixed;
-  z-index:1001;
   top:0;
   left:0;
-  width:min(330px,85vw);
+  width:min(300px,85vw);
   height:100%;
-  background:#101010;
-  border-right:1px solid #333;
-  padding:25px 18px;
+  background:#111;
+  border-right:1px solid var(--border);
+  z-index:30;
+  padding:20px;
   transform:translateX(-105%);
-  transition:transform .28s ease;
-  overflow-y:auto
+  transition:.25s;
+  overflow-y:auto;
 }
-.side-menu.open{transform:translateX(0)}
-.menu-header{
+
+.side-menu.open{
+  transform:translateX(0);
+}
+
+.menu-top{
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  padding-bottom:22px;
-  border-bottom:1px solid #333;
-  margin-bottom:20px
-}
-.menu-logo{font-size:22px;font-weight:900;letter-spacing:2px}
-.menu-logo span{color:#ed252d}
-.menu-close{
-  background:#252525;
-  padding:8px 12px;
-  font-size:18px
-}
-.menu-label{
-  color:#777;
-  font-size:10px;
-  letter-spacing:1.5px;
-  margin:20px 10px 10px
-}
-.menu-item{
-  display:flex;
   align-items:center;
-  gap:13px;
-  width:100%;
-  background:transparent;
-  color:#bbb;
-  text-align:left;
-  padding:14px 12px;
+  margin-bottom:30px;
+}
+
+.menu-title{
+  font-weight:900;
+  font-size:19px;
+}
+
+.menu-title span{
+  color:var(--red);
+}
+
+.menu-close{
+  background:#222;
+  border:1px solid var(--border);
+  color:white;
+  padding:8px 12px;
   border-radius:6px;
-  margin:4px 0;
-  font-size:13px;
+}
+
+.menu-item{
+  display:block;
+  width:100%;
+  text-align:left;
+  padding:14px;
+  margin-bottom:8px;
   border:1px solid transparent;
-  transition:.2s
+  border-radius:7px;
+  background:#191919;
+  color:#ddd;
+  font-weight:bold;
 }
-.menu-item:hover,.menu-item.active{
-  color:#fff;
-  background:#211314;
-  border-color:#562326
-}
-.menu-item.active{color:#ff555b}
-.menu-item .menu-symbol{
-  width:23px;
-  text-align:center;
-  font-size:17px;
-  color:#ed252d
-}
-.menu-divider{height:1px;background:#292929;margin:17px 0}
 
-/* MATCHES */
-.match-card{background:#1b1b1b;border:1px solid #333;padding:16px;border-radius:7px;margin:14px 0}
-.match-title{color:#ed252d;font-weight:bold;margin-bottom:12px}
-.match-players{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.match-player{background:#111;padding:12px;border-radius:5px;overflow-wrap:anywhere}
-.match-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.match-controls label{font-size:12px;color:#aaa}
-.match-controls input,.match-controls select{width:100%;padding:11px;margin-top:6px;background:#090909;color:white;border:1px solid #444;border-radius:5px}
-.match-save{margin-top:12px;width:100%}
-.match-status{color:#aaa;font-size:13px;margin-top:12px}
-.round-heading{color:#ed252d;margin-top:28px;border-bottom:1px solid #333;padding-bottom:8px}
+.menu-item:hover,
+.menu-item.active{
+  background:#281315;
+  border-color:var(--red);
+  color:white;
+}
 
-/* PRIVATE ANALYTICS */
-.analytics-grid{
+.menu-divider{
+  height:1px;
+  background:var(--border);
+  margin:18px 0;
+}
+
+.menu-logout{
+  color:#ff6268;
+}
+
+main{
+  width:min(1200px,94%);
+  margin:30px auto;
+}
+
+.admin-heading{
+  margin-bottom:25px;
+}
+
+.admin-heading h1{
+  font-size:27px;
+  font-weight:900;
+}
+
+.admin-heading p{
+  color:var(--muted);
+  margin-top:8px;
+  font-size:14px;
+}
+
+.admin-view{
+  display:none;
+}
+
+.admin-view.active{
+  display:block;
+}
+
+.section-title{
+  font-size:19px;
+  font-weight:900;
+  margin-bottom:18px;
+}
+
+.section-description{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:-10px;
+  margin-bottom:20px;
+}
+
+.overview-grid{
   display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:12px;
-  margin:20px 0;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:14px;
+  margin-bottom:25px;
 }
+
+.overview-card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:20px;
+  min-height:115px;
+}
+
+.overview-card small{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:bold;
+  letter-spacing:.5px;
+}
+
+.overview-card strong{
+  display:block;
+  font-size:29px;
+  margin-top:12px;
+  color:white;
+}
+
+.overview-card.highlight strong{
+  color:var(--red);
+}
+
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:14px;
+}
+
+.dashboard-action{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:20px;
+  text-align:left;
+  color:white;
+  transition:.2s;
+}
+
+.dashboard-action:hover{
+  border-color:var(--red);
+  transform:translateY(-2px);
+}
+
+.dashboard-action strong{
+  display:block;
+  font-size:16px;
+  margin-bottom:8px;
+}
+
+.dashboard-action span{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.panel h3{
+  font-size:15px;
+  margin-bottom:15px;
+}
+
+.table-wrap{
+  width:100%;
+  overflow-x:auto;
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:650px;
+}
+
+th,td{
+  padding:13px 12px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+  font-size:13px;
+}
+
+th{
+  background:#202020;
+  color:#aaa;
+  font-size:11px;
+  letter-spacing:.4px;
+}
+
+td{
+  color:#eee;
+}
+
+tr:last-child td{
+  border-bottom:0;
+}
+
+.message{
+  color:var(--muted);
+  font-size:13px;
+  margin:12px 0;
+}
+
+.primary-button{
+  background:var(--red);
+  color:white;
+  border:0;
+  padding:12px 17px;
+  border-radius:7px;
+  font-weight:900;
+}
+
+.primary-button:hover{
+  background:#c91b23;
+}
+
+.secondary-button{
+  background:#222;
+  color:white;
+  border:1px solid var(--border);
+  padding:11px 15px;
+  border-radius:7px;
+  font-weight:bold;
+}
+
+.back-dashboard{
+  margin-bottom:20px;
+}
+
+.search-input{
+  width:100%;
+  max-width:450px;
+  background:#0e0e0e;
+  color:white;
+  border:1px solid var(--border);
+  border-radius:7px;
+  padding:13px;
+  outline:none;
+  margin-bottom:15px;
+}
+
+.search-input:focus{
+  border-color:var(--red);
+}
+
+.analytics-stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+  gap:12px;
+  margin-bottom:25px;
+}
+
 .analytics-stat{
   background:#101010;
-  border:1px solid #303030;
-  border-radius:7px;
-  padding:17px;
-  min-width:0;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:16px;
 }
+
 .analytics-stat small{
   display:block;
-  color:#999;
-  font-size:11px;
-  margin-bottom:12px;
-  line-height:1.4;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:bold;
 }
+
 .analytics-stat strong{
   display:block;
-  color:#fff;
-  font-size:27px;
-  overflow-wrap:anywhere;
+  font-size:25px;
+  margin-top:10px;
 }
-.analytics-stat.active strong{color:#35d07f}
+
+.analytics-stat.active strong{
+  color:var(--green);
+}
+
 .analytics-chart-wrap{
   width:100%;
-  height:260px;
-  position:relative;
-  margin-top:15px;
+  height:230px;
+  background:#101010;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:12px;
+  margin:15px 0 25px;
 }
+
 #visitsChart{
   width:100%;
   height:100%;
   display:block;
 }
+
+.analytics-table{
+  min-width:350px;
+}
+
 .analytics-note{
-  color:#888;
+  color:var(--muted);
   font-size:12px;
   line-height:1.6;
+  margin-top:15px;
 }
-.analytics-table{min-width:0}
-.analytics-table th{background:#202020}
-.analytics-table td,.analytics-table th{padding:11px}
-.analytics-heading{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:12px;
-}
-.analytics-heading h2{margin:0}
-.analytics-error{color:#ff5555}
 
-@media(max-width:900px){
-  .analytics-grid{grid-template-columns:repeat(3,1fr)}
+.analytics-error{
+  color:#ff6268;
 }
+
+.player-status{
+  display:inline-block;
+  padding:6px 9px;
+  border-radius:5px;
+  font-size:10px;
+  font-weight:900;
+}
+
+.player-status.active{
+  background:rgba(39,200,121,.12);
+  color:var(--green);
+}
+
+.player-status.blocked{
+  background:rgba(237,37,45,.14);
+  color:#ff6268;
+}
+
+.player-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+
+.player-actions button{
+  border:0;
+  padding:8px 10px;
+  border-radius:5px;
+  font-size:10px;
+  font-weight:900;
+  color:white;
+}
+
+.player-edit-button{
+  background:#343434;
+}
+
+.player-block-button{
+  background:#a51d24;
+}
+
+.player-unblock-button{
+  background:#167a4b;
+}
+
+.player-empty{
+  text-align:center;
+  color:var(--muted);
+  padding:25px;
+}
+
+.round-heading{
+  color:var(--gold);
+  font-size:15px;
+  margin:25px 0 12px;
+}
+
+.match-card{
+  background:#101010;
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:17px;
+  margin-bottom:12px;
+}
+
+.match-title{
+  font-weight:900;
+  color:var(--gold);
+  margin-bottom:12px;
+}
+
+.match-players{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.match-player{
+  background:#1b1b1b;
+  padding:12px;
+  border-radius:6px;
+  font-size:13px;
+}
+
+.match-status{
+  color:var(--muted);
+  font-size:12px;
+  margin:12px 0;
+}
+
+.match-controls{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;
+  margin-top:15px;
+}
+
+.match-controls label{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:bold;
+}
+
+.match-controls input,
+.match-controls select{
+  display:block;
+  width:100%;
+  margin-top:7px;
+  background:#090909;
+  border:1px solid var(--border);
+  border-radius:6px;
+  color:white;
+  padding:11px;
+}
+
+.save-match-button{
+  background:var(--red);
+  color:white;
+  border:0;
+  border-radius:6px;
+  padding:12px;
+  font-weight:900;
+  align-self:end;
+}
+
+footer{
+  text-align:center;
+  color:#666;
+  font-size:11px;
+  padding:30px 15px;
+  border-top:1px solid var(--border);
+  margin-top:40px;
+}
+
 @media(max-width:600px){
-  header{padding:18px 4%}
-  nav a{margin-left:7px;font-size:10px}
-  section{padding:23px 4%}
-  .match-players{grid-template-columns:1fr}
-  .match-controls{grid-template-columns:1fr 1fr}
-  .analytics-grid{grid-template-columns:repeat(2,1fr)}
-  .analytics-stat strong{font-size:23px}
-  .analytics-stat{padding:13px}
-  .analytics-chart-wrap{height:220px}
-  .dashboard-grid{grid-template-columns:1fr 1fr;gap:9px}
-  .dashboard-stat{padding:14px}
-  .dashboard-stat strong{font-size:25px}
-  .dashboard-actions{grid-template-columns:1fr}
-  .dashboard-welcome{padding:19px}
-  .admin-top h1{font-size:21px}
+  header{
+    padding:13px;
+  }
+
+  .logo{
+    font-size:16px;
+  }
+
+  main{
+    margin:22px auto;
+  }
+
+  .admin-heading h1{
+    font-size:23px;
+  }
+
+  .panel{
+    padding:14px;
+  }
+
+  .match-players{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
@@ -305,251 +597,228 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 <body>
 
 <header>
-  <div class="logo">SEXSI<span>.</span></div>
-  <nav>
-    <a href="index.html">НАЧАЛО</a>
-    <a href="tournaments.html">ТУРНИРИ</a>
-    <a href="ranking.html">КЛАСАЦИЯ</a>
-    <a href="profile.html">ПРОФИЛ</a>
-  </nav>
+  <div class="logo">SEXSI <span>TOURNAMENTS</span></div>
+
+  <div class="header-right">
+    <button class="header-button" id="openMenuButton">☰ МЕНЮ</button>
+  </div>
 </header>
 
-<section>
-  <div class="admin-top">
+<div class="menu-overlay" id="menuOverlay"></div>
+
+<nav class="side-menu" id="sideMenu">
+  <div class="menu-top">
+    <div class="menu-title">SEXSI <span>ADMIN</span></div>
+    <button class="menu-close" id="closeMenuButton">✕</button>
+  </div>
+
+  <button class="menu-item active" data-view="dashboard">НАЧАЛО</button>
+  <button class="menu-item" data-view="registrations">РЕГИСТРАЦИИ</button>
+  <button class="menu-item" data-view="players">ВСИЧКИ ИГРАЧИ</button>
+  <button class="menu-item" data-view="player-management">УПРАВЛЕНИЕ НА ИГРАЧИ</button>
+  <button class="menu-item" data-view="matches">ТУРНИРНА СХЕМА</button>
+  <button class="menu-item" data-view="analytics">АНАЛИЗИ И ПОСЕЩЕНИЯ</button>
+
+  <div class="menu-divider"></div>
+
+  <button class="menu-item" id="menuRefreshButton">ОБНОВИ ДАННИТЕ</button>
+  <button class="menu-item menu-logout" id="menuLogoutButton">ИЗХОД</button>
+</nav>
+
+<main>
+
+  <div class="admin-heading">
     <h1>АДМИНИСТРАТИВЕН ПАНЕЛ</h1>
-    <button class="menu-button" id="openMenuButton">
-      <span class="menu-icon">☰</span>
-      УПРАВЛЕНИЕ
-    </button>
+    <p>Управление на SEXSI TOURNAMENTS</p>
   </div>
 
-  <div class="card" id="accessCard">
-    <p id="accessMessage" class="message">Проверка на достъпа...</p>
-  </div>
+  <section class="admin-view active" id="dashboardPanel">
 
-  <div id="adminContent">
+    <div class="section-title">ОБЩ ПРЕГЛЕД</div>
 
-    <!-- SIDE MENU -->
-    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="overview-grid">
 
-    <aside class="side-menu" id="sideMenu">
-      <div class="menu-header">
-        <div class="menu-logo">SEXSI<span>.</span> ADMIN</div>
-        <button class="menu-close" id="closeMenuButton">✕</button>
+      <div class="overview-card highlight">
+        <small>ОБЩО РЕГИСТРАЦИИ</small>
+        <strong id="overviewRegistrations">—</strong>
       </div>
 
-      <div class="menu-label">ОСНОВНО</div>
-
-      <button class="menu-item active" data-view="dashboard">
-        <span class="menu-symbol">⌂</span> Контролно табло
-      </button>
-
-      <div class="menu-divider"></div>
-      <div class="menu-label">УПРАВЛЕНИЕ</div>
-
-      <button class="menu-item" data-view="bracket">
-        <span class="menu-symbol">🏆</span> Турнирна схема
-      </button>
-
-      <button class="menu-item" data-view="matches">
-        <span class="menu-symbol">⚔</span> Управление на двубоите
-      </button>
-
-      <button class="menu-item" data-view="registrations">
-        <span class="menu-symbol">☷</span> Регистрирани участници
-      </button>
-
-      <button class="menu-item" data-view="players">
-        <span class="menu-symbol">♙</span> Всички играчи
-      </button>
-
-      <div class="menu-divider"></div>
-      <div class="menu-label">СТАТИСТИКА</div>
-
-      <button class="menu-item" data-view="analytics">
-        <span class="menu-symbol">▥</span> Аналитика
-      </button>
-
-      <div class="menu-divider"></div>
-
-      <button class="menu-item" id="menuRefreshButton">
-        <span class="menu-symbol">↻</span> Обнови всички данни
-      </button>
-
-      <button class="menu-item" id="menuLogoutButton">
-        <span class="menu-symbol">⇥</span> Изход
-      </button>
-    </aside>
-
-    <!-- DASHBOARD -->
-    <div class="admin-view active" id="dashboardPanel">
-      <div class="dashboard-welcome">
-        <h2>ДОБРЕ ДОШЪЛ В SEXSI ADMIN</h2>
-        <p>Твоят контролен център за управление на турнирите, играчите и статистиката на SEXSI TOURNAMENTS.</p>
+      <div class="overview-card">
+        <small>ОБЩО ИГРАЧИ</small>
+        <strong id="overviewPlayers">—</strong>
       </div>
 
-      <h2>ОБЩ ПРЕГЛЕД</h2>
+      <div class="overview-card">
+        <small>ОБЩО ДВУБОИ</small>
+        <strong id="overviewMatches">—</strong>
+      </div>
 
-      <div class="dashboard-grid">
-        <div class="dashboard-stat">
-          <div class="stat-icon">♙</div>
-          <small>РЕГИСТРИРАНИ УЧАСТНИЦИ</small>
-          <strong id="overviewRegistrations">—</strong>
-        </div>
+      <div class="overview-card">
+        <small>ОБЩО ПОСЕЩЕНИЯ</small>
+        <strong id="overviewVisits">—</strong>
+      </div>
 
-        <div class="dashboard-stat">
-          <div class="stat-icon">👥</div>
-          <small>ВСИЧКИ ИГРАЧИ</small>
-          <strong id="overviewPlayers">—</strong>
-        </div>
+      <div class="overview-card">
+        <small>АКТИВНИ ПОСЕТИТЕЛИ</small>
+        <strong id="overviewActive">—</strong>
+      </div>
 
-        <div class="dashboard-stat">
-          <div class="stat-icon">⚔</div>
-          <small>ОБЩО ДВУБОИ</small>
-          <strong id="overviewMatches">—</strong>
-        </div>
+    </div>
 
-        <div class="dashboard-stat">
-          <div class="stat-icon">◉</div>
+    <div class="section-title">БЪРЗ ДОСТЪП</div>
+
+    <div class="dashboard-grid">
+
+      <button class="dashboard-action" data-open-view="registrations">
+        <strong>РЕГИСТРАЦИИ</strong>
+        <span>Преглед на записаните участници в турнирите.</span>
+      </button>
+
+      <button class="dashboard-action" data-open-view="players">
+        <strong>ВСИЧКИ ИГРАЧИ</strong>
+        <span>Преглед на профилите и GAME ID на играчите.</span>
+      </button>
+
+      <button class="dashboard-action" data-open-view="player-management">
+        <strong>УПРАВЛЕНИЕ НА ИГРАЧИ</strong>
+        <span>Редактиране на GAME ID и блокиране на профили.</span>
+      </button>
+
+      <button class="dashboard-action" data-open-view="matches">
+        <strong>ТУРНИРНА СХЕМА</strong>
+        <span>Преглед на двубоите и резултатите.</span>
+      </button>
+
+      <button class="dashboard-action" data-open-view="analytics">
+        <strong>АНАЛИЗИ И ПОСЕЩЕНИЯ</strong>
+        <span>Статистика за посещенията на сайта.</span>
+      </button>
+
+    </div>
+  </section>
+
+  <section class="admin-view" id="registrationsPanel">
+    <button class="secondary-button back-dashboard">← НАЗАД</button>
+
+    <div class="section-title">РЕГИСТРАЦИИ</div>
+    <p class="section-description">Всички записани участници в турнирите.</p>
+
+    <div class="panel">
+      <p class="message" id="registrationMessage">Зареждане...</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ИМЕ</th>
+              <th>ИМЕЙЛ</th>
+              <th>GAME ID</th>
+              <th>ТУРНИР</th>
+              <th>ДАТА</th>
+            </tr>
+          </thead>
+          <tbody id="registrationsList"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="admin-view" id="playersPanel">
+    <button class="secondary-button back-dashboard">← НАЗАД</button>
+
+    <div class="section-title">ВСИЧКИ ИГРАЧИ</div>
+    <p class="section-description">Регистрирани профили в платформата.</p>
+
+    <div class="panel">
+      <p class="message" id="playersMessage">Зареждане...</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ИМЕ</th>
+              <th>ИМЕЙЛ</th>
+              <th>GAME ID</th>
+            </tr>
+          </thead>
+          <tbody id="playersList"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="admin-view" id="player-managementPanel">
+    <button class="secondary-button back-dashboard">← НАЗАД</button>
+
+    <div class="section-title">УПРАВЛЕНИЕ НА ИГРАЧИ</div>
+    <p class="section-description">
+      Търсене, редактиране на GAME ID и управление на достъпа на играчите.
+    </p>
+
+    <div class="panel">
+      <input
+        type="search"
+        class="search-input"
+        id="playerSearchInput"
+        placeholder="Търси по име, имейл или GAME ID..."
+      >
+
+      <p class="message" id="managementPlayersMessage">Зареждане...</p>
+      <p class="message" id="managementPlayersCount"></p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ИМЕ</th>
+              <th>ИМЕЙЛ</th>
+              <th>GAME ID</th>
+              <th>ДАТА НА ПРОФИЛА</th>
+              <th>СТАТУС</th>
+              <th>ДЕЙСТВИЯ</th>
+            </tr>
+          </thead>
+          <tbody id="managementPlayersList"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="admin-view" id="matchesPanel">
+    <button class="secondary-button back-dashboard">← НАЗАД</button>
+
+    <div class="section-title">ТУРНИРНА СХЕМА</div>
+    <p class="section-description">
+      Управление на двубоите и въвеждане на резултати.
+    </p>
+
+    <div class="panel">
+      <p class="message" id="matchesMessage">Зареждане...</p>
+      <div id="matchesContainer"></div>
+    </div>
+  </section>
+
+  <section class="admin-view" id="analyticsPanel">
+    <button class="secondary-button back-dashboard">← НАЗАД</button>
+
+    <div class="section-title">АНАЛИЗИ И ПОСЕЩЕНИЯ</div>
+    <p class="section-description">
+      Подробна статистика за посещаемостта на сайта.
+    </p>
+
+    <div class="panel">
+      <p class="message" id="analyticsMessage">Статистиката още не е заредена.</p>
+
+      <button class="primary-button" id="refreshAnalyticsButton">
+        ОБНОВИ СТАТИСТИКАТА
+      </button>
+
+      <div class="analytics-stats" style="margin-top:20px;">
+
+        <div class="analytics-stat">
           <small>ОБЩО ПОСЕЩЕНИЯ</small>
-          <strong id="overviewVisits">—</strong>
-        </div>
-
-        <div class="dashboard-stat">
-          <div class="stat-icon">●</div>
-          <small>АКТИВНИ ПОСЕТИТЕЛИ</small>
-          <strong id="overviewActive">—</strong>
-        </div>
-      </div>
-
-      <h2>БЪРЗ ДОСТЪП</h2>
-
-      <div class="dashboard-actions">
-        <button class="dashboard-action" data-open-view="registrations">
-          <strong>РЕГИСТРИРАНИ УЧАСТНИЦИ</strong>
-          <span>Преглед на записаните за турнирите играчи</span>
-        </button>
-
-        <button class="dashboard-action" data-open-view="matches">
-          <strong>УПРАВЛЕНИЕ НА ДВУБОИТЕ</strong>
-          <span>Резултати и победители от мачовете</span>
-        </button>
-
-        <button class="dashboard-action" data-open-view="bracket">
-          <strong>ТУРНИРНА СХЕМА</strong>
-          <span>Създаване и преглед на схемата</span>
-        </button>
-
-        <button class="dashboard-action" data-open-view="analytics">
-          <strong>АНАЛИТИКА</strong>
-          <span>Посещения и активност на сайта</span>
-        </button>
-      </div>
-
-      <div class="card">
-        <div class="view-heading">
-          <h2>СЪСТОЯНИЕ НА ПАНЕЛА</h2>
-          <button id="refreshButton">ОБНОВИ ДАННИТЕ</button>
-        </div>
-        <p class="message" id="dashboardMessage">Данните се зареждат...</p>
-      </div>
-    </div>
-
-    <!-- BRACKET PANEL -->
-    <div class="admin-view" id="bracketPanel">
-      <div class="view-heading">
-        <h2>УПРАВЛЕНИЕ НА ТУРНИРНАТА СХЕМА</h2>
-        <button class="back-dashboard">КЪМ ТАБЛОТО</button>
-      </div>
-      <div class="card">
-        <p class="message">Създаване на турнирна схема за регистрираните участници.</p>
-        <button id="generateBracketButton">СЪЗДАЙ ТУРНИРНА СХЕМА</button>
-        <p id="bracketMessage" class="message"></p>
-      </div>
-    </div>
-
-    <!-- MATCHES PANEL -->
-    <div class="admin-view" id="matchesPanel">
-      <div class="view-heading">
-        <h2>УПРАВЛЕНИЕ НА ДВУБОИТЕ</h2>
-        <button class="back-dashboard">КЪМ ТАБЛОТО</button>
-      </div>
-      <div class="card">
-        <p class="message">Въведи резултата от двубоя и избери победителя.</p>
-        <button id="refreshBracketButton">ОБНОВИ ДВУБОИТЕ</button>
-        <p id="matchesMessage" class="message">Зареждане...</p>
-        <div id="matchesContainer"></div>
-      </div>
-    </div>
-
-    <!-- REGISTRATIONS PANEL -->
-    <div class="admin-view" id="registrationsPanel">
-      <div class="view-heading">
-        <h2>РЕГИСТРИРАНИ УЧАСТНИЦИ</h2>
-        <button class="back-dashboard">КЪМ ТАБЛОТО</button>
-      </div>
-      <div class="card">
-        <p id="registrationMessage" class="message">Зареждане...</p>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>ИГРАЧ</th>
-                <th>ИМЕЙЛ</th>
-                <th>GAME ID</th>
-                <th>ТУРНИР</th>
-                <th>ДАТА</th>
-              </tr>
-            </thead>
-            <tbody id="registrationsList"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- PLAYERS PANEL -->
-    <div class="admin-view" id="playersPanel">
-      <div class="view-heading">
-        <h2>ВСИЧКИ ИГРАЧИ</h2>
-        <button class="back-dashboard">КЪМ ТАБЛОТО</button>
-      </div>
-      <div class="card">
-        <p id="playersMessage" class="message">Зареждане...</p>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>ИГРАЧ</th>
-                <th>ИМЕЙЛ</th>
-                <th>GAME ID</th>
-              </tr>
-            </thead>
-            <tbody id="playersList"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ANALYTICS PANEL -->
-    <div class="admin-view" id="analyticsPanel">
-      <div class="view-heading">
-        <h2>АНАЛИТИКА НА ПОСЕЩЕНИЯТА</h2>
-        <button class="back-dashboard">КЪМ ТАБЛОТО</button>
-      </div>
-
-      <div class="card" id="analyticsSection">
-        <div class="analytics-heading">
-          <h2>СТАТИСТИКА НА ПОСЕЩЕНИЯТА</h2>
-          <button id="refreshAnalyticsButton">ОБНОВИ СТАТИСТИКАТА</button>
-        </div>
-
-        <p id="analyticsMessage" class="message">Зареждане...</p>
-
-        <div class="analytics-grid">
-          <div class="analytics-stat">
-            <small>ОБЩО ПОСЕЩЕНИЯ</small>
-            <strong id="totalVisits">—</strong>
-          </div>
+          <strong id="totalVisits">—</strong>
+                    </div>
           <div class="analytics-stat">
             <small>УНИКАЛНИ ПОСЕТИТЕЛИ</small>
             <strong id="uniqueVisitors">—</strong>
@@ -643,6 +912,10 @@ function showAdminView(viewName){
 
   closeAdminMenu();
   window.scrollTo({top:0,behavior:"smooth"});
+
+  if(viewName==="player-management"){
+    loadManagedPlayers();
+  }
 }
 
 document.getElementById("openMenuButton")
@@ -723,7 +996,8 @@ async function loadRegistrations(){
     list.appendChild(row);
   });
 }
-  /* ALL PLAYERS */
+
+/* ALL PLAYERS */
 
 async function loadPlayers(){
   const message=document.getElementById("playersMessage");
@@ -758,6 +1032,238 @@ async function loadPlayers(){
 
     list.appendChild(row);
   });
+}
+
+/* PLAYER MANAGEMENT */
+
+let managedPlayers=[];
+
+async function loadManagedPlayers(){
+  const message=document.getElementById("managementPlayersMessage");
+  const list=document.getElementById("managementPlayersList");
+
+  message.textContent="Зареждане на играчите...";
+  list.innerHTML="";
+
+  const {data,error}=await db.rpc("sexsi_admin_manage_players");
+
+  if(error){
+    message.textContent="Грешка при зареждане: "+error.message;
+    document.getElementById("managementPlayersCount").textContent="";
+    return;
+  }
+
+  managedPlayers=Array.isArray(data)?data:[];
+  renderManagedPlayers();
+}
+
+function renderManagedPlayers(){
+  const list=document.getElementById("managementPlayersList");
+  const message=document.getElementById("managementPlayersMessage");
+  const count=document.getElementById("managementPlayersCount");
+  const search=document.getElementById("playerSearchInput");
+
+  const term=(search.value||"").trim().toLowerCase();
+
+  const filtered=managedPlayers.filter(player=>{
+    return [
+      player.username,
+      player.email,
+      player.player_id
+    ].some(value=>(value||"").toLowerCase().includes(term));
+  });
+
+  list.innerHTML="";
+
+  count.textContent=
+    "Показани: "+filtered.length+" от "+managedPlayers.length+" играчи";
+
+  if(filtered.length===0){
+    message.textContent=managedPlayers.length===0
+      ?"Няма намерени играчи."
+      :"Няма играчи, отговарящи на търсенето.";
+
+    const row=document.createElement("tr");
+    const cell=document.createElement("td");
+    cell.colSpan=6;
+    cell.className="player-empty";
+    cell.textContent="Няма резултати.";
+    row.appendChild(cell);
+    list.appendChild(row);
+    return;
+  }
+
+  message.textContent="Списъкът с играчи е зареден.";
+
+  filtered.forEach(player=>{
+    const row=document.createElement("tr");
+
+    createCell(row,player.username||"PLAYER");
+    createCell(row,player.email||"");
+    createCell(row,player.player_id||"Няма GAME ID");
+
+    createCell(
+      row,
+      player.registered_at
+        ?new Date(player.registered_at).toLocaleDateString("bg-BG")
+        :"—"
+    );
+
+    const statusCell=document.createElement("td");
+    const status=document.createElement("span");
+
+    status.className="player-status "+
+      (player.is_blocked?"blocked":"active");
+
+    status.textContent=player.is_blocked
+      ?"БЛОКИРАН"
+      :"АКТИВЕН";
+
+    statusCell.appendChild(status);
+    row.appendChild(statusCell);
+
+    const actionsCell=document.createElement("td");
+    const actions=document.createElement("div");
+    actions.className="player-actions";
+
+    const editButton=document.createElement("button");
+    editButton.className="player-edit-button";
+    editButton.textContent="РЕДАКТИРАЙ ID";
+
+    editButton.addEventListener("click",()=>{
+      editPlayerGameId(player);
+    });
+
+    actions.appendChild(editButton);
+
+    const blockButton=document.createElement("button");
+
+    if(player.is_blocked){
+      blockButton.className="player-unblock-button";
+      blockButton.textContent="РАЗБЛОКИРАЙ";
+
+      blockButton.addEventListener("click",()=>{
+        unblockPlayer(player);
+      });
+    }else{
+      blockButton.className="player-block-button";
+      blockButton.textContent="БЛОКИРАЙ";
+
+      blockButton.addEventListener("click",()=>{
+        blockPlayer(player);
+      });
+    }
+
+    actions.appendChild(blockButton);
+    actionsCell.appendChild(actions);
+    row.appendChild(actionsCell);
+
+    list.appendChild(row);
+  });
+}
+
+document.getElementById("playerSearchInput")
+  .addEventListener("input",renderManagedPlayers);
+
+async function editPlayerGameId(player){
+  const currentId=player.player_id||"";
+
+  const newId=prompt(
+    "Въведи нов GAME ID за "+(player.username||"играча")+":",
+    currentId
+  );
+
+  if(newId===null)return;
+
+  const cleanId=newId.trim();
+
+  if(!cleanId){
+    alert("GAME ID не може да бъде празен.");
+    return;
+  }
+
+  if(cleanId===currentId){
+    return;
+  }
+
+  if(!confirm("Сигурен ли си, че искаш да промениш GAME ID?")){
+    return;
+  }
+
+  const {data,error}=await db.rpc(
+    "sexsi_admin_update_player_id",
+    {
+      p_user_id:player.user_id,
+      p_new_player_id:cleanId
+    }
+  );
+
+  if(error){
+    alert("Грешка при промяната: "+error.message);
+    return;
+  }
+
+  alert(data||"GAME ID е обновен успешно.");
+  await loadManagedPlayers();
+  await loadPlayers();
+}
+
+async function blockPlayer(player){
+  const reason=prompt(
+    "Причина за блокиране на "+(player.username||"играча")+":",
+    "Нарушение на правилата"
+  );
+
+  if(reason===null)return;
+
+  const cleanReason=reason.trim()||"Няма посочена причина";
+
+  if(!confirm(
+    "Сигурен ли си, че искаш да блокираш този играч?\n\n"+
+    "Той няма да може да се регистрира за турнири."
+  )){
+    return;
+  }
+
+  const {data,error}=await db.rpc(
+    "sexsi_admin_block_player",
+    {
+      p_user_id:player.user_id,
+      p_reason:cleanReason
+    }
+  );
+
+  if(error){
+    alert("Грешка при блокирането: "+error.message);
+    return;
+  }
+
+  alert(data||"Играчът е блокиран успешно.");
+  await loadManagedPlayers();
+}
+
+async function unblockPlayer(player){
+  if(!confirm(
+    "Сигурен ли си, че искаш да разблокираш "+
+    (player.username||"този играч")+"?"
+  )){
+    return;
+  }
+
+  const {data,error}=await db.rpc(
+    "sexsi_admin_unblock_player",
+    {
+      p_user_id:player.user_id
+    }
+  );
+
+  if(error){
+    alert("Грешка при разблокирането: "+error.message);
+    return;
+  }
+
+  alert(data||"Играчът е разблокиран успешно.");
+  await loadManagedPlayers();
 }
 
 /* ANALYTICS */
@@ -931,8 +1437,7 @@ window.addEventListener("resize",()=>{
     drawVisitsChart(window.lastAnalyticsDaily);
   }
 });
-
-/* BRACKET AND MATCHES */
+  /* BRACKET AND MATCHES */
 
 async function loadAdminData(){
   await loadRegistrations();
@@ -1080,169 +1585,97 @@ function createMatchCard(match){
 
   const option1=document.createElement("option");
   option1.value=match.player1_id;
-  option1.textContent=match.player1_name||"Играч 1";
+  option1.textContent=match.player1_name||"ИГРАЧ 1";
+  winner.appendChild(option1);
 
   const option2=document.createElement("option");
   option2.value=match.player2_id;
-  option2.textContent=match.player2_name||"Играч 2";
+  option2.textContent=match.player2_name||"ИГРАЧ 2";
+  winner.appendChild(option2);
 
-  winner.append(option1,option2);
+  if(match.winner_id){
+    winner.value=match.winner_id;
+  }
+
   winnerLabel.appendChild(winner);
 
-  controls.append(score1Label,score2Label,winnerLabel);
+  const saveButton=document.createElement("button");
+  saveButton.className="save-match-button";
+  saveButton.textContent="ЗАПАЗИ РЕЗУЛТАТА";
 
-  const save=document.createElement("button");
-  save.className="match-save";
-  save.textContent="ЗАПАЗИ РЕЗУЛТАТА";
-
-  const feedback=document.createElement("p");
-  feedback.className="message";
-
-  save.addEventListener("click",async()=>{
-    const s1=Number(score1.value);
-    const s2=Number(score2.value);
+  saveButton.addEventListener("click",async()=>{
+    const result1=Number(score1.value);
+    const result2=Number(score2.value);
 
     if(score1.value===""||score2.value===""){
-      feedback.textContent="Въведи резултатите и на двамата играчи.";
+      alert("Въведи резултат и за двамата играчи.");
       return;
     }
 
-    if(!Number.isInteger(s1)||!Number.isInteger(s2)||s1<0||s2<0){
-      feedback.textContent="Резултатите трябва да са цели неотрицателни числа.";
+    if(!Number.isInteger(result1)||!Number.isInteger(result2)||
+       result1<0||result2<0){
+      alert("Резултатите трябва да са цели положителни числа.");
       return;
     }
 
-    if(s1===s2){
-      feedback.textContent="Резултатът не може да бъде равен.";
+    if(result1===result2){
+      alert("При BO1 не може да има равен резултат.");
       return;
     }
 
-    if(!winner.value){
-      feedback.textContent="Избери победител.";
-      return;
-    }
-
-    const expectedWinner=s1>s2?match.player1_id:match.player2_id;
+    const expectedWinner=result1>result2
+      ?match.player1_id
+      :match.player2_id;
 
     if(winner.value!==expectedWinner){
-      feedback.textContent="Избраният победител не съответства на резултата.";
+      alert("Избраният победител не съответства на резултата.");
       return;
     }
 
-    if(!confirm("Сигурен ли си, че искаш да запишеш този резултат?")){
-      return;
-    }
-
-    save.disabled=true;
-    save.textContent="ЗАПАЗВАНЕ...";
-    feedback.textContent="Записване на резултата...";
-
-    const {data,error}=await db.rpc(
-      "sexsi_admin_submit_bracket_result",
-      {
-        p_match_id:match.id,
-        p_winner_id:winner.value,
-        p_score_player1:s1,
-        p_score_player2:s2
-      }
-    );
-
-    if(error){
-      feedback.textContent="Грешка: "+error.message;
-      save.disabled=false;
-      save.textContent="ЗАПАЗИ РЕЗУЛТАТА";
-      return;
-    }
-
-    feedback.textContent=data||"Резултатът е записан успешно.";
-    await loadBracket();
+    alert("Тук трябва да се свърже функцията за запис на резултата.");
   });
 
-  card.append(controls,save,feedback);
+  controls.append(score1Label,score2Label,winnerLabel,saveButton);
+  card.appendChild(controls);
+
   return card;
 }
 
 /* REFRESH ALL DATA */
 
 async function refreshAllAdminData(){
-  const message=document.getElementById("dashboardMessage");
-  const button=document.getElementById("refreshButton");
-
-  button.disabled=true;
-  button.textContent="ОБНОВЯВАНЕ...";
-  message.textContent="Обновяване на информацията...";
-
   await loadAdminData();
   await loadBracket();
   await loadAnalytics();
-
-  message.textContent="Данните са обновени.";
-  button.disabled=false;
-  button.textContent="ОБНОВИ ДАННИТЕ";
 }
 
-/* ADMIN ACCESS */
+/* ADMIN AUTHENTICATION */
 
 async function checkAdminAccess(){
-  const message=document.getElementById("accessMessage");
-
   const {data,error}=await db.auth.getSession();
 
   if(error||!data.session){
-    message.textContent="Нямаш активна сесия. Влез през профила си.";
+    window.location.href="profile.html";
     return;
   }
 
-  if(data.session.user.id!==ADMIN_ID){
-    message.textContent="ДОСТЪПЪТ Е ОТКАЗАН. Само администратор може да отвори тази страница.";
+  const user=data.session.user;
+
+  if(user.id!==ADMIN_ID){
+    alert("Нямаш достъп до административния панел.");
+    await db.auth.signOut();
+    window.location.href="profile.html";
     return;
   }
-
-  message.textContent="Администраторски достъп потвърден.";
-  document.getElementById("adminContent").style.display="block";
 
   await refreshAllAdminData();
 }
 
-/* BUTTON EVENTS */
-
-document.getElementById("refreshButton")
-  .addEventListener("click",refreshAllAdminData);
-
-document.getElementById("refreshBracketButton")
-  .addEventListener("click",loadBracket);
-
 document.getElementById("refreshAnalyticsButton")
   .addEventListener("click",loadAnalytics);
 
-document.getElementById("generateBracketButton")
-  .addEventListener("click",async function(){
-    const button=this;
-    const message=document.getElementById("bracketMessage");
-
-    if(!confirm("Сигурен ли си, че искаш да създадеш турнирната схема?")){
-      return;
-    }
-
-    button.disabled=true;
-    button.textContent="СЪЗДАВАНЕ...";
-    message.textContent="";
-
-    const {data,error}=await db.rpc("sexsi_admin_generate_bracket");
-
-    if(error){
-      message.textContent="Грешка: "+error.message;
-    }else{
-      message.textContent=data||"Схемата е създадена.";
-      await loadBracket();
-    }
-
-    button.disabled=false;
-    button.textContent="СЪЗДАЙ ТУРНИРНА СХЕМА";
-  });
-
 checkAdminAccess();
-</script>
 
+</script>
 </body>
 </html>
