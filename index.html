@@ -100,7 +100,7 @@ section{padding:40px 5%}
       ТУРНИР: 02.12.2026
     </div>
 
-    <a class="btn" href="register.html">РЕГИСТРИРАЙ СЕ</a>
+    <a class="btn" href="profile.html">РЕГИСТРИРАЙ СЕ</a>
   </div>
 </section>
 
@@ -131,7 +131,7 @@ section{padding:40px 5%}
   <div class="cards">
 
     <div class="card">
-      <div class="status">● ОТВОРЕНО ЗА РЕГИСТРАЦИЯ</div>
+      <div class="status" id="registrationStatus">● ОТВОРЕНО ЗА РЕГИСТРАЦИЯ</div>
 
       <div id="registrationCountdown" style="
         margin:15px 0;
@@ -160,7 +160,7 @@ section{padding:40px 5%}
       <h3>SEXSI 1V1 CUP #001</h3>
       <p>🎮 Игра: STANDOFF 2</p>
       <p>⚔️ Режим: 1V1 • BO1</p>
-      <p>👥 Участници: 16</p>
+      <p id="registrationCount">👥 Участници: зареждане... / 16</p>
       <p>💰 Вход: БЕЗПЛАТЕН</p>
 
       <div style="margin:20px 0;padding:15px;background:#211719;border:1px solid #7d2529;border-radius:8px;">
@@ -173,7 +173,7 @@ section{padding:40px 5%}
       <p>📅 Краен срок: 25.11.2026</p>
       <p>🏆 Турнир: 02.12.2026</p>
 
-      <a class="btn" href="register.html">РЕГИСТРИРАЙ СЕ</a>
+      <a class="btn" href="profile.html">РЕГИСТРИРАЙ СЕ</a>
     </div>
 
     <div class="card">
@@ -225,6 +225,36 @@ window.sexsiSupabase = window.supabase.createClient(
 
 const db = window.sexsiSupabase;
 let loadedUserId = null;
+
+async function loadRegistrationCount() {
+  const countElement = document.getElementById("registrationCount");
+  const statusElement = document.getElementById("registrationStatus");
+
+  const { data, error } = await db.rpc("sexsi_get_registration_count");
+
+  if (error) {
+    countElement.textContent = "👥 Участници: временно недостъпно";
+    console.error("Registration count error:", error.message);
+    return;
+  }
+
+  const count = Number(data);
+
+  if (!Number.isInteger(count) || count < 0) {
+    countElement.textContent = "👥 Участници: временно недостъпно";
+    return;
+  }
+
+  countElement.textContent = "👥 Участници: " + count + " / 16";
+
+  if (count >= 16) {
+    statusElement.textContent = "● МЕСТАТА СА ЗАПЪЛНЕНИ";
+    statusElement.style.color = "#ff454b";
+  } else {
+    statusElement.textContent = "● ОТВОРЕНО ЗА РЕГИСТРАЦИЯ";
+    statusElement.style.color = "#48d98a";
+  }
+}
 
 async function loadBracket() {
   const container = document.getElementById("bracketContainer");
@@ -349,6 +379,8 @@ async function initializePage() {
 }
 
 initializePage();
+loadRegistrationCount();
+
 </script>
 
 <script>
