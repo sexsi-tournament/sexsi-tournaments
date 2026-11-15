@@ -54,8 +54,33 @@ header{
   border-bottom:1px solid rgba(255,255,255,.09);
   background:rgba(8,8,8,.88);backdrop-filter:blur(18px);
 }
-.logo{font-size:28px;font-weight:900;letter-spacing:3px;text-shadow:0 0 22px rgba(255,255,255,.08)}
-.logo span{color:var(--red);text-shadow:0 0 18px var(--red)}
+.logo{
+  display:inline-block;
+  font-size:31px;
+  font-weight:1000;
+  font-style:italic;
+  letter-spacing:1.5px;
+  line-height:1;
+  transform:skewX(-7deg);
+  color:#fff;
+  text-shadow:
+    0 0 8px rgba(255,255,255,.2),
+    0 0 18px rgba(237,37,45,.25),
+    0 0 32px rgba(237,37,45,.18);
+  animation:logoGlow 4.5s ease-in-out infinite;
+}
+.logo sup{
+  display:inline-block;
+  position:relative;
+  top:-.65em;
+  margin-left:2px;
+  font-size:11px;
+  font-weight:900;
+  font-style:normal;
+  letter-spacing:0;
+  color:var(--red2);
+  text-shadow:0 0 7px var(--red),0 0 15px rgba(237,37,45,.8);
+}
 nav{display:flex;flex-wrap:wrap;gap:20px}
 nav a{
   color:#aaa;text-decoration:none;font-size:12px;
@@ -222,6 +247,14 @@ footer{
 @keyframes lineScan{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 @keyframes borderFlow{0%{opacity:.2}50%{opacity:1}100%{opacity:.2}}
 @keyframes ambientMove{from{transform:translate(0,0) scale(.9)}to{transform:translate(90px,-60px) scale(1.2)}}
+@keyframes logoGlow{
+  0%,100%{
+    text-shadow:0 0 8px rgba(255,255,255,.2),0 0 18px rgba(237,37,45,.2),0 0 30px rgba(237,37,45,.12);
+  }
+  50%{
+    text-shadow:0 0 10px rgba(255,255,255,.3),0 0 22px rgba(237,37,45,.45),0 0 38px rgba(237,37,45,.25);
+  }
+}
 
 @media(max-width:800px){
   .hero{grid-template-columns:1fr;padding:65px 6% 35px;text-align:center}
@@ -229,7 +262,7 @@ footer{
 }
 @media(max-width:600px){
   header{padding:17px 4%;flex-wrap:wrap;gap:15px}
-  .logo{font-size:24px}
+  .logo{font-size:27px}
   nav{width:100%;justify-content:space-between;gap:5px}
   nav a{font-size:9px;letter-spacing:0}
   h1{font-size:55px;letter-spacing:-2px}
@@ -251,7 +284,7 @@ footer{
 <div class="ambient"></div>
 
 <header>
-  <div class="logo">SEXSI<span>.</span></div>
+  <div class="logo">SEXSI<sup>®</sup></div>
   <nav>
     <a href="index.html">НАЧАЛО</a>
     <a href="tournaments.html">ТУРНИРИ</a>
@@ -268,8 +301,7 @@ footer{
     <p>Важното е целта. Изгради отбор. БИЙ СЕ ЗА ТОП МЯСТОТО!</p>
     <a class="btn" href="#tournaments">РАЗГЛЕДАЙ ТУРНИРИТЕ</a>
   </div>
-
-</div>
+  </div>
 
 <section id="featured-tournament">
   <div class="featured-wrap">
