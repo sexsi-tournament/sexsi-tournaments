@@ -389,6 +389,17 @@ h1 span{color:var(--red);text-shadow:0 0 35px rgba(237,37,45,.7)}
 .btn:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(237,37,45,.6)}
 
 section{padding:60px 7%}
+#faq{padding-top:34px;padding-bottom:34px}
+.faq-wrap{max-width:1000px;margin:0 auto}
+.faq-intro{margin:-12px 0 22px;color:#999;font-size:13px;line-height:1.7}
+.faq-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.faq-item{align-self:start;background:linear-gradient(145deg,rgba(25,25,28,.96),rgba(12,12,14,.96));border:1px solid rgba(237,37,45,.25);border-radius:9px;overflow:hidden;transition:border-color .25s,box-shadow .25s}
+.faq-item[open]{border-color:rgba(237,37,45,.7);box-shadow:0 8px 25px rgba(237,37,45,.1)}
+.faq-item summary{position:relative;cursor:pointer;list-style:none;padding:17px 46px 17px 18px;color:#fff;font-size:13px;font-weight:800;line-height:1.5}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary:after{content:"+";position:absolute;right:18px;top:50%;transform:translateY(-50%);color:#ff454b;font-size:22px;font-weight:400}
+.faq-item[open] summary:after{content:"−"}
+.faq-item p{margin:0;padding:0 18px 18px;color:#aaa;font-size:12px;line-height:1.8}
 .featured-wrap{
   position:relative;overflow:hidden;max-width:1200px;margin:auto;
   padding:40px;border:1px solid rgba(237,37,45,.55);
@@ -491,6 +502,7 @@ footer{
 }
 
 @media(max-width:800px){
+  .faq-list{grid-template-columns:1fr}
   .hero{grid-template-columns:1fr;padding:65px 6% 35px;text-align:center}
   .hero-content{display:flex;flex-direction:column;align-items:center}
 }
@@ -605,6 +617,31 @@ footer{
     <a class="btn" href="#tournaments">РАЗГЛЕДАЙ ТУРНИРИТЕ</a>
   </div>
   </div>
+
+<section id="faq" aria-labelledby="faqHeading">
+  <div class="faq-wrap">
+    <div class="heading" id="faqHeading">ЧЕСТО ЗАДАВАНИ ВЪПРОСИ</div>
+    <p class="faq-intro">Всичко важно за участието в турнирите SEXSI TOURNAMENTS.</p>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>Как да се запиша за турнир?</summary>
+        <p>Влез или създай профил, добави своя Standoff 2 Game ID и натисни „ЗАПИШИ СЕ ЗА ТУРНИРА“ на страницата на съответния турнир.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Мога ли да се откажа след записване?</summary>
+        <p>Да. Отвори менюто на профила си, избери „МОИТЕ ТУРНИРИ“ и натисни „ОТКАЖИ УЧАСТИЕ“. Отписването е възможно, докато турнирната схема не бъде създадена.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Къде ще видя своите мачове?</summary>
+        <p>След създаването на турнирната схема влез в профила си и отвори „МОИТЕ ТУРНИРИ“. Там ще виждаш личните си двубои, противника, резултата и статуса на мача.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Какво означава BO1?</summary>
+        <p>BO1 означава, че двубоят се решава в една игра. Победителят продължава към следващия кръг.</p>
+      </details>
+    </div>
+  </div>
+</section>
 
 <section id="featured-tournament">
   <div class="featured-wrap">
