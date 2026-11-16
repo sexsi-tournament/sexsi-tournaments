@@ -345,7 +345,7 @@ body:has(#register) > section > h1::after{
   letter-spacing:.2em;font-weight:1000;writing-mode:vertical-rl;
 }
 #register{
-  display:grid!important;
+  display:grid;
   grid-template-columns:1.1fr .9fr!important;
   gap:22px!important;
   align-items:stretch;
@@ -440,7 +440,7 @@ body:has(#register) > section > h1::after{
   }
   body:has(#register) > section > h1::before{left:22px;top:20px}
   body:has(#register) > section > h1::after{right:14px;bottom:20px;font-size:9px}
-  #register{grid-template-columns:1fr!important;gap:14px!important}
+  #register{display:grid;grid-template-columns:1fr!important;gap:14px!important}
   #register .card{min-height:0;padding:23px!important}
   #playerLevelCard{padding:20px!important}
   #tournamentSignupCard,#myRewardPayoutsCard,#myTournamentMatchesCard{padding:19px!important}
