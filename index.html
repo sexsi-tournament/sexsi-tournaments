@@ -922,13 +922,15 @@ footer{
   async function updatePlayerMenu(session){
     const user = session && session.user;
     const isAdmin = !!user && user.id === ADMIN_ID;
-    const isRegularPlayer = !!user && !isAdmin;
+    const isAuthenticated = !!user;
+    const isRegularPlayer = isAuthenticated && !isAdmin;
     const requestId = ++playerMenuProfileRequest;
 
-    playerNav.hidden = !isRegularPlayer;
-    guestNav.hidden = isRegularPlayer;
+    playerNav.hidden = !isAuthenticated;
+    guestNav.hidden = isAuthenticated;
 
     if(!isRegularPlayer){
+      playerMenuButton.textContent = isAdmin ? "АДМИНИСТРАТОР" : "МОЕТО МЕНЮ";
       playerMenu.hidden = true;
       menuMyTournamentsPanel.hidden = true;
       menuMyTournamentsButton.setAttribute("aria-expanded","false");
@@ -938,6 +940,7 @@ footer{
     }
 
     const username = user.user_metadata?.username || "PLAYER";
+    playerMenuButton.textContent = username.toUpperCase();
     menuPlayerName.textContent = username;
     menuPlayerAvatar.textContent = username.trim().charAt(0).toUpperCase() || "P";
     menuPlayerId.textContent = "ID: зареждане...";
