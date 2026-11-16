@@ -936,9 +936,10 @@ footer{
     const request = ++menuTournamentRequest;
     menuMyTournamentsMessage.textContent = "Зареждане на личните двубои...";
     menuMyTournamentsList.replaceChildren();
-    const [bracketResult,registrationResult] = await Promise.all([
+    const [bracketResult,registrationResult,playerIdResult] = await Promise.all([
       db.rpc("sexsi_get_public_bracket"),
-      db.rpc("sexsi_get_my_tournament_status")
+      db.rpc("sexsi_get_my_tournament_status"),
+      db.rpc("sexsi_get_my_player_id")
     ]);
     if(request !== menuTournamentRequest) return;
     const registrationStatus=document.createElement("div");
@@ -961,13 +962,25 @@ footer{
       console.error("Menu tournament error:",bracketResult.error.message);
       return;
     }
+    if(playerIdResult.error){
+      menuMyTournamentsMessage.textContent = "Статусът на записването е показан, но Game ID-то временно не може да бъде заредено.";
+      console.error("Menu player ID error:",playerIdResult.error.message);
+      return;
+    }
+    const playerId=String(playerIdResult.data||"").trim();
+    if(!playerId){
+      menuMyTournamentsMessage.textContent = "Добави Standoff 2 Game ID в профила си, за да свържем личните ти двубои.";
+      return;
+    }
     const data=bracketResult.data;
     const matches = Array.isArray(data) ? data : [];
-    const mine = matches.filter(match => match.player1_id === userId || match.player2_id === userId)
-      .sort((a,b)=>Number(a.round_number)-Number(b.round_number)||Number(a.match_number)-Number(b.match_number));
+    const mine = matches.filter(match =>
+      String(match.player1_id||"").trim() === playerId ||
+      String(match.player2_id||"").trim() === playerId
+    ).sort((a,b)=>Number(a.round_number)-Number(b.round_number)||Number(a.match_number)-Number(b.match_number));
     if(!mine.length){
       menuMyTournamentsMessage.textContent = matches.length
-        ? "Все още няма двубой, свързан с твоя профил."
+        ? "Все още няма двубой за твоето Game ID. Ако схемата още не е генерирана, двубоите ще се появят след създаването ѝ."
         : "Турнирната схема още не е създадена. След създаването ѝ двубоите ще се покажат тук.";
       return;
     }
@@ -978,12 +991,20 @@ footer{
       const title=document.createElement("strong");
       title.textContent="КРЪГ "+(match.round_number||"—")+" · МАЧ №"+(match.match_number||"—");
       const detail=document.createElement("span");
-      const isFirst=match.player1_id===userId;
+      const isFirst=String(match.player1_id||"").trim()===playerId;
       detail.textContent="ПРОТИВНИК: "+((isFirst?match.player2_name:match.player1_name)||"Очаква се");
       const result=document.createElement("span");
       result.className="menu-my-result";
       result.textContent="РЕЗУЛТАТ: "+(match.score_player1??"—")+" : "+(match.score_player2??"—");
-      card.append(title,detail,result);
+      const status=document.createElement("span");
+      status.textContent="СТАТУС: "+(match.status==="completed"?"ЗАВЪРШЕН":match.status==="ongoing"?"В ХОД":"ПРЕДСТОИ");
+      card.append(title,detail,result,status);
+      if(match.winner_name){
+        const winner=document.createElement("span");
+        winner.className="menu-my-result";
+        winner.textContent="ПОБЕДИТЕЛ: "+match.winner_name;
+        card.appendChild(winner);
+      }
       menuMyTournamentsList.appendChild(card);
     });
   }
