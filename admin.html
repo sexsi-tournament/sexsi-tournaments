@@ -1885,17 +1885,22 @@ async function loadRewardWinners(){
     select.innerHTML='<option value="">Грешка при зареждане на турнирната схема</option>';
     return;
   }
-  rewardWinners=(Array.isArray(data)?data:[]).filter(m=>m.status==="completed"&&m.winner_id);
-  rewardWinners.sort((a,b)=>Number(b.round_number)-Number(a.round_number)||Number(a.match_number)-Number(b.match_number));
-  select.innerHTML='<option value="">Избери победител от завършен двубой</option>';
+  const matches=Array.isArray(data)?data:[];
+  const maxRound=matches.reduce((max,m)=>Math.max(max,Number(m.round_number)||0),0);
+  const finalMatch=maxRound?matches.find(m=>Number(m.round_number)===maxRound):null;
+  rewardWinners=finalMatch&&finalMatch.status==="completed"&&finalMatch.winner_id
+    ?[finalMatch]:[];
+  select.innerHTML='<option value="">Избери шампион на завършения турнир</option>';
   rewardWinners.forEach((m,index)=>{
     const option=document.createElement("option");
     option.value=String(index);
-    option.textContent=(m.winner_name||"Победител")+
-      " · "+getRoundName(Number(m.round_number))+" · МАЧ №"+m.match_number;
+    option.textContent=(m.winner_name||"Шампион")+
+      " · ФИНАЛ · МАЧ №"+m.match_number;
     select.appendChild(option);
   });
-  if(!rewardWinners.length)select.innerHTML='<option value="">Няма завършен двубой с определен победител</option>';
+  if(!rewardWinners.length){
+    select.innerHTML='<option value="">Турнирът още няма завършен финал</option>';
+  }
 }
 async function loadRewardPayouts(){
   const container=document.getElementById("rewardArchive");
@@ -1952,7 +1957,7 @@ document.getElementById("saveRewardPayout")?.addEventListener("click",async()=>{
   const file=document.getElementById("rewardProof").files[0];
   const handedValue=document.getElementById("rewardHandedAt").value;
   if(!match||!tournament||!gameName||!gameId||!Number.isInteger(amount)||amount<1){
-    msg.textContent="Избери победител и попълни всички задължителни полета.";
+    msg.textContent="Изчакай завършването на финала и попълни всички задължителни полета.";
     return;
   }
   if(file&&!["image/png","image/jpeg","image/webp"].includes(file.type)){
