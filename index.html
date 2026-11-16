@@ -936,13 +936,32 @@ footer{
     const request = ++menuTournamentRequest;
     menuMyTournamentsMessage.textContent = "Зареждане на личните двубои...";
     menuMyTournamentsList.replaceChildren();
-    const {data,error} = await db.rpc("sexsi_get_public_bracket");
+    const [bracketResult,registrationResult] = await Promise.all([
+      db.rpc("sexsi_get_public_bracket"),
+      db.rpc("sexsi_get_my_tournament_status")
+    ]);
     if(request !== menuTournamentRequest) return;
-    if(error){
-      menuMyTournamentsMessage.textContent = "Двубоите временно не са достъпни.";
-      console.error("Menu tournament error:",error.message);
+    const registrationStatus=document.createElement("div");
+    registrationStatus.className="menu-my-match";
+    const registrationTitle=document.createElement("strong");
+    registrationTitle.textContent="SEXSI 1V1 CUP #001";
+    const registrationDetail=document.createElement("span");
+    if(registrationResult.error){
+      registrationDetail.textContent="СТАТУС НА ЗАПИСВАНЕТО: временно недостъпен";
+    }else{
+      registrationDetail.textContent=registrationResult.data==="registered"
+        ? "СТАТУС: ЗАПИСАН СИ ЗА ТУРНИРА"
+        : "СТАТУС: ВСЕ ОЩЕ НЕ СИ ЗАПИСАН";
+    }
+    registrationDetail.style.color=registrationResult.data==="registered"?"#65e69a":"#e9bd59";
+    registrationStatus.append(registrationTitle,registrationDetail);
+    menuMyTournamentsList.appendChild(registrationStatus);
+    if(bracketResult.error){
+      menuMyTournamentsMessage.textContent = "Статусът на записването е показан. Двубоите временно не са достъпни.";
+      console.error("Menu tournament error:",bracketResult.error.message);
       return;
     }
+    const data=bracketResult.data;
     const matches = Array.isArray(data) ? data : [];
     const mine = matches.filter(match => match.player1_id === userId || match.player2_id === userId)
       .sort((a,b)=>Number(a.round_number)-Number(b.round_number)||Number(a.match_number)-Number(b.match_number));
