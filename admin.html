@@ -813,24 +813,11 @@ footer{
   <section class="admin-view" id="rewardsPanel">
     <button class="secondary-button back-dashboard">← НАЗАД</button>
     <div class="section-title">НАГРАДИ И ИЗПЛАЩАНИЯ</div>
-    <p class="section-description">Регистър на предадените награди и потвържденията от победителите.</p>
+    <p class="section-description">Управление на шампионската награда от 5000 Gold за SEXSI 1V1 CUP #001.</p>
     <div class="panel">
-      <h3>НОВО ИЗПЛАЩАНЕ</h3>
-      <label style="display:block;margin:10px 0 6px">ТУРНИР</label>
-      <input id="rewardTournament" class="search-input" value="SEXSI 1V1 CUP #001">
-      <label style="display:block;margin:10px 0 6px">ПОБЕДИТЕЛ ОТ ЗАВЪРШЕН ДВУБОЙ</label>
-      <select id="rewardWinnerMatch" class="search-input"><option value="">Зареждане на победителите...</option></select>
-      <label style="display:block;margin:10px 0 6px">ИМЕ В STANDOFF 2</label>
-      <input id="rewardGameName" class="search-input" placeholder="Име в играта">
-      <label style="display:block;margin:10px 0 6px">GAME ID</label>
-      <input id="rewardGameId" class="search-input" placeholder="Standoff 2 ID">
-      <label style="display:block;margin:10px 0 6px">НАГРАДА (GOLD)</label>
-      <input id="rewardAmount" class="search-input" type="number" min="1" step="1" value="5000">
-      <label style="display:block;margin:10px 0 6px">ДАТА И ЧАС НА ПРЕДАВАНЕ</label>
-      <input id="rewardHandedAt" class="search-input" type="datetime-local">
-      <label style="display:block;margin:10px 0 6px">SCREENSHOT ДОКАЗАТЕЛСТВО</label>
-      <input id="rewardProof" class="search-input" type="file" accept="image/png,image/jpeg,image/webp">
-      <button class="primary-button" id="saveRewardPayout">ЗАПИШИ ИЗПЛАЩАНЕТО</button>
+      <h3>ШАМПИОНСКА НАГРАДА</h3>
+      <p style="color:var(--muted);line-height:1.6">Системата проверява финалния двубой и автоматично записва неговия победител. За турнира може да бъде създадена само една награда.</p>
+      <button class="primary-button" id="createChampionReward" type="button">СЪЗДАЙ НАГРАДА ЗА ШАМПИОНА · 5000 GOLD</button>
       <p class="message" id="rewardFormMessage" aria-live="polite"></p>
     </div>
     <div class="panel">
@@ -961,7 +948,6 @@ function showAdminView(viewName){
     loadManagedPlayers();
   }
   if(viewName==="rewards"){
-    loadRewardWinners();
     loadRewardPayouts();
   }
   if(viewName==="emails"){
@@ -1875,147 +1861,130 @@ function createMatchCard(match){
 
 
 /* REWARD PAYOUT REGISTER */
-let rewardWinners = [];
-async function loadRewardWinners(){
-  const select=document.getElementById("rewardWinnerMatch");
-  if(!select)return;
-  select.innerHTML='<option value="">Зареждане...</option>';
-  const {data,error}=await db.rpc("sexsi_get_public_bracket");
-  if(error){
-    select.innerHTML='<option value="">Грешка при зареждане на турнирната схема</option>';
-    return;
-  }
-  const matches=Array.isArray(data)?data:[];
-  const maxRound=matches.reduce((max,m)=>Math.max(max,Number(m.round_number)||0),0);
-  const finalMatches=matches.filter(m=>Number(m.round_number)===maxRound);
-  rewardWinners=maxRound>0&&finalMatches.length===1&&
-    finalMatches[0].status==="completed"&&finalMatches[0].winner_id
-    ?[finalMatches[0]]:[];
-  select.innerHTML='<option value="">Избери шампион на завършения турнир</option>';
-  rewardWinners.forEach((m,index)=>{
-    const option=document.createElement("option");
-    option.value=String(index);
-    option.textContent=(m.winner_name||"Шампион")+
-      " · ФИНАЛ · МАЧ №"+m.match_number;
-    select.appendChild(option);
-  });
-  if(!rewardWinners.length){
-    select.innerHTML='<option value="">Няма еднозначно потвърден завършен финал</option>';
-  }
-}
-document.getElementById("rewardWinnerMatch")?.addEventListener("change",async()=>{
-  const selected=document.getElementById("rewardWinnerMatch").value;
-  const match=selected===""?null:rewardWinners[Number(selected)];
-  const nameInput=document.getElementById("rewardGameName");
-  const idInput=document.getElementById("rewardGameId");
-  nameInput.value="";
-  idInput.value="";
-  if(!match)return;
-  const {data,error}=await db.from("profiles")
-    .select("username,player_id")
-    .eq("id",match.winner_id)
-    .single();
-  if(error||!data){
-    document.getElementById("rewardFormMessage").textContent=
-      "Не успях да заредя профила на шампиона. Провери достъпа до profiles.";
-    return;
-  }
-  nameInput.value=data.username||"";
-  idInput.value=data.player_id||"";
-  document.getElementById("rewardFormMessage").textContent=
-    "Победителят и Game ID са заредени от реалния профил.";
-});
+const SEXSI_REWARD_TOURNAMENT_ID = "7c6f2c43-b25d-4a44-a991-4495126e78b1";
+
 async function loadRewardPayouts(){
   const container=document.getElementById("rewardArchive");
   const message=document.getElementById("rewardArchiveMessage");
   if(!container||!message)return;
-  message.textContent="Зареждане на архива...";
-  const {data,error}=await db.from("reward_payouts").select("*").order("created_at",{ascending:false});
+  message.textContent="Зареждане на наградите...";
+  container.replaceChildren();
+
+  const {data,error}=await db.rpc("sexsi_admin_rewards");
   if(error){
     message.textContent="Неуспешно зареждане: "+error.message;
     return;
   }
-  message.textContent=data.length?"Общо записи: "+data.length:"Все още няма регистрирани изплащания.";
+
+  const rows=Array.isArray(data)?data:[];
+  message.textContent=rows.length?"Общо награди: "+rows.length:"Все още няма създадена шампионска награда.";
+  if(!rows.length)return;
+
   const table=document.createElement("table");
-  table.innerHTML="<thead><tr><th>ТУРНИР</th><th>ПОБЕДИТЕЛ</th><th>GAME ID</th><th>НАГРАДА</th><th>ПРЕДАДЕНА</th><th>ПОТВЪРЖДЕНИЕ</th><th>ДОКАЗАТЕЛСТВО</th></tr></thead>";
+  table.innerHTML="<thead><tr><th>ТУРНИР</th><th>ШАМПИОН</th><th>GAME ID</th><th>НАГРАДА</th><th>СТАТУС</th><th>СЪЗДАДЕНА</th><th>ДОКАЗАТЕЛСТВО</th><th>ДЕЙСТВИЯ</th></tr></thead>";
   const body=document.createElement("tbody");
-  data.forEach(item=>{
+
+  rows.forEach(item=>{
     const tr=document.createElement("tr");
     const values=[
-      item.tournament_name,
-      item.winner_game_name,
-      item.winner_game_id,
+      "SEXSI 1V1 CUP #001",
+      item.username||"Неизвестен играч",
+      item.player_id||"Няма Game ID",
       Number(item.reward_amount).toLocaleString("bg-BG")+" "+item.reward_currency,
-      new Date(item.handed_over_at).toLocaleString("bg-BG"),
-      item.status==="confirmed"?"ПОТВЪРДЕНА":"ОЧАКВА ПОТВЪРЖДЕНИЕ",
-      item.proof_path?"ОТВОРИ ДОКАЗАТЕЛСТВО":"НЯМА"
+      item.reward_status==="confirmed"?"ПОТВЪРДЕНА":item.reward_status==="sent"?"ИЗПРАТЕНА":"ОЧАКВА ИЗПЛАЩАНЕ",
+      item.created_at?new Date(item.created_at).toLocaleString("bg-BG"):"—"
     ];
-    values.forEach((value,index)=>{
+    values.forEach(value=>{
       const td=document.createElement("td");
-      if(index===6&&item.proof_path){
-        const link=document.createElement("button");
-        link.type="button";link.textContent=value;
-        link.addEventListener("click",async()=>{
-          const {data,error}=await db.storage.from("sexsi-reward-proofs").createSignedUrl(item.proof_path,300);
-          if(error){alert("Неуспешно отваряне на доказателството: "+error.message);return;}
-          window.open(data.signedUrl,"_blank","noopener");
-        });
-        td.appendChild(link);
-      }else td.textContent=value;
+      td.textContent=value;
       tr.appendChild(td);
     });
+
+    const proofCell=document.createElement("td");
+    if(item.proof_path){
+      const proofButton=document.createElement("button");
+      proofButton.type="button";
+      proofButton.textContent="ОТВОРИ";
+      proofButton.addEventListener("click",async()=>{
+        const {data:proofData,error:proofError}=await db.storage.from("reward-proofs").createSignedUrl(item.proof_path,300);
+        if(proofError){alert("Неуспешно отваряне на доказателството: "+proofError.message);return;}
+        window.open(proofData.signedUrl,"_blank","noopener");
+      });
+      proofCell.appendChild(proofButton);
+    }else{
+      proofCell.textContent="НЯМА";
+    }
+    tr.appendChild(proofCell);
+
+    const actionsCell=document.createElement("td");
+    if(item.reward_status==="pending"){
+      const fileInput=document.createElement("input");
+      fileInput.type="file";
+      fileInput.accept="image/png,image/jpeg,image/webp";
+      fileInput.style.maxWidth="180px";
+      fileInput.setAttribute("aria-label","Доказателство за изплащането");
+      const sendButton=document.createElement("button");
+      sendButton.type="button";
+      sendButton.textContent="ОТБЕЛЕЖИ КАТО ИЗПРАТЕНА";
+      sendButton.style.marginTop="7px";
+      sendButton.addEventListener("click",async()=>{
+        const file=fileInput.files[0];
+        if(file&&(!["image/png","image/jpeg","image/webp"].includes(file.type)||file.size>5*1024*1024)){
+          alert("Избери PNG, JPG или WEBP изображение до 5 MB.");
+          return;
+        }
+        sendButton.disabled=true;
+        sendButton.textContent="ЗАПИСВАНЕ...";
+        try{
+          let proofPath=null;
+          if(file){
+            const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+            proofPath=item.winner_id+"/"+crypto.randomUUID()+"-"+safeName;
+            const {error:uploadError}=await db.storage.from("reward-proofs").upload(proofPath,file,{upsert:false,contentType:file.type});
+            if(uploadError)throw uploadError;
+          }
+          const {error:sendError}=await db.rpc("sexsi_admin_mark_reward_sent",{
+            p_reward_id:item.reward_id,
+            p_proof_path:proofPath
+          });
+          if(sendError)throw sendError;
+          await loadRewardPayouts();
+        }catch(error){
+          alert("Грешка при записване: "+error.message);
+          sendButton.disabled=false;
+          sendButton.textContent="ОТБЕЛЕЖИ КАТО ИЗПРАТЕНА";
+        }
+      });
+      actionsCell.append(fileInput,document.createElement("br"),sendButton);
+    }else{
+      actionsCell.textContent=item.reward_status==="confirmed"?"ЗАВЪРШЕНО":"ОЧАКВА ПОТВЪРЖДЕНИЕ ОТ ШАМПИОНА";
+    }
+    tr.appendChild(actionsCell);
     body.appendChild(tr);
   });
+
   table.appendChild(body);
   container.replaceChildren(table);
 }
-document.getElementById("saveRewardPayout")?.addEventListener("click",async()=>{
-  const msg=document.getElementById("rewardFormMessage");
-  const selected=document.getElementById("rewardWinnerMatch").value;
-  const match=selected===""?null:rewardWinners[Number(selected)];
-  const tournament=document.getElementById("rewardTournament").value.trim();
-  const gameName=document.getElementById("rewardGameName").value.trim();
-  const gameId=document.getElementById("rewardGameId").value.trim();
-  const amount=Number(document.getElementById("rewardAmount").value);
-  const file=document.getElementById("rewardProof").files[0];
-  const handedValue=document.getElementById("rewardHandedAt").value;
-  if(!match||!tournament||!gameName||!gameId||!Number.isInteger(amount)||amount<1){
-    msg.textContent="Изчакай завършването на финала и попълни всички задължителни полета.";
+
+document.getElementById("createChampionReward")?.addEventListener("click",async()=>{
+  const button=document.getElementById("createChampionReward");
+  const message=document.getElementById("rewardFormMessage");
+  button.disabled=true;
+  button.textContent="СЪЗДАВАНЕ...";
+  message.textContent="Проверка на финалния двубой...";
+  const {data,error}=await db.rpc("sexsi_admin_create_reward",{
+    p_tournament_id:SEXSI_REWARD_TOURNAMENT_ID
+  });
+  if(error){
+    message.textContent="Неуспешно създаване: "+error.message;
+    button.disabled=false;
+    button.textContent="СЪЗДАЙ НАГРАДА ЗА ШАМПИОНА · 5000 GOLD";
     return;
   }
-  if(file&&!["image/png","image/jpeg","image/webp"].includes(file.type)){
-    msg.textContent="Позволени са само PNG, JPG или WEBP снимки.";
-    return;
-  }
-  const button=document.getElementById("saveRewardPayout");
-  button.disabled=true;button.textContent="ЗАПИСВАНЕ...";
-  try{
-    let proofPath=null;
-    if(file){
-      const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-      proofPath=crypto.randomUUID()+"/"+safeName;
-      const {error:uploadError}=await db.storage.from("sexsi-reward-proofs").upload(proofPath,file,{upsert:false,contentType:file.type});
-      if(uploadError)throw uploadError;
-    }
-    const handedAt=handedValue?new Date(handedValue).toISOString():new Date().toISOString();
-    const {error}=await db.rpc("sexsi_admin_create_reward_payout",{
-      p_tournament_name:tournament,
-      p_final_match_id:match.id,
-      p_winner_user_id:match.winner_id,
-      p_winner_game_name:gameName,
-      p_winner_game_id:gameId,
-      p_reward_amount:amount,
-      p_proof_path:proofPath,
-      p_handed_over_at:handedAt
-    });
-    if(error)throw error;
-    msg.textContent="Изплащането е записано. Победителят вече може да потвърди получаването в профила си.";
-    document.getElementById("rewardGameName").value="";
-    document.getElementById("rewardGameId").value="";
-    document.getElementById("rewardProof").value="";
-    await loadRewardPayouts();
-  }catch(error){msg.textContent="Грешка: "+error.message;}
-  finally{button.disabled=false;button.textContent="ЗАПИШИ ИЗПЛАЩАНЕТО";}
+  message.textContent="Наградата е създадена успешно. ID: "+data;
+  button.textContent="НАГРАДАТА Е СЪЗДАДЕНА";
+  await loadRewardPayouts();
 });
 document.getElementById("printRewardArchive")?.addEventListener("click",()=>{
   const archive=document.getElementById("rewardArchive");
