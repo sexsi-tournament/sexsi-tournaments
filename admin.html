@@ -594,6 +594,7 @@ footer{
   </div>
   <button class="menu-item active" data-view="dashboard">НАЧАЛО</button>
   <button class="menu-item" data-view="registrations">РЕГИСТРАЦИИ</button>
+  <button class="menu-item" data-view="emails">ИМЕЙЛИ КЪМ ИГРАЧИ</button>
   <button class="menu-item" data-view="players">ВСИЧКИ ИГРАЧИ</button>
   <button class="menu-item" data-view="player-management">УПРАВЛЕНИЕ НА ИГРАЧИ</button>
   <button class="menu-item" data-view="matches">ТУРНИРНА СХЕМА</button>
@@ -650,6 +651,11 @@ footer{
         <span>Преглед на записаните участници в турнирите.</span>
       </button>
 
+      <button class="dashboard-action" data-open-view="emails">
+        <strong>ИМЕЙЛИ КЪМ ИГРАЧИ</strong>
+        <span>Избери записан участник и подготви лично съобщение от своята поща.</span>
+      </button>
+
       <button class="dashboard-action" data-open-view="players">
         <strong>ВСИЧКИ ИГРАЧИ</strong>
         <span>Преглед на профилите и GAME ID на играчите.</span>
@@ -695,6 +701,25 @@ footer{
       </div>
     </div>
   </section>
+  <section class="admin-view" id="emailsPanel">
+    <button class="secondary-button back-dashboard">← НАЗАД</button>
+    <div class="section-title">ИМЕЙЛИ КЪМ ИГРАЧИ</div>
+    <p class="section-description">Избери записан участник. Имейл адресът се зарежда автоматично от регистрацията му.</p>
+    <div class="panel">
+      <label for="emailPlayerSelect" style="display:block;color:var(--muted);font-size:12px;font-weight:bold;margin-bottom:8px;">ПОЛУЧАТЕЛ</label>
+      <select id="emailPlayerSelect" style="display:block;width:100%;max-width:600px;background:#090909;color:white;border:1px solid var(--border);border-radius:7px;padding:13px;margin-bottom:16px;">
+        <option value="">Зареждане на участниците...</option>
+      </select>
+      <p class="message" id="emailRecipientAddress">Имейлът на избрания участник ще се покаже тук.</p>
+      <label for="emailSubject" style="display:block;color:var(--muted);font-size:12px;font-weight:bold;margin:16px 0 8px;">ТЕМА</label>
+      <input id="emailSubject" type="text" maxlength="160" placeholder="Например: Информация за SEXSI 1V1 CUP #001" style="display:block;width:100%;max-width:700px;background:#090909;color:white;border:1px solid var(--border);border-radius:7px;padding:13px;">
+      <label for="emailBody" style="display:block;color:var(--muted);font-size:12px;font-weight:bold;margin:16px 0 8px;">СЪОБЩЕНИЕ</label>
+      <textarea id="emailBody" rows="8" maxlength="10000" placeholder="Напиши съобщението до участника..." style="display:block;width:100%;max-width:800px;background:#090909;color:white;border:1px solid var(--border);border-radius:7px;padding:13px;resize:vertical;line-height:1.5;"></textarea>
+      <button class="primary-button" id="openEmailDraftButton" type="button" style="margin-top:16px;">ОТВОРИ В ПОЩАТА</button>
+      <p class="message" id="emailComposeMessage">Бутонът ще отвори приложението ти за имейли. Прегледай писмото и натисни „Изпрати“ там.</p>
+    </div>
+  </section>
+
   <section class="admin-view" id="playersPanel">
     <button class="secondary-button back-dashboard">← НАЗАД</button>
 
@@ -892,6 +917,9 @@ function showAdminView(viewName){
   if(viewName==="player-management"){
     loadManagedPlayers();
   }
+  if(viewName==="emails"){
+    loadEmailRecipients();
+  }
 }
 
 document.getElementById("openMenuButton")
@@ -967,6 +995,91 @@ async function loadRegistrations(){
     list.appendChild(row);
   });
 }
+
+/* EMAIL COMPOSER */
+let emailRecipients = [];
+let emailRecipientsLoaded = false;
+
+async function loadEmailRecipients(){
+  const select=document.getElementById("emailPlayerSelect");
+  const address=document.getElementById("emailRecipientAddress");
+  const message=document.getElementById("emailComposeMessage");
+  select.innerHTML='<option value="">Зареждане...</option>';
+  address.textContent="";
+  message.textContent="Зареждане на имейл адресите от записаните участници...";
+
+  const {data,error}=await db.rpc("sexsi_admin_registrations");
+  if(error){
+    select.innerHTML='<option value="">Грешка при зареждане</option>';
+    message.textContent="Не успях да заредя участниците: "+error.message;
+    return;
+  }
+
+  emailRecipients=Array.isArray(data)
+    ?data.filter(player=>String(player.player_email||"").trim())
+    :[];
+  select.innerHTML="";
+
+  if(emailRecipients.length===0){
+    select.innerHTML='<option value="">Няма записани участници с наличен имейл</option>';
+    message.textContent="Провери дали участниците имат имейл в регистрационните данни.";
+    emailRecipientsLoaded=true;
+    return;
+  }
+
+  const placeholder=document.createElement("option");
+  placeholder.value="";
+  placeholder.textContent="Избери участник...";
+  select.appendChild(placeholder);
+
+  emailRecipients.forEach((player,index)=>{
+    const option=document.createElement("option");
+    option.value=String(index);
+    option.textContent=(player.player_name||"PLAYER")+" · "+player.player_email;
+    select.appendChild(option);
+  });
+
+  emailRecipientsLoaded=true;
+  message.textContent="Заредени са "+emailRecipients.length+" записани участници с имейл адрес.";
+  updateEmailRecipientAddress();
+}
+
+function updateEmailRecipientAddress(){
+  const select=document.getElementById("emailPlayerSelect");
+  const address=document.getElementById("emailRecipientAddress");
+  const player=emailRecipients[Number(select.value)];
+  address.textContent=player
+    ?"ПОЛУЧАТЕЛ: "+player.player_email
+    :"Избери участник, за да заредим неговия имейл адрес.";
+}
+
+document.getElementById("emailPlayerSelect").addEventListener("change",updateEmailRecipientAddress);
+
+document.getElementById("openEmailDraftButton").addEventListener("click",()=>{
+  const select=document.getElementById("emailPlayerSelect");
+  const player=emailRecipients[Number(select.value)];
+  const subject=document.getElementById("emailSubject").value.trim();
+  const body=document.getElementById("emailBody").value.trim();
+  const message=document.getElementById("emailComposeMessage");
+
+  if(!player){
+    message.textContent="Първо избери участник.";
+    return;
+  }
+  if(!subject&&!body){
+    message.textContent="Добави тема или текст на съобщението.";
+    return;
+  }
+
+  const mailto="mailto:"+encodeURIComponent(player.player_email.trim())+
+    "?subject="+encodeURIComponent(subject)+
+    "&body="+encodeURIComponent(body);
+
+  message.textContent="Подготвям писмо до "+player.player_email+". Изпращането се довършва в приложението ти за имейли.";
+  window.location.href=mailto;
+});
+
+/* END EMAIL COMPOSER */
 
 /* ALL PLAYERS */
 
