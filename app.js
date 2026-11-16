@@ -112,7 +112,7 @@ async function loadMyRewardPayouts(userId){
   if(!container)return;
   container.replaceChildren();
   if(!userId){container.textContent="Влез в профила си, за да виждаш наградите.";return;}
-  const {data,error}=await db.from("reward_payouts").select("*").order("created_at",{ascending:false});
+  const {data,error}=await db.from("reward_payouts").select("*").eq("winner_user_id",userId).order("created_at",{ascending:false});
   if(error){container.textContent="Наградите временно не са достъпни.";return;}
   if(!data||!data.length){container.textContent="Все още нямаш регистрирани награди.";return;}
   data.forEach(item=>{
