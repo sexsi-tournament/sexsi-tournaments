@@ -268,6 +268,24 @@ nav{display:flex;flex-wrap:wrap;gap:20px}
   box-shadow:0 18px 45px rgba(0,0,0,.65),0 0 25px rgba(237,37,45,.13);
 }
 .player-menu[hidden]{display:none!important}
+.guest-header-actions{position:relative;display:flex;align-items:center}
+.guest-menu{width:min(280px,calc(100vw - 28px))}
+.guest-menu nav{display:flex;flex-direction:column;gap:0;width:100%}
+.guest-menu nav a{
+  display:block;width:100%;padding:12px 13px;
+  color:#ccc;font-size:11px;letter-spacing:.5px;
+  border-radius:6px;text-decoration:none;
+}
+.guest-menu nav a:after{display:none}
+.guest-menu nav a:hover{color:#fff;background:rgba(237,37,45,.13);text-shadow:none}
+.guest-menu .guest-auth-actions{
+  display:flex;gap:8px;margin:7px 4px 3px;padding-top:10px;
+  border-top:1px solid #292326;
+}
+.guest-menu .guest-auth-actions a{
+  flex:1;min-height:36px;padding:9px 8px;
+  justify-content:center;text-align:center;font-size:9px;
+}
 @keyframes player-menu-enter{
   from{opacity:0;transform:translateY(-4px)}
   to{opacity:1;transform:translateY(0)}
@@ -641,17 +659,21 @@ footer{
 <header>
   <div class="logo">SEXSI<sup>®</sup></div>
   <div class="guest-header-actions" id="guestNav" hidden>
-    <nav class="guest-links" aria-label="Основна навигация">
-      <a href="index.html">НАЧАЛО</a>
-      <a href="tournaments.html">ТУРНИРИ</a>
-      <a href="matches.html">МОИТЕ ДВУБОИ</a>
-      <a href="archive.html">АРХИВ</a>
-      <a href="ranking.html">КЛАСАЦИЯ</a>
-      <a href="loadout.html">LOADOUT LAB</a>
-    </nav>
-    <div class="guest-auth-actions">
-      <a class="guest-login" href="profile.html#loginForm">ВЛЕЗ</a>
-      <a class="guest-register" href="profile.html#register">РЕГИСТРИРАЙ СЕ</a>
+    <button class="player-menu-button" id="guestMenuButton" type="button"
+      aria-expanded="false" aria-controls="guestMenu">НАВИГАЦИЯ</button>
+    <div class="player-menu guest-menu" id="guestMenu" hidden>
+      <nav aria-label="Основна навигация">
+        <a href="index.html">НАЧАЛО</a>
+        <a href="tournaments.html">ТУРНИРИ</a>
+        <a href="matches.html">МОИТЕ ДВУБОИ</a>
+        <a href="archive.html">АРХИВ</a>
+        <a href="ranking.html">КЛАСАЦИЯ</a>
+        <a href="loadout.html">LOADOUT LAB</a>
+      </nav>
+      <div class="guest-auth-actions">
+        <a class="guest-login" href="profile.html#loginForm">ВЛЕЗ</a>
+        <a class="guest-register" href="profile.html#register">РЕГИСТРИРАЙ СЕ</a>
+      </div>
     </div>
   </div>
   <div class="player-nav" id="playerNav" hidden>
@@ -840,6 +862,8 @@ footer{
   const bracketAccess = document.getElementById("bracketAccess");
   const bracketContainer = document.getElementById("bracketContainer");
   const guestNav = document.getElementById("guestNav");
+  const guestMenuButton = document.getElementById("guestMenuButton");
+  const guestMenu = document.getElementById("guestMenu");
   const playerNav = document.getElementById("playerNav");
   const playerMenuButton = document.getElementById("playerMenuButton");
   const playerMenu = document.getElementById("playerMenu");
@@ -1109,6 +1133,19 @@ footer{
     }
   });
 
+  guestMenuButton.addEventListener("click",()=>{
+    const opening = guestMenu.hidden;
+    guestMenu.hidden = !opening;
+    guestMenuButton.setAttribute("aria-expanded",String(opening));
+  });
+
+  guestMenu.addEventListener("click",(event)=>{
+    if(event.target.closest("a")){
+      guestMenu.hidden = true;
+      guestMenuButton.setAttribute("aria-expanded","false");
+    }
+  });
+
   playerMenuButton.addEventListener("click",()=>{
     const opening = playerMenu.hidden;
     playerMenu.hidden = !opening;
@@ -1119,6 +1156,10 @@ footer{
     if(!playerNav.contains(event.target)){
       playerMenu.hidden = true;
       playerMenuButton.setAttribute("aria-expanded","false");
+    }
+    if(!guestNav.contains(event.target)){
+      guestMenu.hidden = true;
+      guestMenuButton.setAttribute("aria-expanded","false");
     }
   });
 
