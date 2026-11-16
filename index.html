@@ -304,6 +304,15 @@ nav{display:flex;flex-wrap:wrap;gap:20px}
 .menu-my-match strong{display:block;color:#fff;font-size:11px}
 .menu-my-match span{display:block;margin-top:5px;color:#aaa;font-size:10px;line-height:1.5}
 .menu-my-match .menu-my-result{color:#e9bd59}
+.menu-unregister-button{
+  display:inline-flex!important;align-items:center;justify-content:center;
+  width:100%;margin-top:10px;padding:10px 12px;
+  color:#ff777c!important;background:rgba(237,37,45,.10)!important;
+  border:1px solid rgba(237,37,45,.55)!important;border-radius:6px;
+  font-size:10px!important;font-weight:900;letter-spacing:.7px;
+}
+.menu-unregister-button:hover{background:rgba(237,37,45,.22)!important;border-color:#ff454b!important}
+.menu-unregister-button:disabled{opacity:.55;cursor:wait}
 #menuMyTournamentsButton{display:flex;justify-content:space-between;align-items:center}
 #menuMyTournamentsButton[aria-expanded="true"] span{transform:rotate(45deg)}
 .player-menu .menu-logout{color:#ff6268;border-top:1px solid #292929;margin-top:5px}
@@ -954,8 +963,51 @@ footer{
         ? "СТАТУС: ЗАПИСАН СИ ЗА ТУРНИРА"
         : "СТАТУС: ВСЕ ОЩЕ НЕ СИ ЗАПИСАН";
     }
-    registrationDetail.style.color=registrationResult.data==="registered"?"#65e69a":"#e9bd59";
+    const isRegistered = !registrationResult.error && registrationResult.data === "registered";
+    registrationDetail.style.color=isRegistered?"#65e69a":"#e9bd59";
     registrationStatus.append(registrationTitle,registrationDetail);
+
+    if(isRegistered){
+      const unregisterButton=document.createElement("button");
+      unregisterButton.type="button";
+      unregisterButton.className="menu-unregister-button";
+      unregisterButton.textContent="ОТКАЖИ УЧАСТИЕ";
+      unregisterButton.addEventListener("click",async()=>{
+        if(!window.confirm("Сигурен ли си, че искаш да се отпишеш от SEXSI 1V1 CUP #001? Мястото ти ще бъде освободено.")) return;
+        unregisterButton.disabled=true;
+        unregisterButton.textContent="ОТПИСВАНЕ...";
+        try{
+          const {data,error}=await db.rpc("sexsi_unregister_from_tournament");
+          if(error) throw error;
+          if(data==="unregistered"){
+            registrationDetail.textContent="УСПЕШНО СЕ ОТПИСА ОТ ТУРНИРА";
+            registrationDetail.style.color="#e9bd59";
+            registrationStatus.removeChild(unregisterButton);
+            await loadMenuMyTournaments(userId);
+            if(typeof loadRegistrationCount==="function") await loadRegistrationCount();
+            return;
+          }
+          if(data==="locked"){
+            registrationDetail.textContent="ОТПИСВАНЕТО Е ЗАТВОРЕНО: турнирната схема вече е създадена.";
+          }else if(data==="not_registered"){
+            registrationDetail.textContent="ВЕЧЕ НЯМАШ АКТИВНА РЕГИСТРАЦИЯ.";
+          }else if(data==="not_logged_in"){
+            registrationDetail.textContent="СЕСИЯТА Е ИЗТЕКЛА. ВЛЕЗ ОТНОВО.";
+          }else{
+            registrationDetail.textContent="ОТПИСВАНЕТО НЕ БЕШЕ ИЗВЪРШЕНО.";
+          }
+          unregisterButton.disabled=false;
+          unregisterButton.textContent="ОТКАЖИ УЧАСТИЕ";
+        }catch(error){
+          console.error("Tournament unregister error:",error);
+          registrationDetail.textContent="ГРЕШКА ПРИ ОТПИСВАНЕ. ОПИТАЙ ОТНОВО.";
+          unregisterButton.disabled=false;
+          unregisterButton.textContent="ОТКАЖИ УЧАСТИЕ";
+        }
+      });
+      registrationStatus.appendChild(unregisterButton);
+    }
+
     menuMyTournamentsList.appendChild(registrationStatus);
     if(bracketResult.error){
       menuMyTournamentsMessage.textContent = "Статусът на записването е показан. Двубоите временно не са достъпни.";
