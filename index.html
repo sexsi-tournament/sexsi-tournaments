@@ -251,6 +251,26 @@ nav{display:flex;flex-wrap:wrap;gap:20px}
 .guest-register{color:#fff;border:1px solid #ed252d;background:#ed252d}
 .guest-register:hover{background:#c91d25;border-color:#c91d25;transform:translateY(-1px)}
 #guestNav[hidden],#playerNav[hidden]{display:none!important}
+.site-navigation{position:relative;display:flex;align-items:center;margin-left:auto}
+.site-navigation-menu{
+  width:min(290px,calc(100vw - 28px));
+  max-height:min(78vh,680px);overflow-y:auto;
+}
+.site-navigation-menu nav{display:flex;flex-direction:column;gap:0;width:100%}
+.site-navigation-menu nav a{
+  display:block;width:100%;padding:12px 13px;color:#ccc;
+  font-size:11px;letter-spacing:.5px;text-decoration:none;border-radius:6px;
+}
+.site-navigation-menu nav a:after{display:none}
+.site-navigation-menu nav a:hover{color:#fff;background:rgba(237,37,45,.13);text-shadow:none}
+.site-navigation-menu .guest-auth-actions{
+  display:flex;gap:8px;margin:7px 4px 3px;padding-top:10px;
+  border-top:1px solid #292326;
+}
+.site-navigation-menu .guest-auth-actions a{
+  flex:1;min-height:36px;padding:9px 8px;justify-content:center;
+  text-align:center;font-size:9px;
+}
 .player-nav{position:relative;display:flex;align-items:center}
 .player-menu-button{
   display:flex;align-items:center;gap:10px;padding:11px 15px;
@@ -658,6 +678,25 @@ footer{
 
 <header>
   <div class="logo">SEXSI<sup>®</sup></div>
+  <div class="site-navigation" id="siteNavigation">
+    <button class="player-menu-button" id="siteNavigationButton" type="button"
+      aria-expanded="false" aria-controls="siteNavigationMenu">МЕНЮ</button>
+    <div class="player-menu site-navigation-menu" id="siteNavigationMenu" hidden>
+      <nav aria-label="Основна навигация">
+        <a href="index.html">НАЧАЛО</a>
+        <a href="tournaments.html">ТУРНИРИ</a>
+        <a href="matches.html">МОИТЕ ДУБОИ</a>
+        <a href="archive.html">АРХИВ</a>
+        <a href="ranking.html">КЛАСАЦИЯ</a>
+        <a href="loadout.html">LOADOUT LAB</a>
+        <a href="profile.html#playerDashboard">МОЯТ ПРОФИЛ</a>
+      </nav>
+      <div class="guest-auth-actions">
+        <a class="guest-login" href="profile.html#loginForm">ВЛЕЗ</a>
+        <a class="guest-register" href="profile.html#register">РЕГИСТРИРАЙ СЕ</a>
+      </div>
+    </div>
+  </div>
   <div class="guest-header-actions" id="guestNav" hidden>
     <button class="player-menu-button" id="guestMenuButton" type="button"
       aria-expanded="false" aria-controls="guestMenu">НАВИГАЦИЯ</button>
@@ -1414,6 +1453,33 @@ footer{
 })();
 </script>
 
+
+<script>
+(function(){
+  const wrap=document.getElementById("siteNavigation");
+  const button=document.getElementById("siteNavigationButton");
+  const menu=document.getElementById("siteNavigationMenu");
+  if(!wrap||!button||!menu) return;
+  button.addEventListener("click",function(event){
+    event.stopPropagation();
+    const opening=menu.hidden;
+    menu.hidden=!opening;
+    button.setAttribute("aria-expanded",String(opening));
+  });
+  menu.addEventListener("click",function(event){
+    if(event.target.closest("a")){
+      menu.hidden=true;
+      button.setAttribute("aria-expanded","false");
+    }
+  });
+  document.addEventListener("click",function(event){
+    if(!wrap.contains(event.target)){
+      menu.hidden=true;
+      button.setAttribute("aria-expanded","false");
+    }
+  });
+})();
+</script>
 
 <script>
 async function shareSexsiSite() {
