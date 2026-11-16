@@ -1564,7 +1564,7 @@ async function loadBracket(){
   message.textContent="Зареждане на двубоите...";
   container.innerHTML="";
 
-  const {data,error}=await db.rpc("sexsi_get_bracket");
+  const {data,error}=await db.rpc("sexsi_get_public_bracket");
   if(error){
     message.textContent="Грешка при зареждане: "+error.message;
     document.getElementById("overviewMatches").textContent="!";
@@ -1885,10 +1885,9 @@ async function loadRewardWinners(){
     select.innerHTML='<option value="">Грешка при зареждане на турнирната схема</option>';
     return;
   }
-  const completed=(Array.isArray(data)?data:[]).filter(m=>m.status==="completed"&&m.winner_id);
-  const latestRound=completed.reduce((max,m)=>Math.max(max,Number(m.round_number)||0),0);
-  rewardWinners=completed.filter(m=>Number(m.round_number)===latestRound);
-  select.innerHTML='<option value="">Избери победител от последния завършен кръг</option>';
+  rewardWinners=(Array.isArray(data)?data:[]).filter(m=>m.status==="completed"&&m.winner_id);
+  rewardWinners.sort((a,b)=>Number(b.round_number)-Number(a.round_number)||Number(a.match_number)-Number(b.match_number));
+  select.innerHTML='<option value="">Избери победител от завършен двубой</option>';
   rewardWinners.forEach((m,index)=>{
     const option=document.createElement("option");
     option.value=String(index);
@@ -1921,9 +1920,22 @@ async function loadRewardPayouts(){
       Number(item.reward_amount).toLocaleString("bg-BG")+" "+item.reward_currency,
       new Date(item.handed_over_at).toLocaleString("bg-BG"),
       item.status==="confirmed"?"ПОТВЪРДЕНА":"ОЧАКВА ПОТВЪРЖДЕНИЕ",
-      item.proof_path?"НАЛИЧНО":"НЯМА"
+      item.proof_path?"ОТВОРИ ДОКАЗАТЕЛСТВО":"НЯМА"
     ];
-    values.forEach(value=>{const td=document.createElement("td");td.textContent=value;tr.appendChild(td);});
+    values.forEach((value,index)=>{
+      const td=document.createElement("td");
+      if(index===6&&item.proof_path){
+        const link=document.createElement("button");
+        link.type="button";link.textContent=value;
+        link.addEventListener("click",async()=>{
+          const {data,error}=await db.storage.from("sexsi-reward-proofs").createSignedUrl(item.proof_path,300);
+          if(error){alert("Неуспешно отваряне на доказателството: "+error.message);return;}
+          window.open(data.signedUrl,"_blank","noopener");
+        });
+        td.appendChild(link);
+      }else td.textContent=value;
+      tr.appendChild(td);
+    });
     body.appendChild(tr);
   });
   table.appendChild(body);
