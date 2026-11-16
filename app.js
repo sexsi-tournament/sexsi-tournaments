@@ -42,6 +42,7 @@ function showPlayerDashboard(user, playerId) {
 
   loadTournamentRegistration(playerId);
   loadPlayerXP();
+  loadMyTournamentMatches(playerId);
 }
 
 async function loadPlayerXP() {
@@ -112,6 +113,90 @@ async function loadPlayerProfile(user) {
   }
 
   showPlayerDashboard(user, data || "");
+}
+
+/* ЛИЧНИ ТУРНИРИ НА ИГРАЧА */
+async function loadMyTournamentMatches(playerId) {
+  const container = document.getElementById("myTournamentMatches");
+  if (!container) return;
+
+  container.replaceChildren();
+  const note = document.createElement("p");
+  note.className = "message";
+  note.textContent = "Зареждане на личните двубои...";
+  container.appendChild(note);
+
+  if (!playerId) {
+    note.textContent = "Добави Standoff 2 ID в профила си, за да виждаш личните си двубои.";
+    return;
+  }
+
+  const { data, error } = await db.rpc("sexsi_get_public_bracket");
+  if (error) {
+    console.error("My tournaments error:", error.message);
+    note.textContent = "Информацията за двубоите временно не е достъпна.";
+    return;
+  }
+
+  const matches = Array.isArray(data) ? data : [];
+  const mine = matches.filter(match =>
+    match.player1_id === playerId || match.player2_id === playerId
+  );
+
+  if (!mine.length) {
+    note.textContent = matches.length
+      ? "Турнирната схема е създадена, но все още няма двубой, свързан с твоя профил. Провери дали Game ID-то ти съвпада с регистрацията."
+      : "Записването ти се управлява отделно. Личните двубои ще се появят тук след създаването на турнирната схема.";
+    return;
+  }
+
+  note.textContent = "Твоите двубои в SEXSI 1V1 CUP #001";
+  mine.sort((a,b) =>
+    Number(a.round_number) - Number(b.round_number) ||
+    Number(a.match_number) - Number(b.match_number)
+  );
+
+  mine.forEach(match => {
+    const card = document.createElement("article");
+    card.style.cssText = "padding:14px;background:#151515;border:1px solid #383033;border-radius:7px";
+
+    const heading = document.createElement("strong");
+    heading.textContent = "КРЪГ " + (match.round_number || "—") + " · МАЧ №" + (match.match_number || "—");
+
+    const opponent = document.createElement("p");
+    opponent.style.cssText = "margin:9px 0;color:#ddd";
+    const isPlayer1 = match.player1_id === playerId;
+    const opponentName = isPlayer1 ? match.player2_name : match.player1_name;
+    opponent.textContent = "ПРОТИВНИК: " + (opponentName || "Очаква се");
+
+    const result = document.createElement("p");
+    result.style.cssText = "margin:6px 0;color:#aaa;font-size:13px";
+    result.textContent = "РЕЗУЛТАТ: " +
+      (match.score_player1 == null ? "—" : match.score_player1) + " : " +
+      (match.score_player2 == null ? "—" : match.score_player2);
+
+    const status = document.createElement("p");
+    status.style.cssText = "margin:6px 0;font-size:12px;font-weight:bold;color:" +
+      (match.status === "completed" ? "#65e69a" : "#e9bd59");
+    status.textContent = match.status === "completed"
+      ? (match.winner_id === playerId ? "ПОБЕДА" : "ЗАГУБА") + (match.winner_name ? " · " + match.winner_name : "")
+      : match.status === "ongoing" ? "ДВУБОЯТ Е В ХОД" : "ПРЕДСТОИ";
+
+    card.append(heading, opponent, result, status);
+    container.appendChild(card);
+  });
+}
+
+const refreshMyTournamentsButton = document.getElementById("refreshMyTournaments");
+if (refreshMyTournamentsButton) {
+  refreshMyTournamentsButton.addEventListener("click", async function() {
+    refreshMyTournamentsButton.disabled = true;
+    refreshMyTournamentsButton.textContent = "ОБНОВЯВАНЕ...";
+    const playerId = document.getElementById("playerId")?.textContent || "";
+    await loadMyTournamentMatches(playerId === "НЯМА ДОБАВЕНО ID" ? "" : playerId);
+    refreshMyTournamentsButton.disabled = false;
+    refreshMyTournamentsButton.textContent = "ОБНОВИ ИНФОРМАЦИЯТА";
+  });
 }
 
 // РЕГИСТРАЦИЯ
