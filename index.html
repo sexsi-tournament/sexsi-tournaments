@@ -640,7 +640,7 @@ footer{
 
 <header>
   <div class="logo">SEXSI<sup>®</sup></div>
-  <div class="guest-header-actions" id="guestNav">
+  <div class="guest-header-actions" id="guestNav" hidden>
     <nav class="guest-links" aria-label="Основна навигация">
       <a href="index.html">НАЧАЛО</a>
       <a href="tournaments.html">ТУРНИРИ</a>
@@ -1259,6 +1259,8 @@ footer{
 
       if(error){
         console.error("Session error:",error.message);
+        guestNav.hidden = false;
+        playerNav.hidden = true;
         return;
       }
 
