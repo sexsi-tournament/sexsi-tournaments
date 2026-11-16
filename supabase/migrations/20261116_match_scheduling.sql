@@ -36,3 +36,20 @@ $$;
 
 revoke all on function public.sexsi_admin_set_match_schedule(uuid, timestamptz) from public;
 grant execute on function public.sexsi_admin_set_match_schedule(uuid, timestamptz) to authenticated;
+
+
+-- Публично четими са само насрочените дати и часове, без лични данни.
+create or replace function public.sexsi_get_public_match_schedules()
+returns table(match_id uuid, scheduled_at timestamptz)
+language sql
+security definer
+set search_path = public
+stable
+as $$
+  select m.id, m.scheduled_at
+  from public.matches as m
+  where m.scheduled_at is not null;
+$$;
+
+revoke all on function public.sexsi_get_public_match_schedules() from public;
+grant execute on function public.sexsi_get_public_match_schedules() to anon, authenticated;
