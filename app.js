@@ -87,7 +87,14 @@ async function loadPlayerXP() {
     Elite: "LEGEND"
   };
 
+  const rankKey = String(rank).toLowerCase();
   rankBadge.textContent = String(rank).toUpperCase();
+  rankBadge.className = "rank-badge rank-" + rankKey;
+  const levelCard = document.getElementById("playerLevelCard");
+  if (levelCard) {
+    levelCard.classList.remove("rank-rookie", "rank-amateur", "rank-pro", "rank-elite", "rank-legend");
+    levelCard.classList.add("rank-" + rankKey);
+  }
   totalElement.textContent = totalXP.toLocaleString("bg-BG") + " XP";
   progressElement.style.width = progress + "%";
 
