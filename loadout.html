@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090909">
+<meta name="description" content="SEXSI LOADOUT LAB — създай своята комбинация от нож и ръкавици за Standoff 2.">
+<title>SEXSI LOADOUT LAB | SEXSI TOURNAMENTS</title>
+<style>
+*{box-sizing:border-box}
+:root{--red:#ed252d;--red2:#ff454b;--bg:#080808;--panel:#111114;--line:rgba(255,255,255,.1);--muted:#929292}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif;min-height:100vh}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:48px 48px}
+header{height:72px;padding:0 6%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:rgba(8,8,8,.92);position:relative;z-index:2}
+.logo{font-size:25px;font-weight:1000;font-style:italic;letter-spacing:1px;color:#fff;text-decoration:none}.logo span{color:var(--red)}
+header nav{display:flex;gap:22px;align-items:center}
+header nav a{color:#aaa;text-decoration:none;font-size:11px;font-weight:900;letter-spacing:1px}
+header nav a:hover{color:#fff}
+main{position:relative;z-index:1;max-width:1320px;margin:auto;padding:42px 5% 70px}
+.eyebrow{color:var(--red2);font-size:10px;font-weight:900;letter-spacing:4px}
+h1{font-size:clamp(34px,6vw,64px);line-height:.95;letter-spacing:-2px;margin:12px 0}
+h1 span{color:var(--red)}
+.intro{color:#999;max-width:600px;font-size:14px;line-height:1.7;margin:16px 0 30px}
+.lab{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(290px,.8fr);gap:18px;align-items:stretch}
+.stage{min-height:510px;position:relative;overflow:hidden;border:1px solid rgba(237,37,45,.3);border-radius:14px;background:radial-gradient(ellipse at 50% 48%,rgba(115,20,26,.25),transparent 52%),linear-gradient(145deg,#171719,#090909 65%);display:flex;align-items:center;justify-content:center}
+.stage:before{content:"";position:absolute;inset:0;opacity:.22;background:linear-gradient(135deg,transparent 49.8%,rgba(255,255,255,.08) 50%,transparent 50.2%),linear-gradient(45deg,transparent 49.8%,rgba(255,255,255,.05) 50%,transparent 50.2%);background-size:80px 80px}
+.stage-glow{position:absolute;width:340px;height:340px;border-radius:50%;background:rgba(237,37,45,.12);filter:blur(85px)}
+.stage-content{position:relative;text-align:center;padding:30px;max-width:490px}
+.stage-icon{width:76px;height:76px;margin:0 auto 22px;border:1px solid rgba(237,37,45,.5);border-radius:22px;display:grid;place-items:center;background:rgba(237,37,45,.08);font-size:32px;box-shadow:0 0 45px rgba(237,37,45,.12)}
+.stage-content h2{font-size:18px;letter-spacing:2px;margin:0 0 10px}
+.stage-content p{color:#999;font-size:12px;line-height:1.7;margin:0}
+.stage-tag{display:inline-block;margin-top:20px;padding:8px 12px;border:1px solid rgba(237,37,45,.4);border-radius:4px;color:#ff8b90;font-size:9px;font-weight:900;letter-spacing:1.5px}
+.stage-corner{position:absolute;top:18px;left:20px;color:#777;font-size:9px;font-weight:900;letter-spacing:2px}
+.stage-corner.right{left:auto;right:20px;color:#e45b61}
+.controls{border:1px solid var(--line);border-radius:14px;background:linear-gradient(160deg,#151517,#0d0d0f);padding:22px}
+.controls h3{font-size:13px;letter-spacing:1.5px;margin:0 0 20px}
+.field{margin:0 0 18px}
+label{display:block;color:#999;font-size:10px;font-weight:900;letter-spacing:1.2px;margin-bottom:8px}
+select{width:100%;background:#090909;border:1px solid #363639;color:#fff;padding:14px 12px;border-radius:6px;font-size:13px;outline:none}
+select:focus{border-color:var(--red)}
+.selection{padding:15px;margin:18px 0;background:#0a0a0b;border:1px solid #29292d;border-radius:8px}
+.selection small{display:block;color:#777;font-size:9px;font-weight:900;letter-spacing:1.4px;margin-bottom:7px}
+.selection strong{font-size:13px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
+button{border:0;border-radius:6px;padding:13px 10px;font-size:10px;font-weight:900;letter-spacing:1px;cursor:pointer}
+.primary{background:var(--red);color:white}.primary:hover{background:#c91e26}
+.secondary{background:#222;color:#ddd;border:1px solid #3a3a3a}.secondary:hover{border-color:#777}
+.notice{margin-top:16px;padding:12px;border-left:2px solid var(--red);background:rgba(237,37,45,.06);color:#999;font-size:10px;line-height:1.6}
+.notice b{color:#ddd}
+.catalog-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:48px 0 15px}
+.catalog-head h2{font-size:19px;letter-spacing:1px;margin:0}
+.catalog-head p{font-size:11px;color:#777;margin:0}
+.catalog{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.catalog-card{border:1px solid var(--line);background:#111114;border-radius:9px;padding:17px;min-height:112px}
+.catalog-card .symbol{font-size:22px;margin-bottom:12px}
+.catalog-card strong{display:block;font-size:12px;margin-bottom:5px}
+.catalog-card span{color:#777;font-size:10px}
+footer{border-top:1px solid var(--line);padding:22px 6%;color:#666;font-size:10px;text-align:center}
+@media(max-width:850px){.lab{grid-template-columns:1fr}.stage{min-height:390px}.catalog{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){header{height:62px;padding:0 5%}header nav{gap:12px}header nav a{font-size:9px}.logo{font-size:21px}main{padding:32px 4% 50px}.stage{min-height:320px}.controls{padding:18px}.catalog{grid-template-columns:1fr 1fr}.catalog-card{padding:13px;min-height:105px}.catalog-head{align-items:start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">SEXSI<span>.</span></a>
+<nav><a href="index.html">НАЧАЛО</a><a href="tournaments.html">ТУРНИРИ</a><a href="profile.html">ПРОФИЛ</a></nav>
+</header>
+<main>
+<div class="eyebrow">STANDOFF 2 COMMUNITY TOOL</div>
+<h1>LOADOUT <span>LAB</span></h1>
+<p class="intro">Изгради своята комбинация от нож и ръкавици. Целта е да виждаш двата предмета заедно в една реалистична перспектива от първо лице, а не като две случайни картинки.</p>
+<section class="lab" aria-label="Loadout creator">
+<div class="stage">
+<div class="stage-corner">LIVE PREVIEW / 3D VIEWPORT</div><div class="stage-corner right">PROTOTYPE 01</div>
+<div class="stage-glow"></div>
+<div class="stage-content">
+<div class="stage-icon">◈</div>
+<h2>3D SCENE IN DEVELOPMENT</h2>
+<p>Тук ще се визуализират ръцете, ръкавиците и избраният нож в обща 3D сцена. Не използваме сглобени снимки или фалшиви визуализации.</p>
+<div class="stage-tag">3D MODEL ASSETS: NOT CONNECTED</div>
+</div>
+</div>
+<aside class="controls">
+<h3>СЪЗДАЙ КОМБИНАЦИЯ</h3>
+<div class="field"><label for="knife">ИЗБЕРИ НОЖ</label><select id="knife"><option value="Karambit">Karambit</option><option value="Butterfly">Butterfly</option><option value="Kunai">Kunai</option><option value="Fang">Fang</option><option value="Sting">Sting</option></select></div>
+<div class="field"><label for="knifeSkin">ВИЗИЯ НА НОЖА</label><select id="knifeSkin"><option>Default</option><option>Gradient</option><option>Dragon Glass</option><option>Universe</option><option>Frozen</option></select></div>
+<div class="field"><label for="gloves">ИЗБЕРИ РЪКАВИЦИ</label><select id="gloves"><option>Retro Wave</option><option>Living Flame</option><option>Tiger</option><option>Champion</option><option>Specialist</option></select></div>
+<div class="field"><label for="gloveColor">ЦВЕТОВА ВАРИАЦИЯ</label><select id="gloveColor"><option>Оригинални цветове</option><option>Червено / черно</option><option>Синьо / черно</option><option>Лилаво</option><option>Златно</option></select></div>
+<div class="selection"><small>ТВОЯТА КОМБИНАЦИЯ</small><strong id="comboText">Karambit · Default + Retro Wave</strong></div>
+<div class="actions"><button class="primary" id="randomBtn" type="button">🎲 СЛУЧАЙНА</button><button class="secondary" id="resetBtn" type="button">НУЛИРАЙ</button></div>
+<div class="notice"><b>Важно:</b> това е първият етап на страницата. Следва да добавим съвместими 3D модели и текстури с разрешение за използване, след което контролите ще сменят реалните предмети в сцената.</div>
+</aside>
+</section>
+<div class="catalog-head"><h2>КАТАЛОГ НА ПРЕДМЕТИТЕ</h2><p>Начален списък за прототипа · ще бъде разширен</p></div>
+<section class="catalog">
+<div class="catalog-card"><div class="symbol">⚔</div><strong>KNIFE COLLECTION</strong><span>Karambit · Butterfly · Kunai · Fang · Sting</span></div>
+<div class="catalog-card"><div class="symbol">♢</div><strong>GLOVE COLLECTION</strong><span>Retro Wave · Living Flame · Tiger · Champion</span></div>
+<div class="catalog-card"><div class="symbol">◉</div><strong>REAL-TIME COMBINATIONS</strong><span>Една обща перспектива от първо лице</span></div>
+</section>
+</main>
+<footer>SEXSI LOADOUT LAB · НЕОФИЦИАЛЕН ФЕН ПРОЕКТ ЗА STANDOFF 2</footer>
+<script>
+const ids=['knife','knifeSkin','gloves','gloveColor'];
+const combo=document.getElementById('comboText');
+function updateCombo(){combo.textContent=document.getElementById('knife').value+' · '+document.getElementById('knifeSkin').value+' + '+document.getElementById('gloves').value+' ('+document.getElementById('gloveColor').value+')'}
+ids.forEach(id=>document.getElementById(id).addEventListener('change',updateCombo));
+document.getElementById('randomBtn').addEventListener('click',()=>{ids.forEach(id=>{const el=document.getElementById(id);el.selectedIndex=Math.floor(Math.random()*el.options.length)});updateCombo()});
+document.getElementById('resetBtn').addEventListener('click',()=>{ids.forEach(id=>document.getElementById(id).selectedIndex=0);updateCombo()});
+</script>
+</body>
+</html>
