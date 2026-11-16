@@ -540,6 +540,13 @@ tr:last-child td{
   align-self:end;
 }
 
+
+.match-schedule{display:flex;flex-wrap:wrap;align-items:end;gap:10px;margin-top:14px;padding:12px;background:#171717;border:1px solid var(--border);border-radius:7px}
+.match-schedule label{display:block;flex:1 1 220px;color:var(--muted);font-size:11px;font-weight:bold}
+.match-schedule input{display:block;width:100%;margin-top:7px;background:#090909;border:1px solid var(--border);border-radius:6px;color:white;padding:11px}
+.save-schedule-button{background:#343434;color:white;border:1px solid #484848;border-radius:6px;padding:11px 14px;font-weight:900}
+.match-schedule-note{width:100%;color:var(--muted);font-size:11px}
+
 footer{
   text-align:center;
   color:#666;
@@ -1618,7 +1625,68 @@ function createMatchCard(match){
   const status=document.createElement("p");
   status.className="match-status";
   status.textContent="СТАТУС: "+(match.status||"неизвестен");
-  card.append(title,players,status);
+  card.append(title,players);
+
+  if(match.player1_id&&match.player2_id){
+    const schedule=document.createElement("div");
+    schedule.className="match-schedule";
+
+    const scheduleLabel=document.createElement("label");
+    scheduleLabel.textContent="ДАТА И ЧАС НА ДВУБОЯ";
+    const scheduleInput=document.createElement("input");
+    scheduleInput.type="datetime-local";
+    scheduleInput.value=match.scheduled_at
+      ?(()=>{const date=new Date(match.scheduled_at);const local=new Date(date.getTime()-date.getTimezoneOffset()*60000);return local.toISOString().slice(0,16)})()
+      :"";
+    scheduleLabel.appendChild(scheduleInput);
+
+    const scheduleButton=document.createElement("button");
+    scheduleButton.type="button";
+    scheduleButton.className="save-schedule-button";
+    scheduleButton.textContent="ЗАПАЗИ ЧАСА";
+
+    const scheduleNote=document.createElement("p");
+    scheduleNote.className="match-schedule-note";
+    scheduleNote.textContent=match.scheduled_at
+      ?"НАСРОЧЕН: "+new Date(match.scheduled_at).toLocaleString("bg-BG",{dateStyle:"medium",timeStyle:"short"})
+      :"Все още няма уговорен час.";
+
+    scheduleButton.addEventListener("click",async()=>{
+      if(!scheduleInput.value){
+        alert("Избери дата и час за двубоя.");
+        return;
+      }
+      const scheduledAt=new Date(scheduleInput.value);
+      if(Number.isNaN(scheduledAt.getTime())){
+        alert("Въведената дата и час са невалидни.");
+        return;
+      }
+      scheduleButton.disabled=true;
+      scheduleButton.textContent="ЗАПИСВАНЕ...";
+      try{
+        const {data,error}=await db.rpc("sexsi_admin_set_match_schedule",{
+          p_match_id:match.id,
+          p_scheduled_at:scheduledAt.toISOString()
+        });
+        if(error){
+          alert("Грешка при запазване на часа: "+error.message);
+          return;
+        }
+        alert(data||"Часът за двубоя е запазен.");
+        await loadBracket();
+      }catch(error){
+        alert("Възникна грешка: "+error.message);
+      }finally{
+        scheduleButton.disabled=false;
+        scheduleButton.textContent="ЗАПАЗИ ЧАСА";
+      }
+    });
+
+    schedule.append(scheduleLabel,scheduleButton,scheduleNote);
+    card.appendChild(schedule);
+  }
+
+  card.appendChild(status);
 
   if(match.status==="completed"){
     const result=document.createElement("p");
