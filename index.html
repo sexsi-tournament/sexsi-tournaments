@@ -506,13 +506,6 @@ section{padding:60px 7%}
 .mode p,.card p{color:#999;font-size:13px;line-height:1.6}
 .card h3{font-size:19px;position:relative}
 .status{color:#48d98a;font-size:11px;font-weight:bold;letter-spacing:1px}
-#registrationCountdown{
-  background:rgba(237,37,45,.07)!important;
-  border:1px solid rgba(237,37,45,.35)!important;
-  border-radius:8px!important;
-  box-shadow:inset 0 0 25px rgba(237,37,45,.06),0 0 20px rgba(237,37,45,.08);
-}
-#countdownTimer{color:white;text-shadow:0 0 15px rgba(237,37,45,.5)}
 #bracketAccess,#bracketSection{
   border:1px solid rgba(237,37,45,.3);border-radius:12px;
   background:linear-gradient(120deg,#130b0c,#0a0a0a);
@@ -767,15 +760,6 @@ footer{
     <div class="card">
       <div class="status" id="registrationStatus">● ОТВОРЕНО ЗА РЕГИСТРАЦИЯ</div>
 
-      <div id="registrationCountdown" style="margin:15px 0;padding:15px;text-align:center">
-        <div style="color:#ff454b;font-size:11px;font-weight:bold;letter-spacing:2px">
-          РЕГИСТРАЦИЯТА ПРИКЛЮЧВА СЛЕД
-        </div>
-        <div id="countdownTimer" style="display:flex;justify-content:center;gap:12px;margin-top:12px;font-size:22px;font-weight:900">
-          ЗАРЕЖДАНЕ...
-        </div>
-      </div>
-
       <h3>SEXSI 1V1 CUP #001</h3>
       <p>🎮 Игра: STANDOFF 2</p>
       <p>⚔️ Режим: 1V1 • BO1</p>
@@ -852,7 +836,6 @@ footer{
 
   const countElement = document.getElementById("registrationCount");
   const statusElement = document.getElementById("registrationStatus");
-  const timerElement = document.getElementById("countdownTimer");
   const bracketSection = document.getElementById("bracketSection");
   const bracketAccess = document.getElementById("bracketAccess");
   const bracketContainer = document.getElementById("bracketContainer");
@@ -874,8 +857,6 @@ footer{
   const menuMyTournamentsList = document.getElementById("menuMyTournamentsList");
   const playerLogout = document.getElementById("playerLogout");
   const ADMIN_ID = "13f1ada8-cd05-4c31-8940-4fb1790cb90e";
-
-  const deadline = new Date("2026-11-25T23:59:59+02:00").getTime();
 
   function showCountError(message){
     countElement.textContent = "👥 Участници: временно недостъпно";
@@ -913,43 +894,6 @@ footer{
     }
   }
 
-  function updateCountdown(){
-    const now = Date.now();
-    const distance = deadline - now;
-
-    if(distance <= 0){
-      timerElement.textContent = "РЕГИСТРАЦИЯТА ПРИКЛЮЧИ";
-      statusElement.textContent = "● РЕГИСТРАЦИЯТА Е ПРИКЛЮЧИЛА";
-      statusElement.style.color = "#ff454b";
-      return;
-    }
-
-    const days = Math.floor(distance / (1000*60*60*24));
-    const hours = Math.floor((distance / (1000*60*60)) % 24);
-    const minutes = Math.floor((distance / (1000*60)) % 60);
-    const seconds = Math.floor((distance / 1000) % 60);
-
-    timerElement.innerHTML = `
-      <div>
-        ${days}
-        <div style="font-size:9px;color:#aaa;letter-spacing:1px">ДНИ</div>
-      </div>
-      <div>
-        ${String(hours).padStart(2,"0")}
-        <div style="font-size:9px;color:#aaa;letter-spacing:1px">ЧАСА</div>
-      </div>
-      <div>
-        ${String(minutes).padStart(2,"0")}
-        <div style="font-size:9px;color:#aaa;letter-spacing:1px">МИН</div>
-      </div>
-      <div>
-        ${String(seconds).padStart(2,"0")}
-        <div style="font-size:9px;color:#aaa;letter-spacing:1px">СЕК</div>
-      </div>
-    `;
-  }
-
-  let playerMenuProfileRequest = 0;
 
   async function updatePlayerMenu(session){
     const user = session && session.user;
@@ -1330,7 +1274,6 @@ footer{
 
   if(!window.supabase || !window.supabase.createClient){
     showCountError("Supabase библиотеката не се зареди");
-    timerElement.textContent = "ГРЕШКА ПРИ ЗАРЕЖДАНЕ";
     return;
   }
 
@@ -1416,8 +1359,6 @@ footer{
   /* END PRIVATE VISITOR ANALYTICS */
 
   loadRegistrationCount();
-  updateCountdown();
-  setInterval(updateCountdown,1000);
   setInterval(loadRegistrationCount,15000);
 
   initializePage();
