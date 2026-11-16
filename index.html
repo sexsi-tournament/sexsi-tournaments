@@ -519,6 +519,37 @@ footer{
   .featured-wrap{padding:28px 17px}
   .heading{font-size:23px}
 }
+/* MOBILE PERFORMANCE: reduce continuous paint and blur effects while scrolling */
+@media(max-width:800px){
+  body:after{
+    animation:none!important;
+    filter:none!important;
+    background:none!important;
+  }
+  .ambient:before,.ambient:after{
+    animation:none!important;
+    filter:none!important;
+    opacity:.07;
+  }
+  .hero:before{
+    animation:none!important;
+    filter:blur(55px);
+  }
+  .hero:after,
+  .featured-wrap:before{
+    animation:none!important;
+    display:none!important;
+  }
+  .featured-wrap:after,
+  .mode:after,.card:after{
+    animation:none!important;
+  }
+  header{
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+  }
+}
+
 @media(prefers-reduced-motion:reduce){
   *,*:before,*:after{
     animation-duration:.01ms!important;animation-iteration-count:1!important;
