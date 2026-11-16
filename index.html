@@ -676,13 +676,19 @@ footer{
   </div>
 </section>
 
-<section id="home-ranking">
-  <div class="heading">ТОП ИГРАЧИ</div>
-  <div class="cards" id="homeRankingList">
-    <div class="card"><p>Зареждане на класацията...</p></div>
+</section>
+
+<section id="bracketAccess" style="padding:25px 15px;max-width:1100px;margin:auto;text-align:center">
+  <h2>🏆 ТУРНИРНА СХЕМА</h2>
+  <p style="color:#aaa">За да видиш турнирната схема, трябва да влезеш в профила си.</p>
+  <a class="btn" href="profile.html">ВЛЕЗ В ПРОФИЛА</a>
+
+
+<section id="bracketSection" style="display:none;padding:25px 15px;max-width:1100px;margin:auto">
+  <h2 style="text-align:center">🏆 ТУРНИРНА СХЕМА</h2>
+  <div id="bracketContainer">
+    <p style="text-align:center;color:#aaa">Зареждане на турнирната схема...</p>
   </div>
-  <p id="homeRankingMessage" style="color:#888;font-size:12px;margin-top:14px"></p>
-  <a class="btn" href="ranking.html">ЦЯЛАТА КЛАСАЦИЯ</a>
 </section>
 
 <section id="modes">
@@ -769,18 +775,9 @@ footer{
   </div>
 </section>
 
-<section id="bracketAccess" style="padding:25px 15px;max-width:1100px;margin:auto;text-align:center">
-  <h2>🏆 ТУРНИРНА СХЕМА</h2>
-  <p style="color:#aaa">За да видиш турнирната схема, трябва да влезеш в профила си.</p>
-  <a class="btn" href="profile.html">ВЛЕЗ В ПРОФИЛА</a>
 </section>
 
-<section id="bracketSection" style="display:none;padding:25px 15px;max-width:1100px;margin:auto">
-  <h2 style="text-align:center">🏆 ТУРНИРНА СХЕМА</h2>
-  <div id="bracketContainer">
-    <p style="text-align:center;color:#aaa">Зареждане на турнирната схема...</p>
-  </div>
-</section>
+
 </main>
 
 <footer>SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY</footer>
@@ -815,8 +812,6 @@ footer{
   const menuMyTournamentsMessage = document.getElementById("menuMyTournamentsMessage");
   const menuMyTournamentsList = document.getElementById("menuMyTournamentsList");
   const playerLogout = document.getElementById("playerLogout");
-  const homeRankingList = document.getElementById("homeRankingList");
-  const homeRankingMessage = document.getElementById("homeRankingMessage");
   const ADMIN_ID = "13f1ada8-cd05-4c31-8940-4fb1790cb90e";
 
   const deadline = new Date("2026-11-25T23:59:59+02:00").getTime();
@@ -891,51 +886,6 @@ footer{
         <div style="font-size:9px;color:#aaa;letter-spacing:1px">СЕК</div>
       </div>
     `;
-  }
-
-  async function loadHomeRanking(){
-    try{
-      const {data,error} = await db.rpc("sexsi_get_ranking");
-      if(error) throw error;
-
-      homeRankingList.innerHTML = "";
-      const players = Array.isArray(data) ? data.slice(0,3) : [];
-
-      if(!players.length){
-        homeRankingMessage.textContent = "Все още няма играчи в класацията.";
-        homeRankingList.innerHTML = '<div class="card"><p>Класацията ще се появи тук, когато има резултати.</p></div>';
-        return;
-      }
-
-      players.forEach((player,index)=>{
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const rank = document.createElement("div");
-        rank.className = "status";
-        rank.textContent = index === 0 ? "🥇 1ВО МЯСТО" : index === 1 ? "🥈 2РО МЯСТО" : "🥉 3ТО МЯСТО";
-
-        const name = document.createElement("h3");
-        name.textContent = player.player_name || "Играч";
-
-        const stats = document.createElement("p");
-        stats.textContent = "Победи: " + (player.wins ?? 0) +
-          " · Загуби: " + (player.losses ?? 0);
-
-        const points = document.createElement("p");
-        points.textContent = "Точки: " + (player.points ?? 0);
-        points.style.color = "#e9bd59";
-        points.style.fontWeight = "900";
-
-        card.append(rank,name,stats,points);
-        homeRankingList.appendChild(card);
-      });
-      homeRankingMessage.textContent = "Класацията е заредена от реалните резултати.";
-    }catch(error){
-      homeRankingList.innerHTML = '<div class="card"><p>Класацията временно не е достъпна.</p></div>';
-      homeRankingMessage.textContent = "";
-      console.error("Home ranking error:",error.message);
-    }
   }
 
   let playerMenuProfileRequest = 0;
@@ -1402,7 +1352,6 @@ footer{
   /* END PRIVATE VISITOR ANALYTICS */
 
   loadRegistrationCount();
-  loadHomeRanking();
   updateCountdown();
   setInterval(updateCountdown,1000);
   setInterval(loadRegistrationCount,15000);
