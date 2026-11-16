@@ -111,32 +111,85 @@ async function loadMyRewardPayouts(userId){
   const container=document.getElementById("myRewardPayouts");
   if(!container)return;
   container.replaceChildren();
-  if(!userId){container.textContent="Влез в профила си, за да виждаш наградите.";return;}
-  const {data,error}=await db.from("reward_payouts").select("*").eq("winner_user_id",userId).order("created_at",{ascending:false});
-  if(error){container.textContent="Наградите временно не са достъпни.";return;}
-  if(!data||!data.length){container.textContent="Все още нямаш регистрирани награди.";return;}
-  data.forEach(item=>{
+  if(!userId){
+    container.textContent="Влез в профила си, за да виждаш наградите.";
+    return;
+  }
+
+  const {data,error}=await db.rpc("sexsi_get_my_reward");
+  if(error){
+    console.error("My rewards error:",error.message);
+    container.textContent="Наградите временно не са достъпни.";
+    return;
+  }
+
+  const rewards=Array.isArray(data)?data:[];
+  if(!rewards.length){
+    container.textContent="Все още нямаш регистрирани награди.";
+    return;
+  }
+
+  rewards.forEach(item=>{
     const card=document.createElement("article");
     card.style.cssText="padding:14px;margin-top:10px;background:#151515;border:1px solid #383033;border-radius:7px";
-    const title=document.createElement("strong");title.textContent=item.tournament_name;
-    const amount=document.createElement("p");amount.textContent=Number(item.reward_amount).toLocaleString("bg-BG")+" "+item.reward_currency;
-    const date=document.createElement("p");date.textContent="Предадена: "+new Date(item.handed_over_at).toLocaleString("bg-BG");
+
+    const title=document.createElement("strong");
+    title.textContent="SEXSI 1V1 CUP #001";
+    const amount=document.createElement("p");
+    amount.textContent=Number(item.reward_amount).toLocaleString("bg-BG")+" "+item.reward_currency;
+
     const status=document.createElement("p");
-    status.textContent=item.status==="confirmed"?"ПОТВЪРДЕНО ПОЛУЧАВАНЕ · "+new Date(item.confirmed_at).toLocaleString("bg-BG"):"ОЧАКВА ПОТВЪРЖДЕНИЕ";
-    status.style.color=item.status==="confirmed"?"#65e69a":"#e9bd59";
-    card.append(title,amount,date,status);
-    if(item.status==="awaiting_confirmation"){
+    if(item.reward_status==="confirmed"){
+      status.textContent="ПОЛУЧАВАНЕТО Е ПОТВЪРДЕНО"+(item.confirmed_at?" · "+new Date(item.confirmed_at).toLocaleString("bg-BG"):"");
+      status.style.color="#65e69a";
+    }else if(item.reward_status==="sent"){
+      status.textContent="НАГРАДАТА Е ИЗПРАТЕНА"+(item.sent_at?" · "+new Date(item.sent_at).toLocaleString("bg-BG"):"");
+      status.style.color="#e9bd59";
+    }else{
+      status.textContent="НАГРАДАТА ОЧАКВА ИЗПЛАЩАНЕ";
+      status.style.color="#aaa";
+    }
+
+    card.append(title,amount,status);
+
+    if(item.proof_path){
+      const proofButton=document.createElement("button");
+      proofButton.type="button";
+      proofButton.textContent="ВИЖ ДОКАЗАТЕЛСТВОТО";
+      proofButton.style.marginRight="8px";
+      proofButton.addEventListener("click",async()=>{
+        const {data:proofData,error:proofError}=await db.storage.from("reward-proofs").createSignedUrl(item.proof_path,300);
+        if(proofError){
+          alert("Доказателството временно не може да бъде отворено: "+proofError.message);
+          return;
+        }
+        window.open(proofData.signedUrl,"_blank","noopener");
+      });
+      card.appendChild(proofButton);
+    }
+
+    if(item.reward_status==="sent"){
       const button=document.createElement("button");
-      button.type="button";button.textContent="ПОТВЪРДИ ПОЛУЧАВАНЕТО";
+      button.type="button";
+      button.textContent="ПОТВЪРДИ ПОЛУЧАВАНЕТО";
       button.addEventListener("click",async()=>{
-        if(!confirm("Потвърждаваш ли, че получи тази награда?"))return;
-        button.disabled=true;button.textContent="ПОТВЪРЖДАВАНЕ...";
-        const {error:confirmError}=await db.rpc("sexsi_confirm_reward_received",{p_payout_id:item.id});
-        if(confirmError){alert("Грешка: "+confirmError.message);button.disabled=false;button.textContent="ПОТВЪРДИ ПОЛУЧАВАНЕТО";return;}
+        if(!confirm("Потвърждаваш ли, че получи 5000 Gold?"))return;
+        button.disabled=true;
+        button.textContent="ПОТВЪРЖДАВАНЕ...";
+        const {error:confirmError}=await db.rpc("sexsi_confirm_reward",{
+          p_reward_id:item.reward_id
+        });
+        if(confirmError){
+          alert("Грешка при потвърждаване: "+confirmError.message);
+          button.disabled=false;
+          button.textContent="ПОТВЪРДИ ПОЛУЧАВАНЕТО";
+          return;
+        }
         await loadMyRewardPayouts(userId);
       });
       card.appendChild(button);
     }
+
     container.appendChild(card);
   });
 }
