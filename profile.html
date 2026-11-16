@@ -100,6 +100,15 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
     <p id="tournamentSignupMessage" class="message" aria-live="polite"></p>
   </div>
 
+  <div id="myTournamentMatchesCard" style="margin-top:24px;padding:20px;background:#0d0d0d;border:1px solid #7d2529;border-radius:8px">
+    <h2>МОИТЕ ТУРНИРИ</h2>
+    <p style="color:#aaa">Твоето участие и личните ти двубои в SEXSI TOURNAMENTS.</p>
+    <div id="myTournamentMatches" aria-live="polite" style="display:grid;gap:10px">
+      <p class="message">Зареждане на личните турнири...</p>
+    </div>
+    <button type="button" id="refreshMyTournaments" style="margin-top:12px">ОБНОВИ ИНФОРМАЦИЯТА</button>
+  </div>
+
   <button type="button" id="logoutButton">ИЗХОД ОТ ПРОФИЛА</button>
 </div>
   <div id="adminPanel" class="card" style="display:none">
