@@ -1887,9 +1887,10 @@ async function loadRewardWinners(){
   }
   const matches=Array.isArray(data)?data:[];
   const maxRound=matches.reduce((max,m)=>Math.max(max,Number(m.round_number)||0),0);
-  const finalMatch=maxRound?matches.find(m=>Number(m.round_number)===maxRound):null;
-  rewardWinners=finalMatch&&finalMatch.status==="completed"&&finalMatch.winner_id
-    ?[finalMatch]:[];
+  const finalMatches=matches.filter(m=>Number(m.round_number)===maxRound);
+  rewardWinners=maxRound>0&&finalMatches.length===1&&
+    finalMatches[0].status==="completed"&&finalMatches[0].winner_id
+    ?[finalMatches[0]]:[];
   select.innerHTML='<option value="">Избери шампион на завършения турнир</option>';
   rewardWinners.forEach((m,index)=>{
     const option=document.createElement("option");
@@ -1899,9 +1900,31 @@ async function loadRewardWinners(){
     select.appendChild(option);
   });
   if(!rewardWinners.length){
-    select.innerHTML='<option value="">Турнирът още няма завършен финал</option>';
+    select.innerHTML='<option value="">Няма еднозначно потвърден завършен финал</option>';
   }
 }
+document.getElementById("rewardWinnerMatch")?.addEventListener("change",async()=>{
+  const selected=document.getElementById("rewardWinnerMatch").value;
+  const match=selected===""?null:rewardWinners[Number(selected)];
+  const nameInput=document.getElementById("rewardGameName");
+  const idInput=document.getElementById("rewardGameId");
+  nameInput.value="";
+  idInput.value="";
+  if(!match)return;
+  const {data,error}=await db.from("profiles")
+    .select("username,player_id")
+    .eq("id",match.winner_id)
+    .single();
+  if(error||!data){
+    document.getElementById("rewardFormMessage").textContent=
+      "Не успях да заредя профила на шампиона. Провери достъпа до profiles.";
+    return;
+  }
+  nameInput.value=data.username||"";
+  idInput.value=data.player_id||"";
+  document.getElementById("rewardFormMessage").textContent=
+    "Победителят и Game ID са заредени от реалния профил.";
+});
 async function loadRewardPayouts(){
   const container=document.getElementById("rewardArchive");
   const message=document.getElementById("rewardArchiveMessage");
@@ -1977,6 +2000,7 @@ document.getElementById("saveRewardPayout")?.addEventListener("click",async()=>{
     const handedAt=handedValue?new Date(handedValue).toISOString():new Date().toISOString();
     const {error}=await db.rpc("sexsi_admin_create_reward_payout",{
       p_tournament_name:tournament,
+      p_final_match_id:match.id,
       p_winner_user_id:match.winner_id,
       p_winner_game_name:gameName,
       p_winner_game_id:gameId,
