@@ -139,6 +139,13 @@ async function loadMyTournamentMatches(userId) {
   }
 
   const matches = Array.isArray(data) ? data : [];
+  const { data: scheduleData, error: scheduleError } = await db.rpc("sexsi_get_public_match_schedules");
+  if (scheduleError) {
+    console.error("Match schedules error:", scheduleError.message);
+  } else {
+    const schedules = new Map((Array.isArray(scheduleData) ? scheduleData : []).map(item => [item.match_id, item.scheduled_at]));
+    matches.forEach(match => { match.scheduled_at = schedules.get(match.id) || null; });
+  }
   const mine = matches.filter(match =>
     match.player1_id === userId || match.player2_id === userId
   );
@@ -169,6 +176,12 @@ async function loadMyTournamentMatches(userId) {
     const opponentName = isPlayer1 ? match.player2_name : match.player1_name;
     opponent.textContent = "ПРОТИВНИК: " + (opponentName || "Очаква се");
 
+    const schedule = document.createElement("p");
+    schedule.style.cssText = "margin:6px 0;color:#e9bd59;font-size:13px;font-weight:bold";
+    schedule.textContent = match.scheduled_at
+      ? "НАСРОЧЕН ДВУБОЙ: " + new Date(match.scheduled_at).toLocaleString("bg-BG", { dateStyle: "medium", timeStyle: "short" })
+      : "ЧАС: Все още не е уговорен";
+
     const result = document.createElement("p");
     result.style.cssText = "margin:6px 0;color:#aaa;font-size:13px";
     result.textContent = "РЕЗУЛТАТ: " +
@@ -182,7 +195,7 @@ async function loadMyTournamentMatches(userId) {
       ? (match.winner_id === userId ? "ПОБЕДА" : "ЗАГУБА") + (match.winner_name ? " · " + match.winner_name : "")
       : match.status === "ongoing" ? "ДВУБОЯТ Е В ХОД" : "ПРЕДСТОИ";
 
-    card.append(heading, opponent, result, status);
+    card.append(heading, opponent, schedule, result, status);
     container.appendChild(card);
   });
 }
