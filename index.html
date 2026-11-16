@@ -657,6 +657,10 @@ footer{
     <div style="color:#aaa;margin-top:8px">ТУРНИР: 02.12.2026</div>
     <a class="btn" href="tournament-001.html">ПОВЕЧЕ ИНФОРМАЦИЯ</a>
     <a class="btn" href="profile.html?join=SEXSI-1V1-001">ЗАПИШИ СЕ ЗА ТУРНИРА</a>
+    <button class="btn" type="button" onclick="shareSexsiSite()" style="cursor:pointer;border:0">
+      <span aria-hidden="true">↗</span> ПОКАНИ ПРИЯТЕЛ
+    </button>
+    <p style="color:#999;font-size:12px;margin:8px auto 0;max-width:320px">Сподели SEXSI TOURNAMENTS с приятел и го покани да участва.</p>
   </div>
 </section>
 
@@ -1374,6 +1378,34 @@ footer{
   });
 
 })();
+</script>
+
+
+<script>
+async function shareSexsiSite() {
+  const shareData = {
+    title: "SEXSI TOURNAMENTS",
+    text: "Заповядай в SEXSI TOURNAMENTS и се включи в турнирите по Standoff 2!",
+    url: "https://sexsi-tournament.github.io/sexsi-tournaments/"
+  };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+      return;
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(shareData.url);
+      alert("Линкът към SEXSI TOURNAMENTS е копиран. Изпрати го на приятел!");
+      return;
+    }
+    window.prompt("Копирай линка към SEXSI TOURNAMENTS:", shareData.url);
+  } catch (error) {
+    if (error && error.name !== "AbortError") {
+      window.prompt("Копирай линка към SEXSI TOURNAMENTS:", shareData.url);
+    }
+  }
+}
 </script>
 
 </body>
