@@ -42,7 +42,7 @@ function showPlayerDashboard(user, playerId) {
 
   loadTournamentRegistration(playerId);
   loadPlayerXP();
-  loadMyTournamentMatches(playerId);
+  loadMyTournamentMatches(user.id);
 }
 
 async function loadPlayerXP() {
@@ -116,7 +116,7 @@ async function loadPlayerProfile(user) {
 }
 
 /* ЛИЧНИ ТУРНИРИ НА ИГРАЧА */
-async function loadMyTournamentMatches(playerId) {
+async function loadMyTournamentMatches(userId) {
   const container = document.getElementById("myTournamentMatches");
   if (!container) return;
 
@@ -126,8 +126,8 @@ async function loadMyTournamentMatches(playerId) {
   note.textContent = "Зареждане на личните двубои...";
   container.appendChild(note);
 
-  if (!playerId) {
-    note.textContent = "Добави Standoff 2 ID в профила си, за да виждаш личните си двубои.";
+  if (!userId) {
+    note.textContent = "Влез в профила си, за да виждаш личните си двубои.";
     return;
   }
 
@@ -140,7 +140,7 @@ async function loadMyTournamentMatches(playerId) {
 
   const matches = Array.isArray(data) ? data : [];
   const mine = matches.filter(match =>
-    match.player1_id === playerId || match.player2_id === playerId
+    match.player1_id === userId || match.player2_id === userId
   );
 
   if (!mine.length) {
@@ -165,7 +165,7 @@ async function loadMyTournamentMatches(playerId) {
 
     const opponent = document.createElement("p");
     opponent.style.cssText = "margin:9px 0;color:#ddd";
-    const isPlayer1 = match.player1_id === playerId;
+    const isPlayer1 = match.player1_id === userId;
     const opponentName = isPlayer1 ? match.player2_name : match.player1_name;
     opponent.textContent = "ПРОТИВНИК: " + (opponentName || "Очаква се");
 
@@ -179,7 +179,7 @@ async function loadMyTournamentMatches(playerId) {
     status.style.cssText = "margin:6px 0;font-size:12px;font-weight:bold;color:" +
       (match.status === "completed" ? "#65e69a" : "#e9bd59");
     status.textContent = match.status === "completed"
-      ? (match.winner_id === playerId ? "ПОБЕДА" : "ЗАГУБА") + (match.winner_name ? " · " + match.winner_name : "")
+      ? (match.winner_id === userId ? "ПОБЕДА" : "ЗАГУБА") + (match.winner_name ? " · " + match.winner_name : "")
       : match.status === "ongoing" ? "ДВУБОЯТ Е В ХОД" : "ПРЕДСТОИ";
 
     card.append(heading, opponent, result, status);
@@ -192,8 +192,9 @@ if (refreshMyTournamentsButton) {
   refreshMyTournamentsButton.addEventListener("click", async function() {
     refreshMyTournamentsButton.disabled = true;
     refreshMyTournamentsButton.textContent = "ОБНОВЯВАНЕ...";
-    const playerId = document.getElementById("playerId")?.textContent || "";
-    await loadMyTournamentMatches(playerId === "НЯМА ДОБАВЕНО ID" ? "" : playerId);
+    const { data } = await db.auth.getSession();
+    const userId = data.session?.user?.id || "";
+    await loadMyTournamentMatches(userId);
     refreshMyTournamentsButton.disabled = false;
     refreshMyTournamentsButton.textContent = "ОБНОВИ ИНФОРМАЦИЯТА";
   });
