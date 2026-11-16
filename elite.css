@@ -445,3 +445,74 @@ body:has(#register) > section > h1::after{
   #playerLevelCard{padding:20px!important}
   #tournamentSignupCard,#myRewardPayoutsCard,#myTournamentMatchesCard{padding:19px!important}
 }
+
+
+/* PROFILE PAGE — visible mobile-first player dashboard */
+body:has(#playerDashboard) > section{
+  max-width:980px!important;
+  padding:48px 5% 70px!important;
+}
+body:has(#playerDashboard) > section > h1{
+  position:relative!important;
+  display:flex!important;
+  align-items:flex-end!important;
+  min-height:170px!important;
+  margin:0 0 28px!important;
+  padding:42px 34px 30px!important;
+  overflow:hidden!important;
+  border:1px solid rgba(255,52,77,.38)!important;
+  border-left:5px solid #ff344d!important;
+  border-radius:18px!important;
+  background:
+    radial-gradient(ellipse at 90% 10%,rgba(255,52,77,.32),transparent 48%),
+    linear-gradient(115deg,#251116 0%,#151216 55%,#0d0d10 100%)!important;
+  box-shadow:0 22px 55px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06)!important;
+  font-size:clamp(28px,5vw,44px)!important;
+  line-height:1.02!important;
+  letter-spacing:-.055em!important;
+}
+body:has(#playerDashboard) > section > h1::before{
+  content:"PLAYER ZONE / STANDOFF 2";
+  position:absolute!important;
+  top:23px!important;left:35px!important;
+  color:#ff7182!important;
+  font-size:10px!important;font-weight:900!important;
+  letter-spacing:.25em!important;
+}
+body:has(#playerDashboard) > section > h1::after{
+  content:"SEXSI TOURNAMENTS";
+  position:absolute!important;right:24px!important;bottom:22px!important;
+  color:rgba(255,255,255,.18)!important;
+  font-size:10px!important;font-weight:900!important;
+  letter-spacing:.2em!important;writing-mode:vertical-rl!important;
+}
+#playerDashboard{
+  border:1px solid rgba(255,52,77,.28)!important;
+  border-radius:22px!important;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(255,52,77,.11),transparent 35%),
+    linear-gradient(145deg,#1b1b20,#0c0c0f 75%)!important;
+  box-shadow:0 24px 60px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.05)!important;
+}
+#playerDashboard > h2:first-child{
+  font-size:24px!important;
+  padding:0 0 18px!important;
+  border-bottom:1px solid rgba(255,255,255,.12)!important;
+}
+#playerDashboard > p{
+  padding:15px 16px!important;
+  margin:10px 0!important;
+  border:1px solid rgba(255,255,255,.09)!important;
+  border-radius:12px!important;
+  background:rgba(255,255,255,.035)!important;
+}
+@media(max-width:700px){
+  body:has(#playerDashboard) > section{padding:34px 5% 55px!important}
+  body:has(#playerDashboard) > section > h1{
+    min-height:145px!important;padding:40px 20px 24px!important;
+    margin-bottom:20px!important;border-radius:15px!important;
+    font-size:29px!important;
+  }
+  body:has(#playerDashboard) > section > h1::before{left:21px!important;top:19px!important}
+  body:has(#playerDashboard) > section > h1::after{right:13px!important;bottom:18px!important;font-size:8px!important}
+}
