@@ -183,5 +183,5 @@ body>header{animation:elite-rise .65s both}
   }
   .mobile-bottom-nav a small{font-size:9px;letter-spacing:.06em;color:inherit}
   .mobile-bottom-nav a:focus-visible,.mobile-bottom-nav a:hover{color:#fff!important}
-  .mobile-bottom-nav a[href$="matches.html"]{color:#ff5968!important}
+  .mobile-bottom-nav a[aria-current="page"]{color:#ff5968!important}
 }
