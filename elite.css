@@ -29,7 +29,7 @@ body::before{
   mask-image:linear-gradient(to bottom,black,transparent 85%);
 }
 a{transition:color .22s ease,border-color .22s ease,background .22s ease,box-shadow .22s ease,transform .22s ease}
-body>header,header:not(.menu-top){
+body>header{
   background:rgba(10,10,12,.84)!important;
   border-bottom:1px solid rgba(255,255,255,.09)!important;
   backdrop-filter:blur(18px);
@@ -88,18 +88,31 @@ h1,.hero h1,.hero-content h1{
   letter-spacing:.055em;
   transition:transform .2s ease,box-shadow .2s ease,filter .2s ease,border-color .2s ease!important;
 }
-.btn:not(.secondary),button:not(.secondary-button),.primary-button{
+/* Accent only on clear primary actions. Navigation and utility buttons stay neutral. */
+.btn:not(.secondary),.primary-button,button[type="submit],
+#savePlayerGameId,#tournamentSignupButton,.dashboard-action{
   background:linear-gradient(110deg,#b9152b,var(--elite-red),#f04453)!important;
   color:#fff!important;border:1px solid rgba(255,255,255,.08)!important;
   box-shadow:0 8px 24px rgba(229,30,53,.2),inset 0 1px 0 rgba(255,255,255,.15);
 }
-.btn:hover,button:hover,.primary-button:hover,.secondary-button:hover,.header-button:hover{
+.btn:not(.secondary):hover,.primary-button:hover,button[type="submit"]:hover,
+#savePlayerGameId:hover,#tournamentSignupButton:hover,.dashboard-action:hover{
   transform:translateY(-2px);filter:brightness(1.12);
   box-shadow:0 12px 30px rgba(229,30,53,.24)!important;
 }
-.btn.secondary,.secondary-button,.header-button{
+.btn.secondary,.secondary-button,.header-button,.menu-item,.menu-close,
+.menu-logout,.player-menu-button{
   background:rgba(255,255,255,.045)!important;color:#f4f4f5!important;
   border:1px solid rgba(255,255,255,.15)!important;
+  box-shadow:none!important;
+}
+.menu-item:hover,.menu-close:hover,.menu-logout:hover,.player-menu-button:hover{
+  background:rgba(255,255,255,.09)!important;
+  border-color:rgba(255,255,255,.2)!important;
+  transform:none!important;filter:none!important;
+}
+.header-button:hover,.secondary-button:hover,.btn.secondary:hover{
+  transform:translateY(-2px);filter:brightness(1.1);
 }
 input,select,textarea{
   background:rgba(5,5,7,.78)!important;color:#fff!important;
