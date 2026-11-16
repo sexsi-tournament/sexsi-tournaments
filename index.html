@@ -237,6 +237,19 @@ header{
   text-shadow:0 0 7px var(--red),0 0 15px rgba(237,37,45,.8);
 }
 nav{display:flex;flex-wrap:wrap;gap:20px}
+.guest-header-actions{display:flex;align-items:center;justify-content:flex-end;gap:22px}
+.guest-links a{white-space:nowrap}
+.guest-auth-actions{display:flex;align-items:center;gap:9px}
+.guest-auth-actions a{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:38px;padding:10px 14px;border-radius:6px;
+  font-size:10px;font-weight:900;letter-spacing:.8px;text-decoration:none;
+  white-space:nowrap;transition:background .2s,border-color .2s,transform .2s;
+}
+.guest-login{color:#fff;border:1px solid #555;background:#151515}
+.guest-login:hover{border-color:#ed252d;background:#211012}
+.guest-register{color:#fff;border:1px solid #ed252d;background:#ed252d}
+.guest-register:hover{background:#c91d25;border-color:#c91d25;transform:translateY(-1px)}
 #guestNav[hidden],#playerNav[hidden]{display:none!important}
 .player-nav{position:relative;display:flex;align-items:center}
 .player-menu-button{
@@ -557,6 +570,19 @@ footer{
   }
   #sexsiIntro{animation:none;opacity:0;visibility:hidden}
 }
+@media(max-width:900px){
+  .guest-header-actions{gap:12px}
+  .guest-links{gap:12px}
+  .guest-auth-actions a{padding:9px 10px;font-size:9px}
+}
+@media(max-width:640px){
+  header{padding:15px 4%;gap:10px}
+  .guest-header-actions{flex-direction:column;align-items:flex-end;gap:9px}
+  .guest-links{gap:9px}
+  .guest-links a{font-size:9px}
+  .guest-auth-actions{gap:6px}
+  .guest-auth-actions a{min-height:33px;padding:8px 9px;font-size:8px}
+}
 </style>
   <link rel="stylesheet" href="elite.css?v=1">
 </head>
@@ -593,13 +619,18 @@ footer{
 
 <header>
   <div class="logo">SEXSI<sup>®</sup></div>
-  <nav id="guestNav">
-    <a href="index.html">НАЧАЛО</a>
-    <a href="tournaments.html">ТУРНИРИ</a>
-<a href="archive.html">АРХИВ</a>
-    <a href="ranking.html">КЛАСАЦИЯ</a>
-    <a href="profile.html">ПРОФИЛ</a>
-  </nav>
+  <div class="guest-header-actions" id="guestNav">
+    <nav class="guest-links" aria-label="Основна навигация">
+      <a href="index.html">НАЧАЛО</a>
+      <a href="tournaments.html">ТУРНИРИ</a>
+      <a href="archive.html">АРХИВ</a>
+      <a href="ranking.html">КЛАСАЦИЯ</a>
+    </nav>
+    <div class="guest-auth-actions">
+      <a class="guest-login" href="profile.html#loginForm">ВЛЕЗ</a>
+      <a class="guest-register" href="profile.html#register">РЕГИСТРИРАЙ СЕ</a>
+    </div>
+  </div>
   <div class="player-nav" id="playerNav" hidden>
     <button class="player-menu-button" id="playerMenuButton" type="button"
       aria-expanded="false" aria-controls="playerMenu">МОЕТО МЕНЮ</button>
