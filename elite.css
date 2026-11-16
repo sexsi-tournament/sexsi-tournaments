@@ -269,3 +269,179 @@ body:has(#playerDashboard) > section > h1{
   #playerDashboard{padding:16px!important}
   #playerDashboard > p{font-size:13px}
 }
+
+
+/* V3 — bold, unmistakable player-facing redesign */
+:root{
+  --elite-red:#f12640;
+  --elite-red-bright:#ff4359;
+}
+body{
+  background:
+    radial-gradient(ellipse at 82% 7%,rgba(241,38,64,.19),transparent 34%),
+    radial-gradient(ellipse at 8% 38%,rgba(241,38,64,.075),transparent 28%),
+    #070708!important;
+}
+body::before{opacity:.28;background-size:34px 34px}
+body>header{
+  min-height:82px;
+  padding:18px 6%!important;
+  border-bottom:1px solid rgba(241,38,64,.24)!important;
+}
+.logo{font-size:clamp(24px,3vw,32px)!important;font-weight:1000!important}
+nav a{font-size:11px!important;padding:10px 0;position:relative}
+nav a::after{
+  content:"";position:absolute;left:0;right:100%;bottom:2px;height:2px;
+  background:var(--elite-red);transition:right .22s ease;
+}
+nav a:hover::after,nav a:focus-visible::after{right:0}
+h1{font-weight:1000!important;text-transform:uppercase}
+.card,.panel,.overview-card,.analytics-stat,.stat,.mode{
+  background:linear-gradient(145deg,#1b1b20 0%,#101013 72%)!important;
+  border:1px solid rgba(255,255,255,.105)!important;
+  border-radius:18px!important;
+  box-shadow:0 22px 55px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.045)!important;
+}
+button,.btn,.primary-button,.secondary-button{
+  min-height:44px;
+  border-radius:8px!important;
+  text-transform:uppercase;
+}
+input,select,textarea{min-height:48px}
+
+/* Profile page: new hero, stronger hierarchy and large feature panels */
+body:has(#register) > section{
+  width:min(1120px,100%)!important;
+  max-width:1120px!important;
+  padding:54px 6% 82px!important;
+}
+body:has(#register) > section > h1{
+  position:relative;
+  margin:0 0 34px!important;
+  padding:34px 34px 32px!important;
+  min-height:150px;
+  display:flex;align-items:flex-end;
+  overflow:hidden;
+  isolation:isolate;
+  border:1px solid rgba(241,38,64,.32);
+  border-radius:20px;
+  background:
+    linear-gradient(100deg,rgba(7,7,9,.98) 0%,rgba(18,10,13,.9) 55%,rgba(100,12,28,.58) 100%),
+    radial-gradient(circle at 85% 45%,rgba(255,50,75,.38),transparent 35%);
+  box-shadow:0 25px 65px rgba(0,0,0,.38),inset 5px 0 0 var(--elite-red);
+  font-size:clamp(28px,5vw,48px)!important;
+  line-height:1.02;
+  letter-spacing:-.055em!important;
+}
+body:has(#register) > section > h1::before{
+  content:"PLAYER ZONE";
+  position:absolute;top:24px;left:36px;
+  color:#ff6578;font-size:10px;letter-spacing:.28em;font-weight:900;
+}
+body:has(#register) > section > h1::after{
+  content:"STANDOFF 2  /  COMMUNITY";
+  position:absolute;right:28px;bottom:28px;
+  color:rgba(255,255,255,.16);font-size:clamp(10px,1.4vw,14px);
+  letter-spacing:.2em;font-weight:1000;writing-mode:vertical-rl;
+}
+#register{
+  display:grid!important;
+  grid-template-columns:1.1fr .9fr!important;
+  gap:22px!important;
+  align-items:stretch;
+}
+#register .card{
+  position:relative;
+  overflow:hidden;
+  margin:0!important;
+  padding:30px!important;
+  min-height:340px;
+  border-radius:18px!important;
+  background:linear-gradient(150deg,#1d1d23,#101013 72%)!important;
+}
+#register .card:first-child{
+  border-top:3px solid var(--elite-red)!important;
+  background:radial-gradient(ellipse at 100% 0%,rgba(241,38,64,.16),transparent 48%),linear-gradient(150deg,#20191d,#101013 70%)!important;
+}
+#register .card:last-child{
+  border-top:3px solid rgba(255,255,255,.28)!important;
+}
+#register .card h2{
+  color:#fff!important;font-size:21px!important;
+  margin:0 0 8px!important;letter-spacing:-.025em!important;
+}
+#register .card h2::after{
+  content:"";display:block;width:42px;height:3px;
+  margin-top:15px;background:var(--elite-red);border-radius:3px;
+}
+#register input{
+  height:52px!important;margin:13px 0!important;padding:0 16px!important;
+  background:#09090b!important;border:1px solid #34343b!important;
+  border-radius:9px!important;font-size:14px!important;
+}
+#register input:focus{border-color:var(--elite-red)!important}
+#register button{
+  width:100%;height:52px!important;margin-top:8px;
+  background:linear-gradient(100deg,#c81730,#f12640 65%,#ff5368)!important;
+  box-shadow:0 12px 28px rgba(241,38,64,.24)!important;
+  font-size:12px!important;letter-spacing:.1em!important;
+}
+#playerDashboard{
+  padding:clamp(18px,4vw,38px)!important;
+  border:1px solid rgba(241,38,64,.28)!important;
+  border-radius:22px!important;
+  background:linear-gradient(145deg,#19191e,#0b0b0e 70%)!important;
+}
+#playerDashboard > h2:first-child{
+  color:#fff!important;font-size:28px!important;
+  text-transform:uppercase;letter-spacing:-.04em!important;
+}
+#playerLevelCard{
+  min-height:205px;
+  padding:28px!important;
+  border:1px solid rgba(241,38,64,.42)!important;
+  border-radius:18px!important;
+  background:
+    radial-gradient(ellipse at 90% 10%,rgba(241,38,64,.25),transparent 38%),
+    linear-gradient(115deg,#29151b,#151216 65%,#101013)!important;
+  box-shadow:0 20px 48px rgba(0,0,0,.32),inset 4px 0 0 var(--elite-red)!important;
+}
+#playerLevelCard h2{font-size:13px!important;letter-spacing:.18em!important;color:#ff7182!important}
+#playerTotalXP{font-size:clamp(38px,8vw,56px)!important;color:#fff!important}
+#playerXPProgress{background:linear-gradient(90deg,#b8152d,#ff5368)!important}
+#playerDashboard > p{
+  background:#111115!important;border:1px solid #292930!important;
+  border-radius:12px!important;padding:15px 18px!important;
+}
+#tournamentSignupCard,#myRewardPayoutsCard,#myTournamentMatchesCard{
+  padding:26px!important;border-radius:17px!important;
+  background:linear-gradient(145deg,#1b1b20,#101013)!important;
+  border:1px solid rgba(255,255,255,.1)!important;
+}
+#tournamentSignupCard{
+  background:radial-gradient(ellipse at 100% 0%,rgba(241,38,64,.2),transparent 42%),linear-gradient(145deg,#24151a,#111114)!important;
+  border-color:rgba(241,38,64,.35)!important;
+}
+#tournamentSignupButton{min-height:52px!important;padding:0 24px!important}
+#myRewardPayoutsCard h2,#myTournamentMatchesCard h2,#tournamentSignupCard h2{
+  color:#fff!important;font-size:20px!important;
+}
+#savePlayerGameId{min-height:48px!important}
+#logoutButton{min-height:46px!important;padding:0 22px!important}
+@media(max-width:700px){
+  body>header{min-height:auto;padding:15px 4%!important}
+  body>header nav{width:100%;justify-content:space-between;gap:5px!important}
+  body>header nav a{font-size:9px!important;letter-spacing:.035em!important}
+  body:has(#register) > section{padding:30px 4% 55px!important}
+  body:has(#register) > section > h1{
+    min-height:135px;padding:28px 20px 25px!important;
+    margin-bottom:20px!important;border-radius:15px;
+    font-size:29px!important;
+  }
+  body:has(#register) > section > h1::before{left:22px;top:20px}
+  body:has(#register) > section > h1::after{right:14px;bottom:20px;font-size:9px}
+  #register{grid-template-columns:1fr!important;gap:14px!important}
+  #register .card{min-height:0;padding:23px!important}
+  #playerLevelCard{padding:20px!important}
+  #tournamentSignupCard,#myRewardPayoutsCard,#myTournamentMatchesCard{padding:19px!important}
+}
