@@ -516,3 +516,49 @@ body:has(#playerDashboard) > section > h1::after{
   body:has(#playerDashboard) > section > h1::before{left:21px!important;top:19px!important}
   body:has(#playerDashboard) > section > h1::after{right:13px!important;bottom:18px!important;font-size:8px!important}
 }
+
+
+/* RANK IDENTITY SYSTEM — distinct visual identity for every player rank */
+#playerRankBadge.rank-badge{
+  position:relative!important;display:inline-flex!important;align-items:center!important;
+  justify-content:center!important;gap:7px!important;min-height:34px!important;
+  padding:8px 13px!important;border-radius:7px!important;font-size:11px!important;
+  font-weight:1000!important;letter-spacing:.13em!important;line-height:1!important;
+  text-transform:uppercase!important;white-space:nowrap!important;
+  transition:all .25s ease!important;
+}
+#playerRankBadge.rank-badge::before{font-size:14px;line-height:1}
+#playerRankBadge.rank-rookie{color:#e0e3e8!important;background:linear-gradient(135deg,#505762,#242a33)!important;border:1px solid #89919d!important;box-shadow:0 0 16px rgba(160,170,185,.14)!important}
+#playerRankBadge.rank-rookie::before{content:"◆"}
+#playerRankBadge.rank-amateur{color:#d9f2ff!important;background:linear-gradient(135deg,#12658c,#102c49)!important;border:1px solid #42bce9!important;box-shadow:0 0 18px rgba(44,174,235,.22)!important}
+#playerRankBadge.rank-amateur::before{content:"✦"}
+#playerRankBadge.rank-pro{color:#f0dcff!important;background:linear-gradient(135deg,#7134a5,#291743)!important;border:1px solid #bd79f4!important;box-shadow:0 0 20px rgba(177,91,238,.25)!important}
+#playerRankBadge.rank-pro::before{content:"✧"}
+#playerRankBadge.rank-elite{color:#fff1b8!important;background:linear-gradient(135deg,#b47a12,#513407)!important;border:1px solid #ffd66b!important;box-shadow:0 0 22px rgba(255,193,55,.28)!important}
+#playerRankBadge.rank-elite::before{content:"★"}
+#playerRankBadge.rank-legend{
+  color:#fff4d5!important;
+  background:linear-gradient(115deg,#6f101b,#d69b32 48%,#7c1420)!important;
+  border:1px solid #ffe29a!important;
+  box-shadow:0 0 8px rgba(255,205,100,.65),0 0 25px rgba(220,43,58,.42),inset 0 1px 0 rgba(255,255,255,.35)!important;
+  text-shadow:0 1px 4px rgba(0,0,0,.65)!important;
+}
+#playerRankBadge.rank-legend::before{content:"♛"}
+#playerRankBadge.rank-legend::after{content:"♛";font-size:14px;line-height:1}
+#playerLevelCard.rank-rookie{border-color:rgba(160,170,185,.5)!important;box-shadow:0 0 22px rgba(160,170,185,.09),inset 4px 0 0 #89919d!important}
+#playerLevelCard.rank-amateur{border-color:rgba(66,188,233,.6)!important;box-shadow:0 0 26px rgba(44,174,235,.12),inset 4px 0 0 #42bce9!important}
+#playerLevelCard.rank-pro{border-color:rgba(189,121,244,.65)!important;box-shadow:0 0 28px rgba(177,91,238,.14),inset 4px 0 0 #bd79f4!important}
+#playerLevelCard.rank-elite{border-color:rgba(255,214,107,.7)!important;box-shadow:0 0 30px rgba(255,193,55,.16),inset 4px 0 0 #ffd66b!important}
+#playerLevelCard.rank-legend{
+  border:1px solid rgba(255,218,143,.78)!important;
+  background:
+    radial-gradient(ellipse at 88% 8%,rgba(255,190,72,.25),transparent 36%),
+    radial-gradient(ellipse at 5% 100%,rgba(190,25,48,.22),transparent 48%),
+    linear-gradient(125deg,#321016,#171114 58%,#24150e)!important;
+  box-shadow:0 0 12px rgba(255,195,85,.22),0 0 36px rgba(190,25,48,.18),inset 4px 0 0 #e8b653!important;
+}
+#playerLevelCard.rank-legend #playerTotalXP{color:#ffe0a0!important;text-shadow:0 0 18px rgba(255,190,80,.25)!important}
+#playerLevelCard.rank-legend #playerXPProgress{background:linear-gradient(90deg,#9e172b,#e6a93d,#fff0b2)!important;box-shadow:0 0 12px rgba(255,198,86,.4)!important}
+@media(max-width:520px){
+  #playerRankBadge.rank-badge{font-size:9px!important;padding:7px 9px!important;letter-spacing:.09em!important}
+}
