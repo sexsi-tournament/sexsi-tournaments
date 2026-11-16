@@ -1531,6 +1531,14 @@ async function loadBracket(){
     return;
   }
 
+  const {data:scheduleData,error:scheduleError}=await db.rpc("sexsi_get_public_match_schedules");
+  if(scheduleError){
+    console.error("Match schedules error:",scheduleError.message);
+  }else{
+    const schedules=new Map((Array.isArray(scheduleData)?scheduleData:[]).map(item=>[item.match_id,item.scheduled_at]));
+    data.forEach(match=>{match.scheduled_at=schedules.get(match.id)||null;});
+  }
+
   if(!data||data.length===0){
     message.textContent="Все още няма създадена турнирна схема.";
     document.getElementById("overviewMatches").textContent="0";
