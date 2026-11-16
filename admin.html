@@ -1880,7 +1880,7 @@ async function loadRewardWinners(){
   const select=document.getElementById("rewardWinnerMatch");
   if(!select)return;
   select.innerHTML='<option value="">Зареждане...</option>';
-  const {data,error}=await db.rpc("sexsi_get_bracket");
+  const {data,error}=await db.rpc("sexsi_get_public_bracket");
   if(error){
     select.innerHTML='<option value="">Грешка при зареждане на турнирната схема</option>';
     return;
