@@ -87,13 +87,30 @@ async function loadPlayerXP() {
     Elite: "LEGEND"
   };
 
-  const rankKey = String(rank).toLowerCase();
-  rankBadge.textContent = String(rank).toUpperCase();
+  const rankKey = String(rank).trim().toLowerCase();
+  const rankStyles = {
+    rookie: ["◆ ROOKIE ◆", "#59616d", "#f0f2f5", "#aab3c0", "#171b22"],
+    amateur: ["✦ AMATEUR ✦", "#087da8", "#e4f8ff", "#50d5ff", "#0d2634"],
+    pro: ["✧ PRO ✧", "#7134a5", "#f6e7ff", "#d49aff", "#241331"],
+    elite: ["★ ELITE ★", "#b47a12", "#fff4c7", "#ffe07a", "#30240c"],
+    legend: ["♛  LEGEND  ♛", "#9b202d", "#fff8df", "#fff0b0", "#3a1018"]
+  };
+  const style = rankStyles[rankKey] || rankStyles.rookie;
   rankBadge.className = "rank-badge rank-" + rankKey;
+  rankBadge.textContent = style[0];
+  rankBadge.style.setProperty("background", "linear-gradient(110deg," + style[1] + ",#e8ad3e," + style[1] + ")", "important");
+  rankBadge.style.setProperty("color", style[2], "important");
+  rankBadge.style.setProperty("border", "2px solid " + style[3], "important");
+  rankBadge.style.setProperty("box-shadow", "0 0 12px " + style[3] + ",0 0 28px " + style[1], "important");
+  rankBadge.style.setProperty("padding", "9px 14px", "important");
+  rankBadge.style.setProperty("font-weight", "1000", "important");
   const levelCard = document.getElementById("playerLevelCard");
   if (levelCard) {
     levelCard.classList.remove("rank-rookie", "rank-amateur", "rank-pro", "rank-elite", "rank-legend");
     levelCard.classList.add("rank-" + rankKey);
+    levelCard.style.setProperty("background", "linear-gradient(125deg," + style[4] + ",#111114)", "important");
+    levelCard.style.setProperty("border", "2px solid " + style[3], "important");
+    levelCard.style.setProperty("box-shadow", "0 0 30px " + style[1] + ",inset 5px 0 0 " + style[3], "important");
   }
   totalElement.textContent = totalXP.toLocaleString("bg-BG") + " XP";
   progressElement.style.width = progress + "%";
