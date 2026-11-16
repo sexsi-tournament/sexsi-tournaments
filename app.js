@@ -43,6 +43,7 @@ function showPlayerDashboard(user, playerId) {
   loadTournamentRegistration(playerId);
   loadPlayerXP();
   loadMyTournamentMatches(user.id);
+  loadMyRewardPayouts(user.id);
 }
 
 async function loadPlayerXP() {
@@ -103,6 +104,41 @@ async function loadPlayerXP() {
   }
 
   message.textContent = "";
+}
+
+
+async function loadMyRewardPayouts(userId){
+  const container=document.getElementById("myRewardPayouts");
+  if(!container)return;
+  container.replaceChildren();
+  if(!userId){container.textContent="Влез в профила си, за да виждаш наградите.";return;}
+  const {data,error}=await db.from("reward_payouts").select("*").order("created_at",{ascending:false});
+  if(error){container.textContent="Наградите временно не са достъпни.";return;}
+  if(!data||!data.length){container.textContent="Все още нямаш регистрирани награди.";return;}
+  data.forEach(item=>{
+    const card=document.createElement("article");
+    card.style.cssText="padding:14px;margin-top:10px;background:#151515;border:1px solid #383033;border-radius:7px";
+    const title=document.createElement("strong");title.textContent=item.tournament_name;
+    const amount=document.createElement("p");amount.textContent=Number(item.reward_amount).toLocaleString("bg-BG")+" "+item.reward_currency;
+    const date=document.createElement("p");date.textContent="Предадена: "+new Date(item.handed_over_at).toLocaleString("bg-BG");
+    const status=document.createElement("p");
+    status.textContent=item.status==="confirmed"?"ПОТВЪРДЕНО ПОЛУЧАВАНЕ · "+new Date(item.confirmed_at).toLocaleString("bg-BG"):"ОЧАКВА ПОТВЪРЖДЕНИЕ";
+    status.style.color=item.status==="confirmed"?"#65e69a":"#e9bd59";
+    card.append(title,amount,date,status);
+    if(item.status==="awaiting_confirmation"){
+      const button=document.createElement("button");
+      button.type="button";button.textContent="ПОТВЪРДИ ПОЛУЧАВАНЕТО";
+      button.addEventListener("click",async()=>{
+        if(!confirm("Потвърждаваш ли, че получи тази награда?"))return;
+        button.disabled=true;button.textContent="ПОТВЪРЖДАВАНЕ...";
+        const {error:confirmError}=await db.rpc("sexsi_confirm_reward_received",{p_payout_id:item.id});
+        if(confirmError){alert("Грешка: "+confirmError.message);button.disabled=false;button.textContent="ПОТВЪРДИ ПОЛУЧАВАНЕТО";return;}
+        await loadMyRewardPayouts(userId);
+      });
+      card.appendChild(button);
+    }
+    container.appendChild(card);
+  });
 }
 
 async function loadPlayerProfile(user) {
