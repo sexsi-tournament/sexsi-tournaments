@@ -54,20 +54,45 @@ h1{font-size:clamp(34px,6vw,66px);line-height:1;margin:12px 0 10px;letter-spacin
 .player-name{min-width:0;overflow-wrap:anywhere}
 .player-score{font-size:14px;font-weight:900;color:#fff;white-space:nowrap}
 .match-winner{margin-top:8px;padding-top:8px;border-top:1px solid #25252a;color:#72e1a2;font-size:9px;font-weight:900;letter-spacing:.8px}
-.match-schedule{
-  display:flex;flex-direction:column;gap:4px;margin-top:10px;padding:9px 10px;
-  border:1px solid rgba(233,189,89,.25);border-radius:5px;
-  background:rgba(233,189,89,.055);
-}
+.match-schedule{display:flex;flex-direction:column;gap:4px;margin-top:10px;padding:9px 10px;border:1px solid rgba(233,189,89,.25);border-radius:5px;background:rgba(233,189,89,.055)}
 .match-schedule-label{font-size:8px;font-weight:900;letter-spacing:1px;color:#b99b5d}
 .match-schedule-value{font-size:12px;color:#f2d58e;font-weight:900}
 .match-schedule-pending{font-size:9px;color:#888;font-weight:800;letter-spacing:.5px}
+/* Visual hierarchy by tournament stage */
+.round.round-quarter{border-color:#31516c;background:linear-gradient(180deg,#101d2a,#0c1119)}
+.round.round-quarter .round-title{border-color:rgba(91,164,224,.35)}
+.round.round-quarter .round-title strong{color:#8bc8ff}
+.round.round-quarter .match{border-color:#29445b;background:linear-gradient(145deg,#101b27,#090e14)}
+.round.round-quarter .match-meta{color:#82afd4}
+.round.round-semi{border-color:#654b82;background:linear-gradient(180deg,#1b1426,#100d17)}
+.round.round-semi .round-title{border-color:rgba(190,145,255,.38)}
+.round.round-semi .round-title strong{color:#d0a7ff}
+.round.round-semi .match{border-color:#59416f;background:linear-gradient(145deg,#21172e,#100d17);padding:15px}
+.round.round-semi .match-meta{color:#c19be8}
+.round.round-semi .player{font-size:13px;padding:9px 0}
+.round.round-semi .player-score{font-size:16px}
+.round.round-final{position:relative;border:1px solid rgba(231,190,91,.8);background:radial-gradient(ellipse at 50% 0%,rgba(231,190,91,.2),transparent 65%),linear-gradient(180deg,#241d10,#100e0a 78%);box-shadow:0 0 28px rgba(231,190,91,.12),inset 0 0 28px rgba(231,190,91,.045)}
+.round.round-final .round-title{justify-content:center;border-color:rgba(231,190,91,.42);padding-bottom:15px}
+.round.round-final .round-title strong{color:#ffe2a0;font-size:15px;letter-spacing:2.5px;text-shadow:0 0 18px rgba(255,211,122,.35)}
+.round.round-final .round-title span{display:none}
+.round.round-final .match{padding:18px 16px;border:1px solid rgba(231,190,91,.65);border-radius:11px;background:linear-gradient(145deg,#2a2112,#100e0a);box-shadow:0 8px 25px rgba(0,0,0,.35),inset 0 0 20px rgba(231,190,91,.06)}
+.final-banner{margin:-3px 0 15px;padding:11px 8px;border:1px solid rgba(231,190,91,.42);border-radius:7px;background:linear-gradient(90deg,transparent,rgba(231,190,91,.13),transparent);color:#ffe2a0;text-align:center;font-size:11px;font-weight:1000;letter-spacing:2.4px;text-shadow:0 0 16px rgba(255,211,122,.4)}
+.round.round-final .match-meta{color:#d9bd7d}
+.round.round-final .match-status{color:#e8d5a9}
+.round.round-final .player{padding:12px 2px;font-size:15px;color:#f4e6c5}
+.round.round-final .player+.player{border-color:rgba(231,190,91,.22)}
+.round.round-final .player-score{font-size:21px;color:#fff0c8}
+.round.round-final .player.winner{color:#ffe08a;text-shadow:0 0 12px rgba(255,211,122,.28)}
+.round.round-final .match-winner{border-color:rgba(231,190,91,.35);color:#ffe08a;font-size:10px}
+.round.round-final .match-schedule{border-color:rgba(231,190,91,.42);background:rgba(231,190,91,.09)}
+.round.round-final .match-schedule-label{color:#d8b96f}
+.round.round-final .match-schedule-value{color:#ffe5a8}
+.round.round-final .match-schedule-pending{color:#b9a77e}
 .empty{padding:30px 18px;text-align:center;border:1px dashed #444;border-radius:8px;color:#999;font-size:13px}
 .back-link{display:inline-flex;margin-top:30px;color:#aaa;text-decoration:none;font-size:10px;font-weight:900;letter-spacing:1px}
 .back-link:hover{color:#fff}
 footer{border-top:1px solid var(--line);padding:25px;text-align:center;color:#666;font-size:10px;letter-spacing:1px}
-@media(max-width:700px){header{align-items:flex-start;flex-direction:column}nav{gap:12px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{padding:13px}.stat strong{font-size:22px}.rounds{grid-auto-columns:minmax(250px,82vw)}}
-</style>
+@media(max-width:700px){header{align-items:flex-start;flex-direction:column}nav{gap:12px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{padding:13px}.stat strong{font-size:22px}.rounds{grid-auto-columns:minmax(250px,82vw)}}</style>
 <link rel="stylesheet" href="elite.css?v=3">
 </head>
 <body>
@@ -154,13 +179,21 @@ footer{border-top:1px solid var(--line);padding:25px;text-align:center;color:#66
       rounds.forEach(roundNo => {
         const roundMatches = matches.filter(m => Number(m.round_number) === roundNo)
           .sort((a,b)=>(Number(a.match_number)||0)-(Number(b.match_number)||0));
-        const round = make("section","round");
+        const stage = {
+          1:{name:"ОСМИНАФИНАЛИ",className:""},
+          2:{name:"ЧЕТВЪРТФИНАЛИ",className:"round-quarter"},
+          3:{name:"ПОЛУФИНАЛИ",className:"round-semi"},
+          4:{name:"ГОЛЕМИЯТ ФИНАЛ",className:"round-final"}
+        }[roundNo] || {name:"КРЪГ " + roundNo,className:""};
+        const round = make("section","round" + (stage.className ? " " + stage.className : ""));
         const title = make("div","round-title");
-        title.appendChild(make("strong","", "КРЪГ " + roundNo));
-        title.appendChild(make("span","", roundMatches.length + (roundMatches.length === 1 ? " ДВУБОЙ" : " ДВУБОЯ")));
+        title.appendChild(make("strong","",stage.name));
+        title.appendChild(make("span","",roundMatches.length + (roundMatches.length === 1 ? " ДУБОЙ" : " ДУБОЯ")));
         round.appendChild(title);
         roundMatches.forEach(m => {
-          const card = make("article","match");
+          const isFinal = roundNo === 4;
+          const card = make("article","match" + (isFinal ? " match-final" : ""));
+          if(isFinal) card.appendChild(make("div","final-banner","🏆  ГОЛЕМИЯТ ФИНАЛ  🏆"));
           const meta = make("div","match-meta");
           meta.appendChild(make("span","", "МАЧ №" + safe(m.match_number)));
           const state = m.status === "completed" ? "ЗАВЪРШЕН" : m.status === "ongoing" ? "В ХОД" : "ПРЕДСТОИ";
