@@ -666,7 +666,7 @@ footer{
 
       <button class="dashboard-action" data-open-view="emails">
         <strong>ИМЕЙЛИ КЪМ ИГРАЧИ</strong>
-        <span>Избери записан участник и подготви лично съобщение от своята поща.</span>
+        <span>Състави съобщение и го изпрати директно до всички участници в SEXSI 1V1 CUP #001.</span>
       </button>
 
       <button class="dashboard-action" data-open-view="players">
@@ -717,20 +717,23 @@ footer{
   </section>
   <section class="admin-view" id="emailsPanel">
     <button class="secondary-button back-dashboard">← НАЗАД</button>
-    <div class="section-title">ИМЕЙЛИ КЪМ ИГРАЧИ</div>
-    <p class="section-description">Избери записан участник. Имейл адресът се зарежда автоматично от регистрацията му.</p>
+    <div class="section-title">ИМЕЙЛИ КЪМ УЧАСТНИЦИТЕ</div>
+    <p class="section-description">Изпращане на едно и също съобщение до всички записани участници в SEXSI 1V1 CUP #001. Получателите се определят автоматично от регистрациите на турнира.</p>
     <div class="panel">
-      <label for="emailPlayerSelect" style="display:block;color:var(--muted);font-size:12px;font-weight:bold;margin-bottom:8px;">ПОЛУЧАТЕЛ</label>
-      <select id="emailPlayerSelect" style="display:block;width:100%;max-width:600px;background:#090909;color:white;border:1px solid var(--border);border-radius:7px;padding:13px;margin-bottom:16px;">
-        <option value="">Зареждане на участниците...</option>
-      </select>
-      <p class="message" id="emailRecipientAddress">Имейлът на избрания участник ще се покаже тук.</p>
-      <label for="emailSubject" style="display:block;color:var(--muted);font-size:12px;font-weight:bold;margin:16px 0 8px;">ТЕМА</label>
-      <input id="emailSubject" type="text" maxlength="160" placeholder="Например: Информация за SEXSI 1V1 CUP #001" style="display:block;width:100%;max-width:700px;background:#090909;color:white;border:1px solid var(--border);border-radius:7px;padding:13px;">
+      <div class="overview-card" style="min-height:auto;margin-bottom:18px;">
+        <small>ПОЛУЧАТЕЛИ</small>
+        <strong id="emailAudienceCount">—</strong>
+        <p class="message" id="emailAudienceStatus">Списъкът ще бъде проверен от защитената система преди изпращане.</p>
+      </div>
+      <label for="emailSubject" style="display:block;color:var(--muted);font-size:12px;font-weight:bold;margin:16px 0 8px;">ТЕМА НА ИМЕЙЛА</label>
+      <input id="emailSubject" type="text" maxlength="180" placeholder="Например: Важна информация за SEXSI 1V1 CUP #001" style="display:block;width:100%;max-width:700px;background:#090909;color:white;border:1px solid var(--border);border-radius:7px;padding:13px;">
       <label for="emailBody" style="display:block;color:var(--muted);font-size:12px;font-weight:bold;margin:16px 0 8px;">СЪОБЩЕНИЕ</label>
-      <textarea id="emailBody" rows="8" maxlength="10000" placeholder="Напиши съобщението до участника..." style="display:block;width:100%;max-width:800px;background:#090909;color:white;border:1px solid var(--border);border-radius:7px;padding:13px;resize:vertical;line-height:1.5;"></textarea>
-      <button class="primary-button" id="openEmailDraftButton" type="button" style="margin-top:16px;">ОТВОРИ В ПОЩАТА</button>
-      <p class="message" id="emailComposeMessage">Бутонът ще отвори приложението ти за имейли. Прегледай писмото и натисни „Изпрати“ там.</p>
+      <textarea id="emailBody" rows="9" maxlength="10000" placeholder="Напиши съобщението до участниците..." style="display:block;width:100%;max-width:800px;background:#090909;color:white;border:1px solid var(--border);border-radius:7px;padding:13px;resize:vertical;line-height:1.5;"></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
+        <button class="secondary-button" id="previewTournamentEmailsButton" type="button">ПРОВЕРИ ПОЛУЧАТЕЛИТЕ</button>
+        <button class="primary-button" id="sendTournamentEmailsButton" type="button" disabled>ИЗПРАТИ ИМЕЙЛИТЕ</button>
+      </div>
+      <p class="message" id="emailComposeMessage" aria-live="polite">Първо провери броя на получателите. Имейлите няма да бъдат изпратени при тази проверка.</p>
     </div>
   </section>
 
@@ -1034,90 +1037,128 @@ async function loadRegistrations(){
   });
 }
 
-/* EMAIL COMPOSER */
-let emailRecipients = [];
-let emailRecipientsLoaded = false;
+/* BULK TOURNAMENT EMAILS */
+let emailPreviewCount = 0;
+let emailPreviewSnapshot = "";
+
+function currentEmailDraft(){
+  return {
+    subject:document.getElementById("emailSubject").value.trim(),
+    message:document.getElementById("emailBody").value.trim()
+  };
+}
+
+function invalidateEmailPreview(){
+  emailPreviewCount = 0;
+  emailPreviewSnapshot = "";
+  document.getElementById("emailAudienceCount").textContent = "—";
+  document.getElementById("emailAudienceStatus").textContent = "Променено е съдържанието. Провери получателите отново.";
+  document.getElementById("sendTournamentEmailsButton").disabled = true;
+  document.getElementById("emailComposeMessage").textContent = "Първо провери получателите. Все още не е изпратен нито един имейл.";
+}
 
 async function loadEmailRecipients(){
-  const select=document.getElementById("emailPlayerSelect");
-  const address=document.getElementById("emailRecipientAddress");
-  const message=document.getElementById("emailComposeMessage");
-  select.innerHTML='<option value="">Зареждане...</option>';
-  address.textContent="";
-  message.textContent="Зареждане на имейл адресите от записаните участници...";
-
-  const {data,error}=await db.rpc("sexsi_admin_registrations");
-  if(error){
-    select.innerHTML='<option value="">Грешка при зареждане</option>';
-    message.textContent="Не успях да заредя участниците: "+error.message;
-    return;
-  }
-
-  emailRecipients=Array.isArray(data)
-    ?data.filter(player=>String(player.player_email||"").trim())
-    :[];
-  select.innerHTML="";
-
-  if(emailRecipients.length===0){
-    select.innerHTML='<option value="">Няма записани участници с наличен имейл</option>';
-    message.textContent="Провери дали участниците имат имейл в регистрационните данни.";
-    emailRecipientsLoaded=true;
-    return;
-  }
-
-  const placeholder=document.createElement("option");
-  placeholder.value="";
-  placeholder.textContent="Избери участник...";
-  select.appendChild(placeholder);
-
-  emailRecipients.forEach((player,index)=>{
-    const option=document.createElement("option");
-    option.value=String(index);
-    option.textContent=(player.player_name||"PLAYER")+" · "+player.player_email;
-    select.appendChild(option);
-  });
-
-  emailRecipientsLoaded=true;
-  message.textContent="Заредени са "+emailRecipients.length+" записани участници с имейл адрес.";
-  updateEmailRecipientAddress();
+  emailPreviewCount = 0;
+  emailPreviewSnapshot = "";
+  document.getElementById("emailAudienceCount").textContent = "—";
+  document.getElementById("emailAudienceStatus").textContent = "Получателите се зареждат от регистрациите за SEXSI 1V1 CUP #001.";
+  document.getElementById("sendTournamentEmailsButton").disabled = true;
+  document.getElementById("emailComposeMessage").textContent = "Попълни темата и съобщението, след което натисни „ПРОВЕРИ ПОЛУЧАТЕЛИТЕ“.";
 }
 
-function updateEmailRecipientAddress(){
-  const select=document.getElementById("emailPlayerSelect");
-  const address=document.getElementById("emailRecipientAddress");
-  const player=emailRecipients[Number(select.value)];
-  address.textContent=player
-    ?"ПОЛУЧАТЕЛ: "+player.player_email
-    :"Избери участник, за да заредим неговия имейл адрес.";
-}
+document.getElementById("emailSubject").addEventListener("input",invalidateEmailPreview);
+document.getElementById("emailBody").addEventListener("input",invalidateEmailPreview);
 
-document.getElementById("emailPlayerSelect").addEventListener("change",updateEmailRecipientAddress);
-
-document.getElementById("openEmailDraftButton").addEventListener("click",()=>{
-  const select=document.getElementById("emailPlayerSelect");
-  const player=emailRecipients[Number(select.value)];
-  const subject=document.getElementById("emailSubject").value.trim();
-  const body=document.getElementById("emailBody").value.trim();
+document.getElementById("previewTournamentEmailsButton").addEventListener("click",async()=>{
+  const button=document.getElementById("previewTournamentEmailsButton");
+  const sendButton=document.getElementById("sendTournamentEmailsButton");
   const message=document.getElementById("emailComposeMessage");
+  const draft=currentEmailDraft();
 
-  if(!player){
-    message.textContent="Първо избери участник.";
-    return;
-  }
-  if(!subject&&!body){
-    message.textContent="Добави тема или текст на съобщението.";
+  if(!draft.subject||!draft.message){
+    message.textContent="Попълни тема и съобщение преди проверката.";
     return;
   }
 
-  const mailto="mailto:"+encodeURIComponent(player.player_email.trim())+
-    "?subject="+encodeURIComponent(subject)+
-    "&body="+encodeURIComponent(body);
+  button.disabled=true;
+  button.textContent="ПРОВЕРКА...";
+  sendButton.disabled=true;
+  message.textContent="Проверявам регистрациите и имейл адресите на участниците...";
 
-  message.textContent="Подготвям писмо до "+player.player_email+". Изпращането се довършва в приложението ти за имейли.";
-  window.location.href=mailto;
+  try{
+    const {data,error}=await db.functions.invoke("send-tournament-emails",{
+      body:{subject:draft.subject,message:draft.message,dry_run:true}
+    });
+    if(error)throw error;
+    if(!data||data.dry_run!==true||!Number.isInteger(data.recipients_count)||data.recipients_count<1){
+      throw new Error(data?.error||"Неуспешна проверка на получателите.");
+    }
+
+    emailPreviewCount=data.recipients_count;
+    emailPreviewSnapshot=draft.subject+"\n"+draft.message;
+    document.getElementById("emailAudienceCount").textContent=String(emailPreviewCount);
+    document.getElementById("emailAudienceStatus").textContent="Проверени са "+emailPreviewCount+" уникални имейл адреса само от регистрациите за SEXSI 1V1 CUP #001.";
+    sendButton.textContent="ИЗПРАТИ ДО "+emailPreviewCount+" УЧАСТНИЦИ";
+    sendButton.disabled=false;
+    message.textContent="Проверката е успешна. Нищо не е изпратено. Натискането на бутона за изпращане ще поиска допълнително потвърждение.";
+  }catch(error){
+    emailPreviewCount=0;
+    emailPreviewSnapshot="";
+    document.getElementById("emailAudienceCount").textContent="—";
+    document.getElementById("emailAudienceStatus").textContent="Неуспешна проверка.";
+    message.textContent="Грешка при проверката: "+(error.message||"Неизвестна грешка");
+  }finally{
+    button.disabled=false;
+    button.textContent="ПРОВЕРИ ПОЛУЧАТЕЛИТЕ";
+  }
 });
 
-/* END EMAIL COMPOSER */
+document.getElementById("sendTournamentEmailsButton").addEventListener("click",async()=>{
+  const button=document.getElementById("sendTournamentEmailsButton");
+  const previewButton=document.getElementById("previewTournamentEmailsButton");
+  const message=document.getElementById("emailComposeMessage");
+  const draft=currentEmailDraft();
+
+  if(!emailPreviewCount||emailPreviewSnapshot!==draft.subject+"\n"+draft.message){
+    invalidateEmailPreview();
+    return;
+  }
+
+  if(!confirm("Ще изпратиш имейл със следната тема:\n\n"+draft.subject+"\n\nДо "+emailPreviewCount+" участници в SEXSI 1V1 CUP #001.\n\nПотвърждаваш ли изпращането?")){
+    return;
+  }
+
+  button.disabled=true;
+  previewButton.disabled=true;
+  button.textContent="ИЗПРАЩАНЕ...";
+  message.textContent="Изпращам индивидуални имейли до участниците...";
+
+  try{
+    const {data,error}=await db.functions.invoke("send-tournament-emails",{
+      body:{subject:draft.subject,message:draft.message,dry_run:false}
+    });
+    if(error)throw error;
+    if(!data||typeof data.sent!=="number")throw new Error(data?.error||"Системата не върна резултат от изпращането.");
+
+    message.textContent="Изпращането приключи. Успешно изпратени: "+data.sent+". Неуспешни: "+data.failed+". Общо получатели: "+data.recipients_count+".";
+    document.getElementById("emailAudienceStatus").textContent="Резултат от изпращането за SEXSI 1V1 CUP #001.";
+    emailPreviewCount=0;
+    emailPreviewSnapshot="";
+    button.textContent="ИЗПРАЩАНЕТО ПРИКЛЮЧИ";
+    if(data.failed>0){
+      document.getElementById("emailAudienceStatus").textContent+=" Има имейли, които не са приети от пощенската услуга. Провери резултата преди нов опит, за да не се дублират вече изпратените.";
+    }
+  }catch(error){
+    message.textContent="Грешка при изпращането: "+(error.message||"Неизвестна грешка");
+    button.disabled=false;
+    previewButton.disabled=false;
+    button.textContent="ОПИТАЙ ОТНОВО СЛЕД ПРОВЕРКА";
+    emailPreviewCount=0;
+    emailPreviewSnapshot="";
+  }
+});
+
+/* END BULK TOURNAMENT EMAILS */
 
 /* ALL PLAYERS */
 
