@@ -1542,19 +1542,21 @@ async function loadAdminData(){
 async function loadTotalAuthUsers(){
   const counter=document.getElementById("overviewAuthUsers");
   if(!counter)return;
-  counter.textContent="…";
 
   try{
-    const {data,error}=await db.functions.invoke("admin-user-count");
+    const {data,error}=await db.rpc("sexsi_admin_auth_user_count");
     if(error)throw error;
-    if(!data||!Number.isInteger(data.total)||data.total<0){
-      throw new Error("Невалиден отговор от сървъра.");
+
+    const total=Number(data);
+    if(!Number.isSafeInteger(total)||total<0){
+      throw new Error("Невалиден брой потребители.");
     }
-    counter.textContent=formatNumber(data.total);
+
+    counter.textContent=formatNumber(total);
+    counter.title="Общ брой регистрирани потребители в Supabase Auth.";
   }catch(error){
     console.error("Supabase Auth user count:",error);
-    counter.textContent="!";
-    counter.title="Неуспешно зареждане. Провери дали Edge Function admin-user-count е публикувана в Supabase.";
+    counter.title="Грешка при зареждане на броя потребители.";
   }
 }
 function getRoundName(round){
@@ -2047,7 +2049,7 @@ async function checkAdminAccess(){
 
   await refreshAllAdminData();
   if(!window.adminUserCountRefreshTimer){
-    window.adminUserCountRefreshTimer=setInterval(loadTotalAuthUsers,60000);
+    window.adminUserCountRefreshTimer=setInterval(loadTotalAuthUsers,5000);
   }
 }
 
