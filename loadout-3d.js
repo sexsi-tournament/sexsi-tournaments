@@ -47,7 +47,7 @@ if (canvas) {
       if (!response.ok) throw new Error('manifest unavailable');
       assetManifest = await response.json();
       const count = Object.keys(assetManifest.models || {}).length;
-      setAssetStatus(count ? 'ASSET MANIFEST CONNECTED · ' + count + ' MODEL ENTRIES' : 'LOADER READY · 0 MODELS CONNECTED');
+      setAssetStatus(count ? 'ASSET CATALOG CONNECTED · EXTERNAL MODELS READY TO LOAD' : 'LOADER READY · 0 MODELS CONNECTED');
       return true;
     } catch (error) {
       setAssetStatus('3D MODEL ASSETS: NOT CONNECTED');
@@ -64,6 +64,8 @@ if (canvas) {
       }));
     }
     const model = await assetCache.get(url);
+    if (model) setAssetStatus('EXTERNAL GLB ASSET LOADED');
+    else setAssetStatus('EXTERNAL ASSET UNAVAILABLE · PROCEDURAL FALLBACK ACTIVE');
     return model ? model.clone(true) : null;
   }
   function applyAssetTransform(model, config = {}) {
