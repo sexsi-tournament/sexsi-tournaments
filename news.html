@@ -24,6 +24,30 @@ h1{font-size:clamp(32px,6vw,54px);margin:10px 0 8px;letter-spacing:-1.5px}
 .news-content{color:#ddd;font-size:14px;line-height:1.85;white-space:pre-wrap;overflow-wrap:anywhere}
 .news-pinned{border-color:rgba(233,189,89,.55);box-shadow:0 0 25px rgba(233,189,89,.06)}
 .status{padding:24px;text-align:center;color:#999;border:1px dashed #333;border-radius:9px}
+
+.news-social{margin-top:20px;padding-top:15px;border-top:1px solid #292929}
+.reaction-row{display:flex;gap:8px;flex-wrap:wrap}
+.reaction-btn{border:1px solid #383838;background:#111;color:#ddd;border-radius:7px;padding:9px 12px;font-size:13px;font-weight:800;cursor:pointer}
+.reaction-btn:hover,.reaction-btn.active{border-color:#ed252d;background:rgba(237,37,45,.13);color:#fff}
+.reaction-btn:disabled{opacity:.65;cursor:default}
+.comment-heading{font-size:12px;font-weight:900;letter-spacing:1px;color:#ddd;margin:18px 0 10px}
+.comment-list{display:grid;gap:9px}
+.comment-item{background:#111;border:1px solid #292929;border-radius:8px;padding:12px}
+.comment-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.comment-author{font-size:12px;font-weight:900;color:#fff}
+.comment-date{font-size:10px;color:#777}
+.comment-body{font-size:13px;color:#ccc;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:7px}
+.comment-actions{display:flex;gap:10px;margin-top:8px}
+.comment-actions button{border:0;background:none;color:#aaa;font-size:11px;font-weight:800;padding:3px 0;cursor:pointer}
+.comment-actions button:hover{color:#ff777c}
+.comment-form{display:grid;gap:8px;margin-top:12px}
+.comment-form textarea{width:100%;min-height:76px;resize:vertical;border:1px solid #383838;border-radius:7px;background:#0b0b0b;color:#fff;padding:11px;font:13px Arial,sans-serif}
+.comment-form button{justify-self:start;border:0;border-radius:6px;background:#ed252d;color:#fff;padding:10px 14px;font-size:11px;font-weight:900;cursor:pointer}
+.comment-login{font-size:12px;color:#999;margin-top:12px}
+.comment-login a{color:#ff777c;font-weight:900;text-decoration:none}
+.social-status{font-size:11px;color:#ff9b9f;margin-top:8px;min-height:14px}
+.empty-comments{font-size:12px;color:#777;padding:8px 0}
+
 footer{text-align:center;padding:22px;color:#666;border-top:1px solid #222;font-size:10px;letter-spacing:1px}
 @media(min-width:760px){#newsList{grid-template-columns:1fr 1fr}.news-card:first-child{grid-column:1/-1}}
 </style>
@@ -42,26 +66,139 @@ footer{text-align:center;padding:22px;color:#666;border-top:1px solid #222;font-
 (function(){
  const db=window.supabase.createClient("https://fyxlwcoochsuzhqostpe.supabase.co","sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP");
  const list=document.getElementById("newsList");
- db.from("sexsi_news").select("id,title,summary,content,category,published_at,is_pinned")
-  .eq("is_published",true).order("is_pinned",{ascending:false})
-  .order("published_at",{ascending:false}).then(({data,error})=>{
-   list.innerHTML="";
-   if(error||!data||!data.length){const empty=document.createElement("div");empty.className="status";empty.textContent=error?"Новините временно не могат да се заредят.":"Все още няма публикувани новини.";list.appendChild(empty);return}
-   data.forEach(item=>{
-    const card=document.createElement("article");card.className="news-card"+(item.is_pinned?" news-pinned":"");card.id=item.id;
-    const meta=document.createElement("div");meta.className="news-meta";
-    const category=document.createElement("span");category.className="news-category";category.textContent=item.category;
-    const date=document.createElement("span");date.textContent=new Date(item.published_at).toLocaleString("bg-BG",{dateStyle:"medium",timeStyle:"short"});
-    if(item.is_pinned){const pin=document.createElement("span");pin.textContent="★ ВАЖНО";meta.appendChild(pin)}
-    meta.append(category,date);
-    const title=document.createElement("h2");title.textContent=item.title;
-    card.append(meta,title);
-    if(item.summary){const summary=document.createElement("p");summary.className="news-summary";summary.textContent=item.summary;card.appendChild(summary)}
-    const content=document.createElement("div");content.className="news-content";content.textContent=item.content;card.appendChild(content);
-    list.appendChild(card);
+ const ADMIN_ID="13f1ada8-cd05-4c31-8940-4fb1790cb90e";
+ const reactions=[
+  {type:"heart",emoji:"❤️",label:"Харесва ми"},
+  {type:"fire",emoji:"🔥",label:"Страхотно"},
+  {type:"like",emoji:"👍",label:"Подкрепям"},
+  {type:"clap",emoji:"👏",label:"Браво"}
+ ];
+ let currentUser=null;
+ const make=(tag,className,text)=>{
+  const node=document.createElement(tag);
+  if(className)node.className=className;
+  if(text!==undefined)node.textContent=String(text??"");
+  return node;
+ };
+ const formatDate=value=>new Date(value).toLocaleString("bg-BG",{dateStyle:"medium",timeStyle:"short"});
+ const setStatus=(host,message)=>{host.textContent=message||""};
+ async function loadSocial(newsItems){
+  const ids=newsItems.map(item=>item.id);
+  if(!ids.length)return;
+  const [countsResult,mineResult,commentsResult]=await Promise.all([
+   db.from("sexsi_news_reaction_counts").select("news_id,reaction_type,reaction_count").in("news_id",ids),
+   currentUser?db.from("sexsi_news_reactions").select("news_id,reaction_type").eq("user_id",currentUser.id).in("news_id",ids):Promise.resolve({data:[],error:null}),
+   db.from("sexsi_news_comments").select("id,news_id,user_id,author_name,body,created_at,updated_at").in("news_id",ids).order("created_at",{ascending:true})
+  ]);
+  if(countsResult.error)console.error("Reaction counts:",countsResult.error);
+  if(mineResult.error)console.error("My reactions:",mineResult.error);
+  if(commentsResult.error)console.error("Comments:",commentsResult.error);
+  const counts=countsResult.data||[], mine=mineResult.data||[], comments=commentsResult.data||[];
+  newsItems.forEach(item=>{
+   const card=document.getElementById(item.id);
+   if(!card)return;
+   const social=make("section","news-social");
+   const reactionRow=make("div","reaction-row");
+   reactions.forEach(reaction=>{
+    const count=counts.find(row=>row.news_id===item.id&&row.reaction_type===reaction.type)?.reaction_count||0;
+    const selected=mine.some(row=>row.news_id===item.id&&row.reaction_type===reaction.type);
+    const button=make("button","reaction-btn"+(selected?" active":""),reaction.emoji+" "+count);
+    button.type="button";button.title=reaction.label;button.setAttribute("aria-pressed",selected?"true":"false");
+    button.addEventListener("click",async()=>{
+     if(!currentUser){location.href="profile.html#loginForm";return}
+     button.disabled=true;
+     const result=selected
+      ?await db.from("sexsi_news_reactions").delete().eq("news_id",item.id).eq("user_id",currentUser.id)
+      :await db.from("sexsi_news_reactions").upsert({news_id:item.id,user_id:currentUser.id,reaction_type:reaction.type},{onConflict:"news_id,user_id"});
+     if(result.error){alert("Реакцията не беше запазена: "+result.error.message);button.disabled=false;return}
+     await renderNews();
+    });
+    reactionRow.appendChild(button);
    });
-   if(location.hash){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(target)target.scrollIntoView()}
+   social.appendChild(reactionRow);
+   const itemComments=comments.filter(comment=>comment.news_id===item.id);
+   social.appendChild(make("div","comment-heading","КОМЕНТАРИ · "+itemComments.length));
+   const commentList=make("div","comment-list");
+   if(!itemComments.length)commentList.appendChild(make("div","empty-comments","Все още няма коментари. Бъди първият!"));
+   itemComments.forEach(comment=>{
+    const entry=make("article","comment-item");
+    const top=make("div","comment-top");
+    top.append(make("span","comment-author",comment.author_name||"PLAYER"),make("span","comment-date",formatDate(comment.created_at)));
+    entry.append(top,make("div","comment-body",comment.body));
+    if(currentUser&&(comment.user_id===currentUser.id||currentUser.id===ADMIN_ID)){
+     const actions=make("div","comment-actions");
+     if(comment.user_id===currentUser.id){
+      const edit=make("button","","РЕДАКТИРАЙ");edit.type="button";
+      edit.addEventListener("click",async()=>{
+       const next=prompt("Редактирай коментара:",comment.body);
+       if(next===null)return;
+       if(!next.trim()){alert("Коментарът не може да бъде празен.");return}
+       const {error}=await db.from("sexsi_news_comments").update({body:next.trim()}).eq("id",comment.id);
+       if(error){alert("Грешка при редактиране: "+error.message);return}
+       await renderNews();
+      });
+      actions.appendChild(edit);
+     }
+     const remove=make("button","","ИЗТРИЙ");remove.type="button";
+     remove.addEventListener("click",async()=>{
+      if(!confirm("Да изтрия ли този коментар?"))return;
+      const {error}=await db.from("sexsi_news_comments").delete().eq("id",comment.id);
+      if(error){alert("Грешка при изтриване: "+error.message);return}
+      await renderNews();
+     });
+     actions.appendChild(remove);entry.appendChild(actions);
+    }
+    commentList.appendChild(entry);
+   });
+   social.appendChild(commentList);
+   if(currentUser){
+    const form=make("form","comment-form"),textarea=make("textarea");
+    textarea.maxLength=1000;textarea.placeholder="Напиши коментар...";textarea.required=true;
+    const submit=make("button","","ПУБЛИКУВАЙ КОМЕНТАР");submit.type="submit";
+    const message=make("div","social-status","");
+    form.append(textarea,submit,message);
+    form.addEventListener("submit",async event=>{
+     event.preventDefault();const body=textarea.value.trim();if(!body)return;
+     submit.disabled=true;
+     const {error}=await db.from("sexsi_news_comments").insert({news_id:item.id,user_id:currentUser.id,body});
+     if(error){setStatus(message,"Неуспешно публикуване: "+error.message);submit.disabled=false;return}
+     await renderNews();
+    });
+    social.appendChild(form);
+   }else{
+    const login=make("p","comment-login");login.append("За да реагираш или коментираш, ");
+    const link=make("a","","влез в профила си");link.href="profile.html#loginForm";
+    login.append(link,".");social.appendChild(login);
+   }
+   card.appendChild(social);
   });
+ }
+ async function renderNews(){
+  list.innerHTML="";list.appendChild(make("div","status","Зареждане на публикациите..."));
+  const {data,error}=await db.from("sexsi_news").select("id,title,summary,content,category,published_at,is_pinned")
+   .eq("is_published",true).order("is_pinned",{ascending:false}).order("published_at",{ascending:false});
+  list.innerHTML="";
+  if(error||!data||!data.length){
+   list.appendChild(make("div","status",error?"Новините временно не могат да се заредят.":"Все още няма публикувани новини."));return;
+  }
+  data.forEach(item=>{
+   const card=make("article","news-card"+(item.is_pinned?" news-pinned":""));card.id=item.id;
+   const meta=make("div","news-meta");
+   if(item.is_pinned)meta.appendChild(make("span","","★ ВАЖНО"));
+   meta.append(make("span","news-category",item.category),make("span","",formatDate(item.published_at)));
+   card.append(meta,make("h2","",item.title));
+   if(item.summary)card.appendChild(make("p","news-summary",item.summary));
+   card.appendChild(make("div","news-content",item.content));list.appendChild(card);
+  });
+  await loadSocial(data);
+  if(location.hash){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(target)target.scrollIntoView()}
+ }
+ async function init(){
+  const {data}=await db.auth.getUser();currentUser=data?.user||null;
+  await renderNews();
+  db.auth.onAuthStateChange(async(_event,session)=>{currentUser=session?.user||null;await renderNews()});
+ }
+ init();
 })();
 </script>
 </body>
