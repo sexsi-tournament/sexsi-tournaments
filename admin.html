@@ -608,6 +608,7 @@ footer{
   <button class="menu-item" data-view="matches">ТУРНИРНА СХЕМА</button>
   <button class="menu-item" data-view="rewards">НАГРАДИ И ИЗПЛАЩАНИЯ</button>
   <button class="menu-item" data-view="analytics">АНАЛИЗИ И ПОСЕЩЕНИЯ</button>
+  <button class="menu-item" data-view="news">НОВИНИ</button>
 
   <div class="menu-divider"></div>
   <button class="menu-item" id="menuRefreshButton">ОБНОВИ ДАННИТЕ</button>
@@ -839,6 +840,50 @@ footer{
     </div>
   </section>
 
+  <section class="admin-view" id="newsPanel">
+    <button class="secondary-button back-dashboard">← НАЗАД</button>
+    <div class="section-title">УПРАВЛЕНИЕ НА НОВИНИ</div>
+    <p class="section-description">Публикувай официални новини и съобщения за общността.</p>
+    <div class="panel">
+      <h3 id="newsEditorHeading">НОВА ПУБЛИКАЦИЯ</h3>
+      <form id="newsAdminForm" style="display:grid;gap:12px;margin-top:16px">
+        <input type="hidden" id="newsEditId">
+        <label style="display:grid;gap:7px">ЗАГЛАВИЕ
+          <input id="newsTitle" type="text" maxlength="180" required placeholder="Заглавие на новината">
+        </label>
+        <label style="display:grid;gap:7px">КРАТКО ОПИСАНИЕ
+          <input id="newsSummary" type="text" maxlength="400" placeholder="Кратък текст за картата">
+        </label>
+        <label style="display:grid;gap:7px">ПЪЛЕН ТЕКСТ
+          <textarea id="newsContent" rows="7" maxlength="12000" required placeholder="Съдържание на публикацията" style="width:100%;padding:12px;border-radius:7px;background:#101010;color:#fff;border:1px solid #333;resize:vertical"></textarea>
+        </label>
+        <label style="display:grid;gap:7px">КАТЕГОРИЯ
+          <select id="newsCategory">
+            <option value="ВАЖНО">ВАЖНО</option>
+            <option value="ТУРНИР" selected>ТУРНИР</option>
+            <option value="РЕЗУЛТАТИ">РЕЗУЛТАТИ</option>
+            <option value="ОБЩНОСТ">ОБЩНОСТ</option>
+          </select>
+        </label>
+        <label style="display:flex;align-items:center;gap:9px"><input id="newsPinned" type="checkbox"> ЗАКАЧИ НАЙ-ОТГОРЕ</label>
+        <label style="display:flex;align-items:center;gap:9px"><input id="newsPublished" type="checkbox" checked> ПУБЛИКУВАНА ВЕДНАГА</label>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+          <button class="primary-button" type="submit" id="newsSaveButton">ПУБЛИКУВАЙ НОВИНАТА</button>
+          <button class="secondary-button" type="button" id="newsCancelEdit" hidden>ОТКАЖИ РЕДАКЦИЯТА</button>
+        </div>
+        <p class="message" id="newsFormMessage" aria-live="polite"></p>
+      </form>
+    </div>
+    <div class="panel" style="margin-top:18px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <h3>ПУБЛИКАЦИИ</h3>
+        <button class="secondary-button" type="button" id="newsRefreshButton">ОБНОВИ</button>
+      </div>
+      <p class="message" id="newsAdminListMessage">Зареждане...</p>
+      <div id="newsAdminList" style="display:grid;gap:10px"></div>
+    </div>
+  </section>
+
   <section class="admin-view" id="analyticsPanel">
     <button class="secondary-button back-dashboard">← НАЗАД</button>
 
@@ -961,6 +1006,9 @@ function showAdminView(viewName){
   }
   if(viewName==="emails"){
     loadEmailRecipients();
+  }
+  if(viewName==="news"){
+    loadAdminNews();
   }
 }
 
@@ -2125,6 +2173,110 @@ async function checkAdminAccess(){
 
 document.getElementById("refreshAnalyticsButton")
   .addEventListener("click",loadAnalytics);
+
+
+// NEWS MANAGEMENT
+const newsAdminForm=document.getElementById("newsAdminForm");
+const newsAdminList=document.getElementById("newsAdminList");
+const newsAdminListMessage=document.getElementById("newsAdminListMessage");
+const newsFormMessage=document.getElementById("newsFormMessage");
+
+function formatNewsDate(value){
+  return new Date(value).toLocaleString("bg-BG",{dateStyle:"medium",timeStyle:"short"});
+}
+function resetNewsForm(){
+  newsAdminForm.reset();
+  document.getElementById("newsEditId").value="";
+  document.getElementById("newsPublished").checked=true;
+  document.getElementById("newsEditorHeading").textContent="НОВА ПУБЛИКАЦИЯ";
+  document.getElementById("newsSaveButton").textContent="ПУБЛИКУВАЙ НОВИНАТА";
+  document.getElementById("newsCancelEdit").hidden=true;
+  newsFormMessage.textContent="";
+}
+async function loadAdminNews(){
+  newsAdminListMessage.textContent="Зареждане на публикациите...";
+  newsAdminList.innerHTML="";
+  const {data,error}=await db.from("sexsi_news").select("*")
+    .order("is_pinned",{ascending:false}).order("published_at",{ascending:false});
+  if(error){
+    newsAdminListMessage.textContent="Грешка при зареждане: "+error.message;
+    return;
+  }
+  if(!data.length){
+    newsAdminListMessage.textContent="Все още няма публикации.";
+    return;
+  }
+  newsAdminListMessage.textContent="Общо публикации: "+data.length;
+  data.forEach(item=>{
+    const card=document.createElement("article");
+    card.style.cssText="padding:15px;border:1px solid #303030;border-radius:9px;background:#101010";
+    const title=document.createElement("h3");title.textContent=item.title;
+    const meta=document.createElement("p");meta.style.cssText="color:#aaa;font-size:11px;margin:7px 0";
+    meta.textContent=item.category+" · "+formatNewsDate(item.published_at)+" · "+(item.is_published?"ПУБЛИКУВАНА":"ЧЕРНОВА")+(item.is_pinned?" · ЗАКАЧЕНА":"");
+    const summary=document.createElement("p");summary.style.cssText="color:#bbb;font-size:13px;line-height:1.6;margin:8px 0";summary.textContent=item.summary||item.content.slice(0,160);
+    const actions=document.createElement("div");actions.style.cssText="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px";
+    const makeButton=(label,action)=>{const b=document.createElement("button");b.type="button";b.className="secondary-button";b.textContent=label;b.dataset.action=action;b.dataset.id=item.id;actions.appendChild(b)};
+    makeButton("РЕДАКТИРАЙ","edit");makeButton(item.is_pinned?"ОТКАЧИ":"ЗАКАЧИ","pin");makeButton(item.is_published?"СКРИЙ":"ПУБЛИКУВАЙ","publish");makeButton("ИЗТРИЙ","delete");
+    card.append(title,meta,summary,actions);newsAdminList.appendChild(card);
+  });
+}
+newsAdminForm.addEventListener("submit",async event=>{
+  event.preventDefault();
+  const id=document.getElementById("newsEditId").value;
+  const payload={
+    title:document.getElementById("newsTitle").value.trim(),
+    summary:document.getElementById("newsSummary").value.trim(),
+    content:document.getElementById("newsContent").value.trim(),
+    category:document.getElementById("newsCategory").value,
+    is_pinned:document.getElementById("newsPinned").checked,
+    is_published:document.getElementById("newsPublished").checked,
+    published_at:new Date().toISOString()
+  };
+  if(!payload.title||!payload.content){newsFormMessage.textContent="Попълни заглавие и съдържание.";return}
+  newsFormMessage.textContent="Запазване...";
+  const result=id
+    ? await db.from("sexsi_news").update(payload).eq("id",id)
+    : await db.from("sexsi_news").insert({...payload,created_by:(await db.auth.getUser()).data.user.id});
+  if(result.error){newsFormMessage.textContent="Грешка: "+result.error.message;return}
+  resetNewsForm();newsFormMessage.textContent="Публикацията е запазена.";
+  await loadAdminNews();
+});
+newsAdminList.addEventListener("click",async event=>{
+  const button=event.target.closest("button[data-action]");
+  if(!button)return;
+  const {action,id}=button.dataset;
+  if(action==="edit"){
+    const {data,error}=await db.from("sexsi_news").select("*").eq("id",id).single();
+    if(error){newsAdminListMessage.textContent=error.message;return}
+    document.getElementById("newsEditId").value=data.id;
+    document.getElementById("newsTitle").value=data.title;
+    document.getElementById("newsSummary").value=data.summary||"";
+    document.getElementById("newsContent").value=data.content;
+    document.getElementById("newsCategory").value=data.category;
+    document.getElementById("newsPinned").checked=data.is_pinned;
+    document.getElementById("newsPublished").checked=data.is_published;
+    document.getElementById("newsEditorHeading").textContent="РЕДАКЦИЯ НА НОВИНА";
+    document.getElementById("newsSaveButton").textContent="ЗАПАЗИ ПРОМЕНИТЕ";
+    document.getElementById("newsCancelEdit").hidden=false;
+    document.getElementById("newsAdminForm").scrollIntoView({behavior:"smooth",block:"start"});
+    return;
+  }
+  if(action==="delete"&&!confirm("Да изтрия ли тази публикация?"))return;
+  const {data,error}=action==="delete"
+    ? await db.from("sexsi_news").delete().eq("id",id)
+    : action==="pin"
+      ? await db.from("sexsi_news").select("is_pinned").eq("id",id).single()
+      : await db.from("sexsi_news").select("is_published").eq("id",id).single();
+  if(error){newsAdminListMessage.textContent="Грешка: "+error.message;return}
+  if(action==="delete"){await loadAdminNews();return}
+  const field=action==="pin"?"is_pinned":"is_published";
+  const updated=await db.from("sexsi_news").update({[field]:!data[field]}).eq("id",id);
+  if(updated.error){newsAdminListMessage.textContent="Грешка: "+updated.error.message;return}
+  await loadAdminNews();
+});
+document.getElementById("newsCancelEdit").addEventListener("click",resetNewsForm);
+document.getElementById("newsRefreshButton").addEventListener("click",loadAdminNews);
+
 
 checkAdminAccess();
 
