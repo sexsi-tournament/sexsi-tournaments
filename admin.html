@@ -634,6 +634,10 @@ footer{
         <small>ОБЩО ИГРАЧИ</small>
         <strong id="overviewPlayers">—</strong>
       </div>
+      <div class="overview-card">
+        <small>ОБЩО ПОТРЕБИТЕЛИ В SUPABASE</small>
+        <strong id="overviewAuthUsers">—</strong>
+      </div>
 
       <div class="overview-card">
         <small>ОБЩО ДВУБОИ</small>
@@ -1532,6 +1536,26 @@ function drawVisitsChart(daily){
 async function loadAdminData(){
   await loadRegistrations();
   await loadPlayers();
+  await loadTotalAuthUsers();
+}
+
+async function loadTotalAuthUsers(){
+  const counter=document.getElementById("overviewAuthUsers");
+  if(!counter)return;
+  counter.textContent="…";
+
+  try{
+    const {data,error}=await db.functions.invoke("admin-user-count");
+    if(error)throw error;
+    if(!data||!Number.isInteger(data.total)||data.total<0){
+      throw new Error("Невалиден отговор от сървъра.");
+    }
+    counter.textContent=formatNumber(data.total);
+  }catch(error){
+    console.error("Supabase Auth user count:",error);
+    counter.textContent="!";
+    counter.title="Неуспешно зареждане. Провери дали Edge Function admin-user-count е публикувана в Supabase.";
+  }
 }
 function getRoundName(round){
   const names={
@@ -2022,6 +2046,9 @@ async function checkAdminAccess(){
   }
 
   await refreshAllAdminData();
+  if(!window.adminUserCountRefreshTimer){
+    window.adminUserCountRefreshTimer=setInterval(loadTotalAuthUsers,60000);
+  }
 }
 
 document.getElementById("refreshAnalyticsButton")
