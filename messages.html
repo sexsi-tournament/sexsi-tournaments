@@ -8,74 +8,100 @@
 <link rel="stylesheet" href="elite.css?v=5">
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#090909;color:#fff;font-family:Arial,sans-serif}
-header{height:68px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #292929;background:#101010}
-.logo{font-size:20px;font-weight:1000;letter-spacing:2px}.logo span{color:#ed252d}
-.header-actions{display:flex;gap:8px;align-items:center}
-button,input,textarea{font:inherit}
+:root{--red:#ed252d;--panel:#121214;--line:#29292e;--muted:#92929a}
+body{margin:0;background:#09090b;color:#f7f7f8;font-family:Arial,sans-serif}
+button,input,textarea,select{font:inherit}
 button{cursor:pointer}
-.small-btn{background:#1b1b1b;border:1px solid #383838;color:#eee;border-radius:6px;padding:10px 12px;font-weight:bold}
-main{width:min(1180px,96%);margin:25px auto}
-.page-heading{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px}
-h1{font-size:25px;margin:0;font-weight:1000}
-.page-heading p{color:#999;font-size:13px;margin:6px 0 0}
-.chat-layout{display:grid;grid-template-columns:340px minmax(0,1fr);height:min(720px,calc(100vh - 150px));min-height:480px;border:1px solid #303030;border-radius:10px;overflow:hidden;background:#111}
-.sidebar{display:flex;flex-direction:column;min-height:0;border-right:1px solid #303030;background:#101010}
-.sidebar-section{padding:15px;border-bottom:1px solid #292929}
-.section-label{font-size:11px;letter-spacing:1px;color:#aaa;font-weight:900;margin:0 0 11px}
-.search{width:100%;padding:11px 12px;border-radius:6px;background:#090909;border:1px solid #383838;color:white;outline:none}
-.search:focus,.message-input:focus{border-color:#ed252d}
-.scroll-list{overflow:auto;min-height:0}
-.user-row,.conversation-row{width:100%;display:flex;align-items:center;gap:11px;padding:12px 14px;text-align:left;color:#eee;background:transparent;border:0;border-bottom:1px solid #242424}
-.user-row:hover,.conversation-row:hover,.conversation-row.selected{background:#211315}
-.avatar{width:39px;height:39px;flex:0 0 39px;border-radius:50%;display:grid;place-items:center;background:#343434;color:white;font-weight:900}
-.admin-avatar{background:#702127}
-.user-info,.conversation-info{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
-.user-info strong,.conversation-info strong{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.user-info small,.conversation-info small{font-size:10px;color:#999}
-.row-arrow{font-size:23px;color:#777}
+header{height:66px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:#101012}
+.logo{font-size:19px;font-weight:1000;letter-spacing:2px}.logo span{color:var(--red)}
+.header-actions{display:flex;gap:8px;align-items:center}
+.small-btn{background:#1b1b1e;border:1px solid #38383e;color:#eee;border-radius:7px;padding:10px 12px;font-size:10px;font-weight:900}
+.small-btn.primary{background:#ed252d;border-color:#ed252d}
+main{width:min(1240px,96%);margin:25px auto}
+.heading{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:18px}
+h1{font-size:25px;letter-spacing:.4px;margin:0;font-weight:1000}
+.heading p{color:var(--muted);font-size:12px;margin:6px 0 0}
+.account-label{font-size:11px;color:#aaa}
+.workspace{display:grid;grid-template-columns:350px minmax(0,1fr);min-height:660px;height:min(760px,calc(100vh - 145px));border:1px solid #303036;border-radius:13px;overflow:hidden;background:#101012;box-shadow:0 20px 65px #0007}
+.rail{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--line);background:#111113}
+.rail-top{padding:17px;border-bottom:1px solid var(--line)}
+.eyebrow{font-size:10px;letter-spacing:1.5px;font-weight:900;color:#999;margin:0 0 10px}
+.friend-picker{display:flex;gap:8px}
+select,.search{width:100%;min-width:0;padding:12px;background:#09090b;border:1px solid #38383e;border-radius:8px;color:#fff;outline:none}
+select:focus,.search:focus,textarea:focus{border-color:#ed252d}
+.friend-picker button{border:0;border-radius:8px;padding:0 13px;background:var(--red);color:white;font-size:10px;font-weight:900;white-space:nowrap}
+.rail-section{padding:14px 16px 9px;display:flex;align-items:center;justify-content:space-between}
+.section-title{font-size:10px;letter-spacing:1.3px;font-weight:900;color:#aaa}
+.counter{font-size:10px;font-weight:900;background:#29292d;color:#fff;border-radius:20px;padding:4px 8px}
+.counter.alert{background:#ed252d}
+.list{overflow:auto;min-height:0}
+.conversation-row{width:100%;display:flex;align-items:center;gap:11px;padding:12px 15px;text-align:left;color:#eee;background:transparent;border:0;border-top:1px solid #222226}
+.conversation-row:hover,.conversation-row.selected{background:#211315}
+.avatar{width:39px;height:39px;flex:0 0 39px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(140deg,#45454c,#242429);color:white;font-weight:900}
+.admin-avatar{background:linear-gradient(140deg,#a52b35,#50151b)}
+.user-info{min-width:0;flex:1;display:flex;flex-direction:column;gap:5px}
+.user-info strong{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-info small{font-size:10px;color:#999}
 .conversation-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .conversation-top small{white-space:nowrap}
 .preview{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.unread-badge{min-width:20px;height:20px;padding:0 6px;border-radius:20px;background:#ed252d;color:white;display:grid;place-items:center;font-size:10px;font-weight:900}
-.empty{padding:15px;color:#777;font-size:12px;line-height:1.5}
-.chat-main{display:flex;flex-direction:column;min-width:0;min-height:0;background:#0d0d0d}
-.empty-state{margin:auto;text-align:center;padding:25px;color:#888}
-.empty-state strong{display:block;color:#eee;font-size:18px;margin-bottom:8px}
+.unread{min-width:19px;height:19px;padding:0 5px;border-radius:20px;background:#ed252d;color:white;display:grid;place-items:center;font-size:10px;font-weight:900}
+.empty{padding:14px;color:#777;font-size:11px;line-height:1.6}
+.rail-bottom{margin-top:auto;padding:13px 15px;border-top:1px solid var(--line);display:flex;gap:8px}
+.rail-bottom button{flex:1;padding:10px 8px;border:1px solid #38383e;border-radius:7px;background:#19191c;color:#ddd;font-size:10px;font-weight:900}
+.chat-main{display:flex;flex-direction:column;min-width:0;min-height:0;background:#0d0d0f}
+.welcome{margin:auto;text-align:center;padding:35px;color:#85858d;max-width:380px}
+.welcome-mark{width:62px;height:62px;margin:0 auto 18px;border-radius:20px;display:grid;place-items:center;background:#241013;border:1px solid #64232a;color:#ff5961;font-size:26px}
+.welcome strong{display:block;color:#f5f5f5;font-size:17px;margin-bottom:9px}
+.welcome p{font-size:12px;line-height:1.7}
 .chat-panel{height:100%;display:flex;flex-direction:column;min-height:0}
-.chat-top{display:flex;align-items:center;gap:11px;padding:13px 17px;border-bottom:1px solid #292929;background:#111}
-.chat-top .avatar{width:40px;height:40px}
-.chat-title{font-weight:900;font-size:14px}
+.chat-top{display:flex;align-items:center;gap:11px;padding:14px 18px;border-bottom:1px solid var(--line);background:#121214}
+.chat-title{font-weight:900;font-size:13px}
 .chat-subline{font-size:10px;color:#999;margin-top:4px}
-.messages{padding:18px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:10px}
+.messages{padding:20px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:10px}
 .message-line{display:flex;width:100%}.message-line.mine{justify-content:flex-end}.message-line.theirs{justify-content:flex-start}
-.bubble{max-width:min(78%,520px);padding:10px 12px;border-radius:10px;background:#202020;border:1px solid #343434}
-.mine .bubble{background:#4b171c;border-color:#78252c}
-.bubble-body{font-size:13px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.bubble{max-width:min(78%,540px);padding:11px 13px;border-radius:13px;background:#202024;border:1px solid #34343a}
+.mine .bubble{background:#4a171c;border-color:#78252c}
+.bubble-body{font-size:13px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
 .bubble-meta{font-size:9px;color:#bbb;text-align:right;margin-top:6px}
 .message-empty{margin:auto;text-align:center;color:#777;font-size:12px}
-.composer{padding:12px;border-top:1px solid #292929;display:flex;gap:9px;background:#111}
-.message-input{flex:1;min-width:0;max-height:110px;resize:vertical;padding:12px;border-radius:7px;background:#090909;border:1px solid #383838;color:white;outline:none}
-.send-btn{background:#ed252d;border:0;color:white;border-radius:7px;padding:0 18px;font-weight:900}
+.composer{padding:13px;border-top:1px solid var(--line);display:flex;gap:9px;background:#121214}
+.message-input{flex:1;min-width:0;max-height:110px;resize:vertical;padding:12px;border-radius:9px;background:#09090b;border:1px solid #38383e;color:white;outline:none}
+.send-btn{background:#ed252d;border:0;color:white;border-radius:9px;padding:0 18px;font-size:10px;font-weight:1000}
 .send-btn:disabled{opacity:.5;cursor:not-allowed}
-.status{font-size:11px;color:#aaa;min-height:18px;margin:10px 2px}
+.modal-backdrop{position:fixed;inset:0;z-index:1000;background:#000b;display:grid;place-items:center;padding:16px}
+.modal{width:min(520px,100%);max-height:85vh;display:flex;flex-direction:column;background:#141416;border:1px solid #45454b;border-radius:13px;overflow:hidden;box-shadow:0 20px 70px #000}
+.modal-head{padding:17px;border-bottom:1px solid #303036;display:flex;align-items:center;justify-content:space-between}
+.modal-head h2{margin:0;font-size:15px}
+.modal-close{background:none;border:0;color:#aaa;font-size:24px}
+.modal-content{padding:14px;overflow:auto}
+.request-card,.candidate-card{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #29292e}
+.request-card:last-child,.candidate-card:last-child{border-bottom:0}
+.request-actions{display:flex;gap:6px}
+.request-actions button,.action-btn{padding:8px 10px;border:1px solid #444;border-radius:7px;background:#202024;color:#eee;font-size:9px;font-weight:900}
+.request-actions .accept,.action-btn.primary{background:#ed252d;border-color:#ed252d}
+.action-btn:disabled{opacity:.55}
+.modal-search{margin-bottom:10px}
 #loginRequired{padding:45px 20px;text-align:center;background:#141414;border:1px solid #333;border-radius:9px}
 #loginRequired a{color:#ff555d}
+.status{font-size:11px;color:#aaa;min-height:18px;margin:10px 2px}
 [hidden]{display:none!important}
-@media(max-width:720px){
- header{padding:0 4%;height:60px}.logo{font-size:16px}
+@media(max-width:760px){
+ header{padding:0 4%;height:58px}.logo{font-size:15px}
  main{width:100%;margin:0}
- .page-heading{padding:17px 4% 12px}
+ .heading{padding:16px 4% 12px;margin:0}
  h1{font-size:21px}
- .chat-layout{display:flex;flex-direction:column;height:calc(100dvh - 128px);min-height:480px;border-left:0;border-right:0;border-radius:0}
- .sidebar{height:44%;min-height:170px;border-right:0;border-bottom:1px solid #303030}
- .chat-main{height:56%;min-height:0}
- .sidebar-section{padding:10px 12px}
- .user-row,.conversation-row{padding:9px 12px}
- .avatar{width:34px;height:34px;flex-basis:34px}
+ .workspace{display:flex;flex-direction:column;height:calc(100dvh - 115px);min-height:500px;border-left:0;border-right:0;border-radius:0}
+ .rail{height:48%;min-height:235px;border-right:0;border-bottom:1px solid var(--line)}
+ .chat-main{height:52%;min-height:0}
+ .rail-top{padding:11px 12px}
+ .rail-section{padding:10px 12px 7px}
+ .conversation-row{padding:9px 12px}
+ .avatar{width:33px;height:33px;flex-basis:33px}
  .messages{padding:12px}
  .bubble{max-width:88%}
  .send-btn{padding:0 13px}
+ .account-label{display:none}
 }
 </style>
 </head>
@@ -83,55 +109,50 @@ h1{font-size:25px;margin:0;font-weight:1000}
 <header>
   <div class="logo">SEXSI <span>TOURNAMENTS</span></div>
   <div class="header-actions">
+    <button class="small-btn" id="enableNotifications" type="button">🔔 ИЗВЕСТИЯ</button>
     <button class="small-btn" id="backToProfile" type="button">ПРОФИЛ</button>
     <button class="small-btn" id="logoutChat" type="button">ИЗХОД</button>
   </div>
 </header>
 <main>
-  <div class="page-heading">
-    <div><h1>СЪОБЩЕНИЯ</h1><p>Лични разговори в SEXSI TOURNAMENTS</p></div>
-    <div id="currentUserName" style="font-size:12px;color:#aaa"></div>
+  <div class="heading">
+    <div><h1>СЪОБЩЕНИЯ</h1><p>Твоите приятели и лични разговори</p></div>
+    <div id="currentUserName" class="account-label"></div>
   </div>
-  <div id="loginRequired" hidden>
-    <h2>НУЖЕН Е ВХОД</h2>
-    <p>Влез в профила си, за да използваш съобщенията.</p>
-    <a href="profile.html">КЪМ ВХОДА</a>
-  </div>
+  <div id="loginRequired" hidden><h2>НУЖЕН Е ВХОД</h2><p>Влез в профила си, за да използваш съобщенията.</p><a href="profile.html">КЪМ ВХОДА</a></div>
   <div id="chatApp" hidden>
-    <div class="chat-layout">
-      <aside class="sidebar">
-        <div class="sidebar-section">
-          <div class="section-label">РАЗГОВОРИ <span id="unreadTotal" class="unread-badge" hidden>0</span></div>
-          <div id="conversationList" class="scroll-list"><p class="empty">Зареждане...</p></div>
+    <div class="workspace">
+      <aside class="rail">
+        <div class="rail-top">
+          <div class="eyebrow">НОВ РАЗГОВОР · ПРИЯТЕЛИ</div>
+          <div class="friend-picker">
+            <select id="friendSelect"><option value="">Избери приятел...</option></select>
+            <button id="startFriendChat" type="button">ОТВОРИ</button>
+          </div>
         </div>
-        <div class="sidebar-section">
-          <div class="section-label">НОВ РАЗГОВОР</div>
-          <input id="userSearch" class="search" type="search" placeholder="Търси играч или GAME ID...">
+        <div class="rail-section"><span class="section-title">РАЗГОВОРИ</span><span id="unreadTotal" class="counter alert" hidden>0</span></div>
+        <div id="conversationList" class="list"><p class="empty">Зареждане...</p></div>
+        <div class="rail-bottom">
+          <button id="openRequests" type="button">ПОКАНИ <span id="requestCount"></span></button>
+          <button id="openFindFriends" type="button">+ НАМЕРИ ПРИЯТЕЛИ</button>
         </div>
-        <div id="userDirectory" class="scroll-list"><p class="empty">Зареждане...</p></div>
       </aside>
       <section class="chat-main">
-        <div id="emptyState" class="empty-state">
-          <strong>ТВОИТЕ СЪОБЩЕНИЯ</strong>
-          Избери разговор или започни нов с играч.
-        </div>
+        <div id="emptyState" class="welcome"><div class="welcome-mark">✉</div><strong>ТВОЕТО ПРОСТРАНСТВО</strong><p>Избери приятел от падащото меню или отвори съществуващ разговор. За да пишеш на нов играч, първо изпрати покана за приятелство.</p></div>
         <div id="chatPanel" class="chat-panel" hidden>
-          <div class="chat-top">
-            <span id="chatAvatar" class="avatar">И</span>
-            <div><div id="chatName" class="chat-title">Играч</div><div id="chatSubline" class="chat-subline">SEXSI TOURNAMENTS</div></div>
-          </div>
+          <div class="chat-top"><span id="chatAvatar" class="avatar">И</span><div><div id="chatName" class="chat-title">Играч</div><div id="chatSubline" class="chat-subline">SEXSI TOURNAMENTS</div></div></div>
           <div id="messages" class="messages" aria-live="polite"></div>
-          <div class="composer">
-            <textarea id="messageInput" class="message-input" rows="1" maxlength="4000" placeholder="Напиши съобщение..." disabled></textarea>
-            <button id="sendButton" class="send-btn" type="button" disabled>ИЗПРАТИ</button>
-          </div>
+          <div class="composer"><textarea id="messageInput" class="message-input" rows="1" maxlength="4000" placeholder="Напиши съобщение..." disabled></textarea><button id="sendButton" class="send-btn" type="button" disabled>ИЗПРАТИ</button></div>
         </div>
       </section>
     </div>
     <p id="pageStatus" class="status" aria-live="polite"></p>
   </div>
 </main>
+<div id="requestsModal" class="modal-backdrop" hidden><section class="modal"><div class="modal-head"><h2>ПОКАНИ ЗА ПРИЯТЕЛСТВО</h2><button class="modal-close" data-close="requestsModal" type="button">×</button></div><div id="requestsContent" class="modal-content"></div></section></div>
+<div id="findModal" class="modal-backdrop" hidden><section class="modal"><div class="modal-head"><h2>НАМЕРИ ПРИЯТЕЛИ</h2><button class="modal-close" data-close="findModal" type="button">×</button></div><div class="modal-content"><input id="friendSearch" class="search modal-search" type="search" placeholder="Търси по име или Game ID..."><div id="candidateList"></div></div></section></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="chat.js?v=1"></script>
+<script src="chat.js?v=2"></script>
+<script src="chat-notifications.js?v=2"></script>
 </body>
 </html>
