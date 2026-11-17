@@ -188,7 +188,7 @@ footer{border-top:1px solid var(--line);padding:25px;text-align:center;color:#66
         const round = make("section","round" + (stage.className ? " " + stage.className : ""));
         const title = make("div","round-title");
         title.appendChild(make("strong","",stage.name));
-        title.appendChild(make("span","",roundMatches.length + (roundMatches.length === 1 ? " ДУБОЙ" : " ДУБОЯ")));
+        title.appendChild(make("span","",roundMatches.length + (roundMatches.length === 1 ? " ДВУБОЙ" : " ДВУБОЯ")));
         round.appendChild(title);
         roundMatches.forEach(m => {
           const isFinal = roundNo === 4;
