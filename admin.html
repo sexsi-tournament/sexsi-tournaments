@@ -1139,7 +1139,7 @@ async function loadSingleEmailPlayers(){
     option.dataset.email=player.email;
     select.appendChild(option);
   });
-  document.getElementById("singleEmailMessage").textContent="Заредени играчи с валиден имейл: "+select.options.length-1+".";
+  document.getElementById("singleEmailMessage").textContent="Заредени играчи с валиден имейл: "+(select.options.length-1)+".";
   singleEmailPreview="";
 }
 document.getElementById("singleEmailPlayer").addEventListener("change",()=>{
