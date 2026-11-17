@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<title>Турнирна схема | SEXSI TOURNAMENTS</title>
+<meta name="description" content="Официална турнирна схема на SEXSI 1V1 CUP #001. Следи кръговете, двубоите, резултатите и победителите.">
+<link rel="canonical" href="https://sexsi-tournament.github.io/sexsi-tournaments/bracket.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="bg_BG">
+<meta property="og:site_name" content="SEXSI TOURNAMENTS">
+<meta property="og:title" content="Официална турнирна схема | SEXSI TOURNAMENTS">
+<meta property="og:description" content="Следи официалните двубои и резултати от SEXSI 1V1 CUP #001.">
+<style>
+*{box-sizing:border-box}
+:root{--red:#f02b35;--muted:#92929a;--line:#29292f;--panel:#111115;--gold:#e9bd59}
+body{margin:0;background:#080809;color:#f7f7f8;font-family:Arial,sans-serif;line-height:1.55}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% -15%,rgba(240,43,53,.16),transparent 48%);z-index:-1}
+header{height:auto;min-height:76px;padding:16px clamp(18px,5vw,72px);display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line);background:rgba(8,8,9,.9)}
+.logo{font-size:27px;font-weight:1000;font-style:italic;letter-spacing:2px;color:#fff;text-decoration:none}
+.logo span{color:var(--red)}
+nav{display:flex;gap:clamp(10px,2vw,24px);flex-wrap:wrap}
+nav a{font-size:10px;font-weight:900;letter-spacing:1px;color:#aaa;text-decoration:none}
+nav a:hover,nav a.active{color:#fff}
+main{max-width:1240px;margin:auto;padding:clamp(28px,5vw,64px) clamp(16px,4vw,48px) 70px}
+.kicker{font-size:10px;letter-spacing:4px;font-weight:900;color:#ff646b}
+h1{font-size:clamp(34px,6vw,66px);line-height:1;margin:12px 0 10px;letter-spacing:-2px}
+.subtitle{color:var(--muted);font-size:14px;max-width:650px;margin:0}
+.tournament-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.event-tag{border:1px solid #583036;color:#ff777d;background:#1b1012;padding:8px 12px;border-radius:4px;font-size:10px;font-weight:900;letter-spacing:1px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:30px 0 34px}
+.stat{background:linear-gradient(145deg,#17171c,#101013);border:1px solid var(--line);padding:16px 18px;border-radius:8px;min-width:0}
+.stat strong{display:block;font-size:25px;line-height:1.2;overflow-wrap:anywhere}
+.stat span{display:block;margin-top:6px;color:#888;font-size:9px;font-weight:900;letter-spacing:1.2px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:34px 0 16px}
+.section-head h2{font-size:16px;letter-spacing:1.5px;margin:0}
+.live-note{font-size:10px;color:#8b8b94}
+#bracketStatus{margin:0 0 18px;padding:13px 15px;border:1px solid #333;border-left:3px solid var(--red);background:#121215;color:#aaa;font-size:12px;border-radius:5px}
+#bracketStatus.error{border-left-color:#d94b4b;color:#ff9a9a}
+.rounds{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(245px,1fr);gap:14px;overflow-x:auto;padding:4px 2px 18px;scroll-snap-type:x proximity}
+.round{min-width:0;scroll-snap-align:start;background:linear-gradient(180deg,#151519,#0e0e11);border:1px solid #303037;border-radius:9px;padding:15px}
+.round-title{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid #303037;margin-bottom:12px}
+.round-title strong{font-size:12px;letter-spacing:1.2px}
+.round-title span{font-size:9px;color:#888}
+.match{background:#09090b;border:1px solid #29292f;border-radius:6px;padding:12px;margin-top:10px}
+.match-meta{display:flex;justify-content:space-between;gap:8px;margin-bottom:10px;color:#777;font-size:9px;font-weight:900;letter-spacing:.7px}
+.match-status{color:#aaa}
+.match-status.done{color:#66d99a}
+.match-status.playing{color:#f0c36b}
+.player{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;color:#c9c9ce;font-size:12px}
+.player+.player{border-top:1px solid #222228}
+.player.winner{color:#72e1a2;font-weight:900}
+.player-name{min-width:0;overflow-wrap:anywhere}
+.player-score{font-size:14px;font-weight:900;color:#fff;white-space:nowrap}
+.match-winner{margin-top:8px;padding-top:8px;border-top:1px solid #25252a;color:#72e1a2;font-size:9px;font-weight:900;letter-spacing:.8px}
+.empty{padding:30px 18px;text-align:center;border:1px dashed #444;border-radius:8px;color:#999;font-size:13px}
+.back-link{display:inline-flex;margin-top:30px;color:#aaa;text-decoration:none;font-size:10px;font-weight:900;letter-spacing:1px}
+.back-link:hover{color:#fff}
+footer{border-top:1px solid var(--line);padding:25px;text-align:center;color:#666;font-size:10px;letter-spacing:1px}
+@media(max-width:700px){header{align-items:flex-start;flex-direction:column}nav{gap:12px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{padding:13px}.stat strong{font-size:22px}.rounds{grid-auto-columns:minmax(250px,82vw)}}
+</style>
+<link rel="stylesheet" href="elite.css?v=3">
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">SEXSI<span>.</span></a>
+<nav aria-label="Основна навигация">
+<a href="index.html">НАЧАЛО</a>
+<a href="tournaments.html">ТУРНИРИ</a>
+<a href="matches.html">МОИТЕ ДУБОИ</a>
+<a class="active" href="bracket.html">ТУРНИРНА СХЕМА</a>
+<a href="archive.html">АРХИВ</a>
+<a href="ranking.html">КЛАСАЦИЯ</a>
+</nav>
+</header>
+<main>
+<div class="tournament-head">
+<div>
+<div class="kicker">SEXSI TOURNAMENTS · OFFICIAL BRACKET</div>
+<h1>ТУРНИРНА СХЕМА</h1>
+<p class="subtitle">Официални двубои, кръгове и резултати от SEXSI 1V1 CUP #001. Информацията се обновява автоматично.</p>
+</div>
+<div class="event-tag">STANDOFF 2 · 1V1 · BO1</div>
+</div>
+<section class="stats" aria-label="Статистика на турнира">
+<div class="stat"><strong id="participantCount">—</strong><span>УЧАСТНИЦИ</span></div>
+<div class="stat"><strong id="matchCount">—</strong><span>ДВУБОИ В СХЕМАТА</span></div>
+<div class="stat"><strong id="completedCount">—</strong><span>ЗАВЪРШЕНИ МАЧОВЕ</span></div>
+<div class="stat"><strong id="roundCount">—</strong><span>КРЪГОВЕ</span></div>
+</section>
+<div class="section-head"><h2>SEXSI 1V1 CUP #001</h2><span class="live-note">АВТОМАТИЧНО ОБНОВЯВАНЕ ПРИ ОТВАРЯНЕ</span></div>
+<div id="bracketStatus">Зареждане на официалната турнирна схема...</div>
+<div id="bracketContainer" class="empty">Свързване със системата...</div>
+<a class="back-link" href="index.html">← ОБРАТНО КЪМ НАЧАЛОТО</a>
+</main>
+<footer>SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  const db = window.supabase.createClient(
+    "https://fyxlwcoochsuzhqostpe.supabase.co",
+    "sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP"
+  );
+  const el = id => document.getElementById(id);
+  const safe = value => value == null || value === "" ? "—" : String(value);
+  const make = (tag, cls, value) => {
+    const node = document.createElement(tag);
+    if(cls) node.className = cls;
+    if(value !== undefined) node.textContent = value;
+    return node;
+  };
+  async function loadBracket(){
+    const status = el("bracketStatus");
+    const container = el("bracketContainer");
+    try{
+      const {data,error} = await db.rpc("sexsi_get_public_bracket");
+      if(error) throw error;
+      const matches = Array.isArray(data) ? data : [];
+      const ids = new Set();
+      matches.forEach(m => {
+        if(m.player1_id) ids.add(m.player1_id);
+        if(m.player2_id) ids.add(m.player2_id);
+      });
+      const completed = matches.filter(m => m.status === "completed").length;
+      const rounds = [...new Set(matches.map(m => Number(m.round_number)).filter(Number.isFinite))].sort((a,b)=>a-b);
+      el("participantCount").textContent = ids.size;
+      el("matchCount").textContent = matches.length;
+      el("completedCount").textContent = completed;
+      el("roundCount").textContent = rounds.length;
+      status.className = "";
+      status.textContent = matches.length
+        ? "● ОФИЦИАЛНАТА СХЕМА Е ЗАРЕДЕНА · " + completed + " ОТ " + matches.length + " ДВУБОЯ СА ЗАВЪРШЕНИ"
+        : "СХЕМАТА ВСЕ ОЩЕ НЕ Е ГЕНЕРИРАНА. ЩЕ СЕ ПОЯВИ ТУК АВТОМАТИЧНО СЛЕД СЪЗДАВАНЕТО Ѝ ОТ АДМИНИСТРАТОРА.";
+      container.replaceChildren();
+      if(!matches.length){
+        container.className = "empty";
+        container.textContent = "Все още няма генерирани двубои за SEXSI 1V1 CUP #001.";
+        return;
+      }
+      container.className = "rounds";
+      rounds.forEach(roundNo => {
+        const roundMatches = matches.filter(m => Number(m.round_number) === roundNo)
+          .sort((a,b)=>(Number(a.match_number)||0)-(Number(b.match_number)||0));
+        const round = make("section","round");
+        const title = make("div","round-title");
+        title.appendChild(make("strong","", "КРЪГ " + roundNo));
+        title.appendChild(make("span","", roundMatches.length + (roundMatches.length === 1 ? " ДВУБОЙ" : " ДВУБОЯ")));
+        round.appendChild(title);
+        roundMatches.forEach(m => {
+          const card = make("article","match");
+          const meta = make("div","match-meta");
+          meta.appendChild(make("span","", "МАЧ №" + safe(m.match_number)));
+          const state = m.status === "completed" ? "ЗАВЪРШЕН" : m.status === "ongoing" ? "В ХОД" : "ПРЕДСТОИ";
+          meta.appendChild(make("span","match-status" + (m.status === "completed" ? " done" : m.status === "ongoing" ? " playing" : ""),state));
+          card.appendChild(meta);
+          const p1 = make("div","player" + (m.winner_id && m.winner_id === m.player1_id ? " winner" : ""));
+          p1.appendChild(make("span","player-name",safe(m.player1_name)));
+          p1.appendChild(make("span","player-score",safe(m.score_player1)));
+          const p2 = make("div","player" + (m.winner_id && m.winner_id === m.player2_id ? " winner" : ""));
+          p2.appendChild(make("span","player-name",safe(m.player2_name)));
+          p2.appendChild(make("span","player-score",safe(m.score_player2)));
+          card.appendChild(p1);
+          card.appendChild(p2);
+          if(m.winner_name) card.appendChild(make("div","match-winner","ПОБЕДИТЕЛ: " + m.winner_name));
+          round.appendChild(card);
+        });
+        container.appendChild(round);
+      });
+    }catch(error){
+      status.className = "error";
+      status.textContent = "НЕУСПЕШНО ЗАРЕЖДАНЕ НА СХЕМАТА. ОПИТАЙ ОТНОВО ПО-КЪСНО.";
+      container.className = "empty";
+      container.textContent = "В момента няма връзка с официалните данни.";
+      console.error("Bracket loading error:",error);
+    }
+  }
+  loadBracket();
+})();
+</script>
+</body>
+</html>
