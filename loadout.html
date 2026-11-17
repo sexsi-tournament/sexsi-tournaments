@@ -43,7 +43,7 @@ select:focus{border-color:var(--red)}
 .selection{padding:15px;margin:18px 0;background:#0a0a0b;border:1px solid #29292d;border-radius:8px}
 .selection small{display:block;color:#777;font-size:9px;font-weight:900;letter-spacing:1.4px;margin-bottom:7px}
 .selection strong{font-size:13px}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}.actions button:nth-child(n+3){grid-column:span 2}.saved-wrap{margin-top:20px}.saved-title{display:flex;justify-content:space-between;color:#aaa;font-size:9px;font-weight:900;letter-spacing:1.4px;margin-bottom:9px}.saved-title span{color:var(--red2)}.saved-list{display:grid;gap:7px}.saved-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;background:#09090a;border:1px solid #29292d;border-radius:6px}.saved-item strong{display:block;font-size:10px}.saved-item small{display:block;color:#777;font-size:9px;margin-top:4px}.saved-item button{padding:8px;background:#242428;color:#ddd}.empty-saved{font-size:10px;color:#666;margin:0;padding:10px;border:1px dashed #333;border-radius:6px}
 button{border:0;border-radius:6px;padding:13px 10px;font-size:10px;font-weight:900;letter-spacing:1px;cursor:pointer}
 .primary{background:var(--red);color:white}.primary:hover{background:#c91e26}
 .secondary{background:#222;color:#ddd;border:1px solid #3a3a3a}.secondary:hover{border-color:#777}
@@ -85,7 +85,7 @@ footer{border-top:1px solid var(--line);padding:22px 6%;color:#666;font-size:10p
 <div class="field"><label for="gloves">ИЗБЕРИ РЪКАВИЦИ</label><select id="gloves"><option>Retro Wave</option><option>Living Flame</option><option>Tiger</option><option>Champion</option><option>Specialist</option></select></div>
 <div class="field"><label for="gloveColor">ЦВЕТОВА ВАРИАЦИЯ</label><select id="gloveColor"><option>Оригинални цветове</option><option>Червено / черно</option><option>Синьо / черно</option><option>Лилаво</option><option>Златно</option></select></div>
 <div class="selection"><small>ТВОЯТА КОМБИНАЦИЯ</small><strong id="comboText">Karambit · Default + Retro Wave</strong></div>
-<div class="actions"><button class="primary" id="randomBtn" type="button">🎲 СЛУЧАЙНА</button><button class="secondary" id="resetBtn" type="button">НУЛИРАЙ</button></div>
+<div class="actions"><button class="primary" id="randomBtn" type="button">🎲 СЛУЧАЙНА</button><button class="secondary" id="resetBtn" type="button">НУЛИРАЙ</button><button class="secondary" id="saveBtn" type="button">♥ ЗАПАЗИ КОМПЛЕКТА</button><button class="secondary" id="shareBtn" type="button">КОПИРАЙ КОМБИНАЦИЯ</button></div><div class="saved-wrap"><div class="saved-title">ЗАПАЗЕНИ КОМПЛЕКТИ <span id="savedCount">0</span></div><div id="savedLoadouts" class="saved-list"><p class="empty-saved">Все още нямаш запазени комплекти.</p></div></div>
 <div class="notice"><b>Важно:</b> това е първият етап на страницата. Сцената използва базови процедурни модели. Точните игрови модели и текстури ще бъдат добавени отделно.</div>
 </aside>
 </section>
@@ -97,14 +97,8 @@ footer{border-top:1px solid var(--line);padding:22px 6%;color:#666;font-size:10p
 </section>
 </main>
 <footer>SEXSI LOADOUT LAB · НЕОФИЦИАЛЕН ФЕН ПРОЕКТ ЗА STANDOFF 2</footer>
-<script>
-const ids=['knife','knifeSkin','gloves','gloveColor'];
-const combo=document.getElementById('comboText');
-function updateCombo(){combo.textContent=document.getElementById('knife').value+' · '+document.getElementById('knifeSkin').value+' + '+document.getElementById('gloves').value+' ('+document.getElementById('gloveColor').value+')'}
-ids.forEach(id=>document.getElementById(id).addEventListener('change',updateCombo));
-document.getElementById('randomBtn').addEventListener('click',()=>{ids.forEach(id=>{const el=document.getElementById(id);el.selectedIndex=Math.floor(Math.random()*el.options.length)});updateCombo()});
-document.getElementById('resetBtn').addEventListener('click',()=>{ids.forEach(id=>document.getElementById(id).selectedIndex=0);updateCombo()});
-</script>
+<script src="loadout-ui.js"></script>
+
 <script type="module" src="loadout-3d.js"></script>
 </body>
 </html>
