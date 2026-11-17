@@ -1,70 +1,166 @@
+const DATA_URL = './loadout-data.json';
+const STORAGE_KEY = 'sexsi-loadout-lab-v2';
+const state = { items: [], category: 'all', search: '', model: 'all', collection: 'all', rarity: 'all' };
 const $ = id => document.getElementById(id);
-const KEY = 'sexsi-loadout-lab-v1';
-const items = [
-  {id:'Karambit',type:'knife',desc:'Извит профил с характерен пръстен на дръжката.',tag:'KNIFE',tone:'#ed343d',shape:'karambit'},
-  {id:'Butterfly',type:'knife',desc:'Лек силует с две симетрични половини на дръжката.',tag:'KNIFE',tone:'#a9b6d4',shape:'butterfly'},
-  {id:'Kunai',type:'knife',desc:'Тесен профил с ясно изразен връх и халка.',tag:'KNIFE',tone:'#4d9cba',shape:'kunai'},
-  {id:'Fang',type:'knife',desc:'Агресивна форма с издължено острие.',tag:'KNIFE',tone:'#bd6c45',shape:'fang'},
-  {id:'Sting',type:'knife',desc:'Компактен и изчистен дизайн.',tag:'KNIFE',tone:'#8b79d5',shape:'sting'},
-  {id:'Retro Wave',type:'gloves',desc:'Контрастна визия с неонови акценти.',tag:'GLOVES',tone:'#e44c9b',shape:'gloves'},
-  {id:'Living Flame',type:'gloves',desc:'Топли цветове и огнен характер.',tag:'GLOVES',tone:'#ef762f',shape:'gloves'},
-  {id:'Tiger',type:'gloves',desc:'Тъмна основа с ярки златисти детайли.',tag:'GLOVES',tone:'#d5a52d',shape:'gloves'},
-  {id:'Champion',type:'gloves',desc:'Изчистен спортен стил със светли акценти.',tag:'GLOVES',tone:'#aeb8c8',shape:'gloves'},
-  {id:'Specialist',type:'gloves',desc:'Тактическа визия в зелени нюанси.',tag:'GLOVES',tone:'#54a78a',shape:'gloves'}
-];
-const state = {knife:'Karambit',gloves:'Retro Wave',category:'all',search:''};
-const svg = shape => {
-  if(shape==='gloves') return '<svg viewBox="0 0 140 140" fill="none" aria-hidden="true"><path d="M42 112 30 72q-3-10 5-13 7-3 11 7l-2-35q0-9 8-9t9 9l2 27 2-37q1-9 9-8 8 1 7 10l-1 36 5-28q2-9 10-7 8 2 6 11l-5 36 9-17q5-8 12-3 7 5 2 13l-18 38q-7 15-24 15H57q-11 0-15-10Z" fill="currentColor" fill-opacity=".2" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/><path d="m42 85 20 8 28-2M57 63l1 19m17-25-1 26m20-18-4 18" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>';
-  const blade = shape==='karambit'?'M70 22C35 35 33 72 62 84c-2-17 4-30 16-40-7 19-5 34 8 43 26-28 12-57-16-65Z':shape==='butterfly'?'M70 18 58 57 45 91 62 83 70 123 78 83 95 91 82 57Z':shape==='kunai'?'M70 16 49 68 70 87 91 68Z':shape==='fang'?'M70 17 46 70 61 65 67 113 91 55 78 61Z':'M70 18 49 72 70 112 91 72Z';
-  return '<svg viewBox="0 0 140 140" fill="none" aria-hidden="true"><path d="'+blade+'" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><path d="M70 91v30" stroke="#c4a477" stroke-width="13" stroke-linecap="round"/><path d="M61 99h18M61 108h18" stroke="#332b29" stroke-width="3"/>'+(shape==='karambit'?'<circle cx="70" cy="126" r="9" stroke="#c4a477" stroke-width="5"/>':shape==='butterfly'?'<path d="M50 88 39 116m51-28 11 28" stroke="#c4a477" stroke-width="8" stroke-linecap="round"/>':shape==='kunai'?'<circle cx="70" cy="126" r="8" stroke="#c4a477" stroke-width="4"/>':'')+'</svg>';
-};
-function read(){return {knife:state.knife,knifeSkin:$('knifeSkin').value,gloves:state.gloves,gloveColor:$('gloveColor').value};}
-function label(v=read()){return v.knife+' · '+v.knifeSkin+' + '+v.gloves+' ('+v.gloveColor+')';}
-function update(){
-  $('chosenKnife').textContent=state.knife;
-  $('chosenSkin').textContent=$('knifeSkin').value+' finish';
-  $('chosenGloves').textContent=state.gloves;
-  $('chosenColor').textContent=$('gloveColor').value;
-  $('comboText').textContent=label();
+const keyOf = item => item.type + ':' + (item.id ?? item.name);
+const knifeItems = () => state.items.filter(x => x.type === 'knife');
+const gloveItems = () => state.items.filter(x => x.type === 'gloves');
+let selectedKnifeKey = '';
+let selectedGloveKey = '';
+
+function option(label, value) {
+  const el = document.createElement('option'); el.value = value; el.textContent = label; return el;
 }
-function renderCatalog(){
-  const filtered=items.filter(item=>(state.category==='all'||item.type===state.category)&&item.id.toLowerCase().includes(state.search));
-  $('catalogCount').textContent=filtered.length+' предмета';
-  const root=$('catalogGrid');root.innerHTML='';
-  if(!filtered.length){root.innerHTML='<div class="no-results">Няма намерени предмети.</div>';return;}
-  filtered.forEach(item=>{
-    const card=document.createElement('article');card.className='item-card';
-    const art=document.createElement('div');art.className='art';art.style.setProperty('--artglow',item.tone+'55');art.style.color=item.tone;art.innerHTML=svg(item.shape);
-    const info=document.createElement('div');info.className='item-info';
-    const top=document.createElement('div');top.className='item-top';
-    const title=document.createElement('strong');title.textContent=item.id;
-    const tag=document.createElement('span');tag.className='tag';tag.textContent=item.tag;
-    top.append(title,tag);
-    const desc=document.createElement('p');desc.textContent=item.desc;
-    const btn=document.createElement('button');btn.className='primary';btn.type='button';btn.textContent=(item.type==='knife'?state.knife===item.id:state.gloves===item.id)?'ИЗБРАНО ✓':'ИЗБЕРИ ПРЕДМЕТ';
-    btn.addEventListener('click',()=>{if(item.type==='knife')state.knife=item.id;else state.gloves=item.id;update();renderCatalog();});
-    info.append(top,desc,btn);card.append(art,info);root.append(card);
+function fillSelect(id, items, selectedKey) {
+  const select = $(id); select.innerHTML = '';
+  items.forEach(item => select.append(option(item.name, keyOf(item))));
+  if (selectedKey && items.some(x => keyOf(x) === selectedKey)) select.value = selectedKey;
+}
+function getByKey(key) { return state.items.find(x => keyOf(x) === key); }
+function selected() { return { knife: getByKey(selectedKnifeKey), gloves: getByKey(selectedGloveKey) }; }
+
+function imageOrPlaceholder(item, className = '') {
+  const wrap = document.createElement('div'); wrap.className = 'item-image ' + className;
+  if (item.image) {
+    const img = document.createElement('img'); img.src = item.image; img.alt = item.name; img.loading = 'lazy'; img.decoding = 'async';
+    img.onerror = () => { img.remove(); const fallback = document.createElement('span'); fallback.className = 'image-fallback'; fallback.textContent = item.model; wrap.append(fallback); };
+    wrap.append(img);
+  } else {
+    const fallback = document.createElement('span'); fallback.className = 'image-fallback'; fallback.textContent = item.model; wrap.append(fallback);
+  }
+  return wrap;
+}
+function updateBuilder() {
+  const chosen = selected(); if (!chosen.knife || !chosen.gloves) return;
+  $('knifePreview').replaceChildren(imageOrPlaceholder(chosen.knife, 'preview-image'));
+  $('glovePreview').replaceChildren(imageOrPlaceholder(chosen.gloves, 'preview-image'));
+  $('chosenKnife').textContent = chosen.knife.name;
+  $('chosenKnifeMeta').textContent = chosen.knife.model + ' · ' + chosen.knife.collection + ' · ' + chosen.knife.rarity;
+  $('chosenGloves').textContent = chosen.gloves.name;
+  $('chosenGlovesMeta').textContent = chosen.gloves.collection + ' · ' + chosen.gloves.rarity;
+  $('comboText').textContent = chosen.knife.name + '  +  ' + chosen.gloves.name;
+}
+function updateFilters() {
+  const visible = state.items.filter(x => state.category === 'all' || x.type === state.category);
+  const models = [...new Set(visible.map(x => x.model))].sort();
+  const collections = [...new Set(visible.map(x => x.collection))].sort();
+  const modelSelect = $('modelFilter'), collectionSelect = $('collectionFilter');
+  const oldModel = state.model, oldCollection = state.collection;
+  modelSelect.innerHTML = ''; modelSelect.append(option('Всички модели', 'all'));
+  models.forEach(x => modelSelect.append(option(x, x)));
+  collectionSelect.innerHTML = ''; collectionSelect.append(option('Всички колекции', 'all'));
+  collections.forEach(x => collectionSelect.append(option(x, x)));
+  modelSelect.value = models.includes(oldModel) ? oldModel : 'all';
+  collectionSelect.value = collections.includes(oldCollection) ? oldCollection : 'all';
+  state.model = modelSelect.value; state.collection = collectionSelect.value;
+}
+function renderCatalog() {
+  const filtered = state.items.filter(item => {
+    const haystack = (item.name + ' ' + item.model + ' ' + item.collection + ' ' + item.rarity).toLowerCase();
+    return (state.category === 'all' || item.type === state.category) &&
+      (state.model === 'all' || item.model === state.model) &&
+      (state.collection === 'all' || item.collection === state.collection) &&
+      (state.rarity === 'all' || item.rarity === state.rarity) && haystack.includes(state.search);
+  });
+  $('catalogCount').textContent = filtered.length + ' предмета';
+  $('catalogGrid').replaceChildren();
+  if (!filtered.length) {
+    const empty = document.createElement('div'); empty.className = 'no-results';
+    empty.textContent = 'Няма намерени предмети за тези филтри.'; $('catalogGrid').append(empty); return;
+  }
+  const fragment = document.createDocumentFragment();
+  filtered.forEach(item => {
+    const card = document.createElement('article'); card.className = 'item-card'; card.append(imageOrPlaceholder(item));
+    const info = document.createElement('div'); info.className = 'item-info';
+    const top = document.createElement('div'); top.className = 'item-top';
+    const name = document.createElement('strong'); name.textContent = item.name;
+    const rarity = document.createElement('span'); rarity.className = 'tag'; rarity.textContent = item.rarity;
+    top.append(name, rarity);
+    const meta = document.createElement('p'); meta.textContent = item.model + ' · ' + item.collection;
+    const btn = document.createElement('button'); btn.className = 'primary'; btn.type = 'button';
+    const isSelected = item.type === 'knife' ? selectedKnifeKey === keyOf(item) : selectedGloveKey === keyOf(item);
+    btn.textContent = isSelected ? 'ИЗБРАНО ✓' : item.type === 'knife' ? 'ИЗБЕРИ НОЖ' : 'ИЗБЕРИ РЪКАВИЦИ';
+    btn.addEventListener('click', () => {
+      if (item.type === 'knife') { selectedKnifeKey = keyOf(item); $('knifeSelect').value = selectedKnifeKey; }
+      else { selectedGloveKey = keyOf(item); $('gloveSelect').value = selectedGloveKey; }
+      updateBuilder(); renderCatalog();
+    });
+    info.append(top, meta, btn); card.append(info); fragment.append(card);
+  });
+  $('catalogGrid').append(fragment);
+}
+function readSaved() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; } }
+function renderSaved() {
+  const list = readSaved(); $('savedCount').textContent = list.length;
+  const root = $('savedLoadouts'); root.replaceChildren();
+  if (!list.length) { const p = document.createElement('p'); p.className = 'empty-saved'; p.textContent = 'Все още нямаш запазени комплекти.'; root.append(p); return; }
+  list.forEach((entry, index) => {
+    const row = document.createElement('div'); row.className = 'saved-item';
+    const info = document.createElement('div'), strong = document.createElement('strong'), small = document.createElement('small');
+    strong.textContent = entry.knifeName; small.textContent = entry.gloveName; info.append(strong, small);
+    const actions = document.createElement('div');
+    const load = document.createElement('button'); load.className = 'secondary'; load.textContent = 'ЗАРЕДИ';
+    load.addEventListener('click', () => {
+      selectedKnifeKey = entry.knifeKey; selectedGloveKey = entry.gloveKey;
+      $('knifeSelect').value = selectedKnifeKey; $('gloveSelect').value = selectedGloveKey;
+      updateBuilder(); renderCatalog();
+    });
+    const remove = document.createElement('button'); remove.className = 'secondary'; remove.textContent = '✕'; remove.setAttribute('aria-label', 'Изтрий комплект');
+    remove.addEventListener('click', () => { const next = readSaved(); next.splice(index, 1); localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); renderSaved(); });
+    actions.append(load, remove); row.append(info, actions); root.append(row);
   });
 }
-function saved(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
-function renderSaved(){
-  const root=$('savedLoadouts'),list=saved();$('savedCount').textContent=list.length;root.innerHTML='';
-  if(!list.length){root.innerHTML='<p class="empty-saved">Все още нямаш запазени комплекти.</p>';return;}
-  list.forEach((item,index)=>{
-    const row=document.createElement('div');row.className='saved-item';
-    const info=document.createElement('div'),title=document.createElement('strong'),sub=document.createElement('small');
-    title.textContent=item.knife+' + '+item.gloves;sub.textContent=item.knifeSkin+' · '+item.gloveColor;info.append(title,sub);
-    const actions=document.createElement('div');
-    const load=document.createElement('button');load.className='secondary';load.type='button';load.textContent='ЗАРЕДИ';load.addEventListener('click',()=>{state.knife=item.knife;state.gloves=item.gloves;$('knifeSkin').value=item.knifeSkin;$('gloveColor').value=item.gloveColor;update();renderCatalog();});
-    const del=document.createElement('button');del.className='secondary';del.type='button';del.textContent='✕';del.setAttribute('aria-label','Изтрий комплект');del.addEventListener('click',()=>{const next=saved();next.splice(index,1);localStorage.setItem(KEY,JSON.stringify(next));renderSaved();});
-    actions.append(load,del);row.append(info,actions);root.append(row);
-  });
+function setCategory(category) {
+  state.category = category;
+  document.querySelectorAll('.tab').forEach(btn => btn.classList.toggle('active', btn.dataset.category === category));
+  state.model = 'all'; state.collection = 'all'; updateFilters(); renderCatalog();
 }
-document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{state.category=btn.dataset.category;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b===btn));renderCatalog();}));
-$('catalogSearch').addEventListener('input',e=>{state.search=e.target.value.trim().toLowerCase();renderCatalog();});
-$('knifeSkin').addEventListener('change',update);$('gloveColor').addEventListener('change',update);
-$('randomBtn').addEventListener('click',()=>{const knives=items.filter(x=>x.type==='knife'),gloves=items.filter(x=>x.type==='gloves');state.knife=knives[Math.floor(Math.random()*knives.length)].id;state.gloves=gloves[Math.floor(Math.random()*gloves.length)].id;$('knifeSkin').selectedIndex=Math.floor(Math.random()*$('knifeSkin').options.length);$('gloveColor').selectedIndex=Math.floor(Math.random()*$('gloveColor').options.length);update();renderCatalog();});
-$('resetBtn').addEventListener('click',()=>{state.knife='Karambit';state.gloves='Retro Wave';$('knifeSkin').selectedIndex=0;$('gloveColor').selectedIndex=0;update();renderCatalog();});
-$('saveBtn').addEventListener('click',()=>{const list=saved(),v=read();if(list.some(x=>['knife','knifeSkin','gloves','gloveColor'].every(k=>x[k]===v[k]))){$('saveBtn').textContent='ВЕЧЕ Е ЗАПАЗЕН';return;}list.unshift(v);localStorage.setItem(KEY,JSON.stringify(list.slice(0,20)));renderSaved();$('saveBtn').textContent='ЗАПАЗЕНО ✓';});
-$('shareBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText('SEXSI LOADOUT LAB: '+label());$('shareBtn').textContent='КОПИРАНО ✓';}catch(e){$('shareBtn').textContent='КОПИРАНЕТО НЕ Е ДОСТЪПНО';}});
-update();renderCatalog();renderSaved();
+function randomLoadout() {
+  const knives = knifeItems(), gloves = gloveItems();
+  const knife = knives[Math.floor(Math.random() * knives.length)], glove = gloves[Math.floor(Math.random() * gloves.length)];
+  selectedKnifeKey = keyOf(knife); selectedGloveKey = keyOf(glove);
+  $('knifeSelect').value = selectedKnifeKey; $('gloveSelect').value = selectedGloveKey;
+  updateBuilder(); renderCatalog();
+}
+async function init() {
+  try {
+    const response = await fetch(DATA_URL, { cache: 'no-cache' });
+    if (!response.ok) throw new Error('catalog data unavailable');
+    const payload = await response.json(); state.items = payload.items || [];
+    const knives = knifeItems(), gloves = gloveItems();
+    if (!knives.length || !gloves.length) throw new Error('catalog is empty');
+    selectedKnifeKey = keyOf(knives[0]); selectedGloveKey = keyOf(gloves[0]);
+    $('catalogSummary').textContent = knives.length + ' скина на ножове · ' + gloves.length + ' скина на ръкавици';
+    fillSelect('knifeSelect', knives, selectedKnifeKey); fillSelect('gloveSelect', gloves, selectedGloveKey);
+    $('knifeSelect').addEventListener('change', e => { selectedKnifeKey = e.target.value; updateBuilder(); renderCatalog(); });
+    $('gloveSelect').addEventListener('change', e => { selectedGloveKey = e.target.value; updateBuilder(); renderCatalog(); });
+    $('catalogSearch').addEventListener('input', e => { state.search = e.target.value.trim().toLowerCase(); renderCatalog(); });
+    $('modelFilter').addEventListener('change', e => { state.model = e.target.value; renderCatalog(); });
+    $('collectionFilter').addEventListener('change', e => { state.collection = e.target.value; renderCatalog(); });
+    $('rarityFilter').addEventListener('change', e => { state.rarity = e.target.value; renderCatalog(); });
+    document.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => setCategory(btn.dataset.category)));
+    $('randomBtn').addEventListener('click', randomLoadout);
+    $('resetBtn').addEventListener('click', () => {
+      selectedKnifeKey = keyOf(knives[0]); selectedGloveKey = keyOf(gloves[0]);
+      $('knifeSelect').value = selectedKnifeKey; $('gloveSelect').value = selectedGloveKey;
+      updateBuilder(); renderCatalog();
+    });
+    $('saveBtn').addEventListener('click', () => {
+      const chosen = selected(), list = readSaved();
+      const entry = { knifeKey: selectedKnifeKey, gloveKey: selectedGloveKey, knifeName: chosen.knife.name, gloveName: chosen.gloves.name };
+      if (!list.some(x => x.knifeKey === entry.knifeKey && x.gloveKey === entry.gloveKey)) list.unshift(entry);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list.slice(0, 30)));
+      renderSaved(); $('saveBtn').textContent = 'ЗАПАЗЕНО ✓';
+    });
+    $('shareBtn').addEventListener('click', async () => {
+      const chosen = selected(), text = 'SEXSI LOADOUT LAB\n' + chosen.knife.name + '\n' + chosen.gloves.name;
+      try { await navigator.clipboard.writeText(text); $('shareBtn').textContent = 'КОПИРАНО ✓'; }
+      catch { $('shareBtn').textContent = 'НЕУСПЕШНО КОПИРАНЕ'; }
+    });
+    updateFilters(); updateBuilder(); renderCatalog(); renderSaved();
+  } catch (error) {
+    $('catalogGrid').textContent = 'Каталогът не можа да се зареди. Презареди страницата след малко.';
+    $('catalogSummary').textContent = 'Грешка при зареждане';
+  }
+}
+init();
