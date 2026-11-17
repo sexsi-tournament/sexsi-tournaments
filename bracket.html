@@ -54,6 +54,14 @@ h1{font-size:clamp(34px,6vw,66px);line-height:1;margin:12px 0 10px;letter-spacin
 .player-name{min-width:0;overflow-wrap:anywhere}
 .player-score{font-size:14px;font-weight:900;color:#fff;white-space:nowrap}
 .match-winner{margin-top:8px;padding-top:8px;border-top:1px solid #25252a;color:#72e1a2;font-size:9px;font-weight:900;letter-spacing:.8px}
+.match-schedule{
+  display:flex;flex-direction:column;gap:4px;margin-top:10px;padding:9px 10px;
+  border:1px solid rgba(233,189,89,.25);border-radius:5px;
+  background:rgba(233,189,89,.055);
+}
+.match-schedule-label{font-size:8px;font-weight:900;letter-spacing:1px;color:#b99b5d}
+.match-schedule-value{font-size:12px;color:#f2d58e;font-weight:900}
+.match-schedule-pending{font-size:9px;color:#888;font-weight:800;letter-spacing:.5px}
 .empty{padding:30px 18px;text-align:center;border:1px dashed #444;border-radius:8px;color:#999;font-size:13px}
 .back-link{display:inline-flex;margin-top:30px;color:#aaa;text-decoration:none;font-size:10px;font-weight:900;letter-spacing:1px}
 .back-link:hover{color:#fff}
@@ -117,6 +125,10 @@ footer{border-top:1px solid var(--line);padding:25px;text-align:center;color:#66
       const {data,error} = await db.rpc("sexsi_get_public_bracket");
       if(error) throw error;
       const matches = Array.isArray(data) ? data : [];
+      const {data:scheduleData,error:scheduleError} = await db.rpc("sexsi_get_public_match_schedules");
+      if(scheduleError) throw scheduleError;
+      const schedules = new Map((Array.isArray(scheduleData)?scheduleData:[]).map(item=>[item.match_id,item.scheduled_at]));
+      matches.forEach(match=>{match.scheduled_at=schedules.get(match.id)||null;});
       const ids = new Set();
       matches.forEach(m => {
         if(m.player1_id) ids.add(m.player1_id);
@@ -162,6 +174,16 @@ footer{border-top:1px solid var(--line);padding:25px;text-align:center;color:#66
           p2.appendChild(make("span","player-score",safe(m.score_player2)));
           card.appendChild(p1);
           card.appendChild(p2);
+          const schedule = make("div","match-schedule");
+          if(m.scheduled_at){
+            const scheduledDate = new Date(m.scheduled_at);
+            schedule.appendChild(make("span","match-schedule-label","НАСРОЧЕН ДВУБОЙ"));
+            schedule.appendChild(make("strong","match-schedule-value",scheduledDate.toLocaleString("bg-BG",{dateStyle:"medium",timeStyle:"short"})));
+          }else{
+            schedule.appendChild(make("span","match-schedule-label","ДАТА И ЧАС"));
+            schedule.appendChild(make("strong","match-schedule-pending","ОЧАКВА СЕ УГОВАРЯНЕ"));
+          }
+          card.appendChild(schedule);
           if(m.winner_name) card.appendChild(make("div","match-winner","ПОБЕДИТЕЛ: " + m.winner_name));
           round.appendChild(card);
         });
