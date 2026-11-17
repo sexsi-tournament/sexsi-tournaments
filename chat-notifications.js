@@ -8,7 +8,7 @@
   const style=document.createElement("style");
   style.textContent="#sexsiChatNotice{position:fixed;right:17px;top:88px;z-index:99990}#sexsiChatNotice a{position:relative;width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:#171719;border:1px solid #45454b;color:#fff;text-decoration:none;font:18px Arial;box-shadow:0 5px 18px #0008}#sexsiChatNotice a:hover{border-color:#ed252d}#sexsiChatCount{position:absolute;right:-5px;top:-5px;min-width:18px;height:18px;padding:0 4px;display:grid;place-items:center;border-radius:20px;background:#ed252d;color:#fff;font:900 9px Arial;border:2px solid #09090b}#sexsiChatCount[hidden]{display:none!important}#sexsiChatToast{position:fixed;right:17px;top:139px;z-index:99991;max-width:min(330px,calc(100vw - 34px));padding:12px 14px;background:#211012;border:1px solid #ed252d;border-radius:9px;color:#fff;font:12px/1.5 Arial;box-shadow:0 8px 30px #0009;cursor:pointer}#sexsiChatToast[hidden]{display:none}";
   document.head.appendChild(style);
-  const bar=document.createElement("div");bar.id="sexsiChatNotice";
+  const bar=document.createElement("div");bar.id="sexsiChatNotice";bar.style.display="none";
   bar.innerHTML='<a href="messages.html" aria-label="Съобщения" title="Съобщения">✉<span id="sexsiChatCount" hidden>0</span></a>';
   document.body.appendChild(bar);
   const countEl=document.getElementById("sexsiChatCount");
@@ -30,12 +30,19 @@
     }
     updateCount(total);
   }
-  db.auth.getSession().then(({data,error})=>{
-    if(error||!data.session)return;
-    userId=data.session.user.id;refresh(true);setInterval(()=>refresh(false),12000);
+  let refreshTimer=null;
+  function applySession(session){
+    if(!session){userId=null;bar.style.display="none";updateCount(0);if(channel){db.removeChannel(channel);channel=null;}if(refreshTimer){clearInterval(refreshTimer);refreshTimer=null;}return;}
+    userId=session.user.id;
+    bar.style.display=location.pathname.endsWith("messages.html")?"none":"block";
+    refresh(true);
+    if(!refreshTimer)refreshTimer=setInterval(()=>refresh(false),12000);
+    if(channel)db.removeChannel(channel);
     channel=db.channel("sexsi-global-chat-"+userId)
       .on("postgres_changes",{event:"INSERT",schema:"public",table:"sexsi_messages",filter:"recipient_id=eq."+userId},()=>refresh(false))
       .subscribe();
-  });
+  }
+  db.auth.getSession().then(({data,error})=>{if(!error)applySession(data.session);});
+  db.auth.onAuthStateChange((_event,session)=>applySession(session));
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh(true);});
 })();
