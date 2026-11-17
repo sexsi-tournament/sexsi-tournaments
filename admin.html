@@ -735,6 +735,19 @@ footer{
         <button class="secondary-button" id="sendTestTournamentEmailButton" type="button">ИЗПРАТИ ТЕСТ ДО АДМИНИСТРАТОРА</button>
         <button class="primary-button" id="sendTournamentEmailsButton" type="button" disabled>ИЗПРАТИ ИМЕЙЛИТЕ</button>
       </div>
+      <div class="panel" style="margin-top:22px;background:#101010">
+        <h3>ИНДИВИДУАЛЕН ИМЕЙЛ</h3>
+        <p class="message">Избери конкретен играч. Ще бъде изпратено само до неговия регистриран имейл адрес.</p>
+        <label for="singleEmailPlayer" style="display:block;color:var(--muted);font-size:12px;font-weight:bold;margin:14px 0 8px">ИЗБЕРИ ИГРАЧ</label>
+        <select id="singleEmailPlayer" style="display:block;width:100%;max-width:700px;background:#090909;color:white;border:1px solid var(--border);border-radius:7px;padding:13px">
+          <option value="">Зареждане на играчите...</option>
+        </select>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+          <button class="secondary-button" id="previewSingleEmailButton" type="button">ПРОВЕРИ ПОЛУЧАТЕЛЯ</button>
+          <button class="primary-button" id="sendSingleEmailButton" type="button" disabled>ИЗПРАТИ САМО ДО ТОЗИ ИГРАЧ</button>
+        </div>
+        <p class="message" id="singleEmailMessage" aria-live="polite">Използва се същата тема и съобщение от полетата по-горе.</p>
+      </div>
       <p class="message" id="emailComposeMessage" aria-live="polite">Първо провери броя на получателите. Имейлите няма да бъдат изпратени при тази проверка.</p>
     </div>
   </section>
@@ -1006,6 +1019,7 @@ function showAdminView(viewName){
   }
   if(viewName==="emails"){
     loadEmailRecipients();
+    loadSingleEmailPlayers();
   }
   if(viewName==="news"){
     loadAdminNews();
@@ -1106,6 +1120,91 @@ function invalidateEmailPreview(){
   document.getElementById("emailComposeMessage").textContent = "Първо провери получателите. Все още не е изпратен нито един имейл.";
 }
 
+let singleEmailPreview="";
+async function loadSingleEmailPlayers(){
+  const select=document.getElementById("singleEmailPlayer");
+  select.innerHTML='<option value="">Зареждане...</option>';
+  const {data,error}=await db.rpc("sexsi_admin_manage_players");
+  if(error){
+    select.innerHTML='<option value="">Грешка при зареждане</option>';
+    document.getElementById("singleEmailMessage").textContent="Неуспешно зареждане на играчите: "+error.message;
+    return;
+  }
+  const players=Array.isArray(data)?data:[];
+  select.innerHTML='<option value="">Избери играч...</option>';
+  players.filter(player=>player.user_id&&player.email).forEach(player=>{
+    const option=document.createElement("option");
+    option.value=player.user_id;
+    option.textContent=(player.username||"PLAYER")+" · "+player.email;
+    option.dataset.email=player.email;
+    select.appendChild(option);
+  });
+  document.getElementById("singleEmailMessage").textContent="Заредени играчи с валиден имейл: "+select.options.length-1+".";
+  singleEmailPreview="";
+}
+document.getElementById("singleEmailPlayer").addEventListener("change",()=>{
+  singleEmailPreview="";
+  document.getElementById("sendSingleEmailButton").disabled=true;
+  document.getElementById("singleEmailMessage").textContent="Провери получателя преди изпращане.";
+});
+document.getElementById("previewSingleEmailButton").addEventListener("click",async()=>{
+  const select=document.getElementById("singleEmailPlayer");
+  const playerId=select.value;
+  const draft=currentEmailDraft();
+  const message=document.getElementById("singleEmailMessage");
+  const send=document.getElementById("sendSingleEmailButton");
+  if(!playerId||!draft.subject||!draft.message){
+    message.textContent="Избери играч и попълни тема и съобщение.";
+    return;
+  }
+  const button=document.getElementById("previewSingleEmailButton");
+  button.disabled=true;send.disabled=true;button.textContent="ПРОВЕРКА...";
+  try{
+    const {data,error}=await db.functions.invoke("send-tournament-emails",{
+      body:{subject:draft.subject,message:draft.message,recipient_user_id:playerId,dry_run:true}
+    });
+    if(error)throw error;
+    if(!data||data.dry_run!==true||data.recipients_count!==1||!data.recipient)throw new Error(data?.error||"Получателят не беше потвърден.");
+    singleEmailPreview=playerId+"\n"+draft.subject+"\n"+draft.message;
+    message.textContent="Потвърден получател: "+data.recipient+". Нищо не е изпратено.";
+    send.disabled=false;
+  }catch(error){
+    singleEmailPreview="";
+    message.textContent="Грешка при проверката: "+(error.message||"Неизвестна грешка");
+  }finally{
+    button.disabled=false;button.textContent="ПРОВЕРИ ПОЛУЧАТЕЛЯ";
+  }
+});
+document.getElementById("sendSingleEmailButton").addEventListener("click",async()=>{
+  const select=document.getElementById("singleEmailPlayer");
+  const playerId=select.value;
+  const draft=currentEmailDraft();
+  const snapshot=playerId+"\n"+draft.subject+"\n"+draft.message;
+  const message=document.getElementById("singleEmailMessage");
+  const button=document.getElementById("sendSingleEmailButton");
+  if(!playerId||singleEmailPreview!==snapshot){
+    singleEmailPreview="";button.disabled=true;
+    message.textContent="Съдържанието или получателят са променени. Направи нова проверка.";
+    return;
+  }
+  const playerName=select.options[select.selectedIndex]?.textContent||"избрания играч";
+  if(!confirm("Ще изпратиш един имейл само до:\n\n"+playerName+"\n\nТема: "+draft.subject+"\n\nПотвърждаваш ли?"))return;
+  button.disabled=true;button.textContent="ИЗПРАЩАНЕ...";
+  try{
+    const {data,error}=await db.functions.invoke("send-tournament-emails",{
+      body:{subject:draft.subject,message:draft.message,recipient_user_id:playerId,dry_run:false}
+    });
+    if(error)throw error;
+    if(!data||data.sent!==1||data.failed!==0)throw new Error(data?.error||"Имейлът не беше изпратен успешно.");
+    message.textContent="Имейлът е изпратен успешно само до "+data.recipient+".";
+    singleEmailPreview="";
+  }catch(error){
+    message.textContent="Грешка при изпращането: "+(error.message||"Неизвестна грешка");
+    singleEmailPreview="";
+  }finally{
+    button.disabled=true;button.textContent="ИЗПРАТИ САМО ДО ТОЗИ ИГРАЧ";
+  }
+});
 async function loadEmailRecipients(){
   emailPreviewCount = 0;
   emailPreviewSnapshot = "";
@@ -1116,7 +1215,8 @@ async function loadEmailRecipients(){
 }
 
 document.getElementById("emailSubject").addEventListener("input",invalidateEmailPreview);
-document.getElementById("emailBody").addEventListener("input",invalidateEmailPreview);
+document.getElementById("emailBody").addEventListener("input",()=>{invalidateEmailPreview();singleEmailPreview="";document.getElementById("sendSingleEmailButton").disabled=true;document.getElementById("singleEmailMessage").textContent="Променено е съобщението. Провери получателя отново.";});
+document.getElementById("emailSubject").addEventListener("input",()=>{singleEmailPreview="";document.getElementById("sendSingleEmailButton").disabled=true;document.getElementById("singleEmailMessage").textContent="Променена е темата. Провери получателя отново.";});
 
 document.getElementById("previewTournamentEmailsButton").addEventListener("click",async()=>{
   const button=document.getElementById("previewTournamentEmailsButton");
