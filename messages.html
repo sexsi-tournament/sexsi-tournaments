@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090909">
+<title>Съобщения | SEXSI TOURNAMENTS</title>
+<link rel="stylesheet" href="elite.css?v=5">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090909;color:#fff;font-family:Arial,sans-serif}
+header{height:68px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #292929;background:#101010}
+.logo{font-size:20px;font-weight:1000;letter-spacing:2px}.logo span{color:#ed252d}
+.header-actions{display:flex;gap:8px;align-items:center}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.small-btn{background:#1b1b1b;border:1px solid #383838;color:#eee;border-radius:6px;padding:10px 12px;font-weight:bold}
+main{width:min(1180px,96%);margin:25px auto}
+.page-heading{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px}
+h1{font-size:25px;margin:0;font-weight:1000}
+.page-heading p{color:#999;font-size:13px;margin:6px 0 0}
+.chat-layout{display:grid;grid-template-columns:340px minmax(0,1fr);height:min(720px,calc(100vh - 150px));min-height:480px;border:1px solid #303030;border-radius:10px;overflow:hidden;background:#111}
+.sidebar{display:flex;flex-direction:column;min-height:0;border-right:1px solid #303030;background:#101010}
+.sidebar-section{padding:15px;border-bottom:1px solid #292929}
+.section-label{font-size:11px;letter-spacing:1px;color:#aaa;font-weight:900;margin:0 0 11px}
+.search{width:100%;padding:11px 12px;border-radius:6px;background:#090909;border:1px solid #383838;color:white;outline:none}
+.search:focus,.message-input:focus{border-color:#ed252d}
+.scroll-list{overflow:auto;min-height:0}
+.user-row,.conversation-row{width:100%;display:flex;align-items:center;gap:11px;padding:12px 14px;text-align:left;color:#eee;background:transparent;border:0;border-bottom:1px solid #242424}
+.user-row:hover,.conversation-row:hover,.conversation-row.selected{background:#211315}
+.avatar{width:39px;height:39px;flex:0 0 39px;border-radius:50%;display:grid;place-items:center;background:#343434;color:white;font-weight:900}
+.admin-avatar{background:#702127}
+.user-info,.conversation-info{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
+.user-info strong,.conversation-info strong{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-info small,.conversation-info small{font-size:10px;color:#999}
+.row-arrow{font-size:23px;color:#777}
+.conversation-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.conversation-top small{white-space:nowrap}
+.preview{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.unread-badge{min-width:20px;height:20px;padding:0 6px;border-radius:20px;background:#ed252d;color:white;display:grid;place-items:center;font-size:10px;font-weight:900}
+.empty{padding:15px;color:#777;font-size:12px;line-height:1.5}
+.chat-main{display:flex;flex-direction:column;min-width:0;min-height:0;background:#0d0d0d}
+.empty-state{margin:auto;text-align:center;padding:25px;color:#888}
+.empty-state strong{display:block;color:#eee;font-size:18px;margin-bottom:8px}
+.chat-panel{height:100%;display:flex;flex-direction:column;min-height:0}
+.chat-top{display:flex;align-items:center;gap:11px;padding:13px 17px;border-bottom:1px solid #292929;background:#111}
+.chat-top .avatar{width:40px;height:40px}
+.chat-title{font-weight:900;font-size:14px}
+.chat-subline{font-size:10px;color:#999;margin-top:4px}
+.messages{padding:18px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:10px}
+.message-line{display:flex;width:100%}.message-line.mine{justify-content:flex-end}.message-line.theirs{justify-content:flex-start}
+.bubble{max-width:min(78%,520px);padding:10px 12px;border-radius:10px;background:#202020;border:1px solid #343434}
+.mine .bubble{background:#4b171c;border-color:#78252c}
+.bubble-body{font-size:13px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.bubble-meta{font-size:9px;color:#bbb;text-align:right;margin-top:6px}
+.message-empty{margin:auto;text-align:center;color:#777;font-size:12px}
+.composer{padding:12px;border-top:1px solid #292929;display:flex;gap:9px;background:#111}
+.message-input{flex:1;min-width:0;max-height:110px;resize:vertical;padding:12px;border-radius:7px;background:#090909;border:1px solid #383838;color:white;outline:none}
+.send-btn{background:#ed252d;border:0;color:white;border-radius:7px;padding:0 18px;font-weight:900}
+.send-btn:disabled{opacity:.5;cursor:not-allowed}
+.status{font-size:11px;color:#aaa;min-height:18px;margin:10px 2px}
+#loginRequired{padding:45px 20px;text-align:center;background:#141414;border:1px solid #333;border-radius:9px}
+#loginRequired a{color:#ff555d}
+[hidden]{display:none!important}
+@media(max-width:720px){
+ header{padding:0 4%;height:60px}.logo{font-size:16px}
+ main{width:100%;margin:0}
+ .page-heading{padding:17px 4% 12px}
+ h1{font-size:21px}
+ .chat-layout{display:flex;flex-direction:column;height:calc(100dvh - 128px);min-height:480px;border-left:0;border-right:0;border-radius:0}
+ .sidebar{height:44%;min-height:170px;border-right:0;border-bottom:1px solid #303030}
+ .chat-main{height:56%;min-height:0}
+ .sidebar-section{padding:10px 12px}
+ .user-row,.conversation-row{padding:9px 12px}
+ .avatar{width:34px;height:34px;flex-basis:34px}
+ .messages{padding:12px}
+ .bubble{max-width:88%}
+ .send-btn{padding:0 13px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">SEXSI <span>TOURNAMENTS</span></div>
+  <div class="header-actions">
+    <button class="small-btn" id="backToProfile" type="button">ПРОФИЛ</button>
+    <button class="small-btn" id="logoutChat" type="button">ИЗХОД</button>
+  </div>
+</header>
+<main>
+  <div class="page-heading">
+    <div><h1>СЪОБЩЕНИЯ</h1><p>Лични разговори в SEXSI TOURNAMENTS</p></div>
+    <div id="currentUserName" style="font-size:12px;color:#aaa"></div>
+  </div>
+  <div id="loginRequired" hidden>
+    <h2>НУЖЕН Е ВХОД</h2>
+    <p>Влез в профила си, за да използваш съобщенията.</p>
+    <a href="profile.html">КЪМ ВХОДА</a>
+  </div>
+  <div id="chatApp" hidden>
+    <div class="chat-layout">
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <div class="section-label">РАЗГОВОРИ <span id="unreadTotal" class="unread-badge" hidden>0</span></div>
+          <div id="conversationList" class="scroll-list"><p class="empty">Зареждане...</p></div>
+        </div>
+        <div class="sidebar-section">
+          <div class="section-label">НОВ РАЗГОВОР</div>
+          <input id="userSearch" class="search" type="search" placeholder="Търси играч или GAME ID...">
+        </div>
+        <div id="userDirectory" class="scroll-list"><p class="empty">Зареждане...</p></div>
+      </aside>
+      <section class="chat-main">
+        <div id="emptyState" class="empty-state">
+          <strong>ТВОИТЕ СЪОБЩЕНИЯ</strong>
+          Избери разговор или започни нов с играч.
+        </div>
+        <div id="chatPanel" class="chat-panel" hidden>
+          <div class="chat-top">
+            <span id="chatAvatar" class="avatar">И</span>
+            <div><div id="chatName" class="chat-title">Играч</div><div id="chatSubline" class="chat-subline">SEXSI TOURNAMENTS</div></div>
+          </div>
+          <div id="messages" class="messages" aria-live="polite"></div>
+          <div class="composer">
+            <textarea id="messageInput" class="message-input" rows="1" maxlength="4000" placeholder="Напиши съобщение..." disabled></textarea>
+            <button id="sendButton" class="send-btn" type="button" disabled>ИЗПРАТИ</button>
+          </div>
+        </div>
+      </section>
+    </div>
+    <p id="pageStatus" class="status" aria-live="polite"></p>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="chat.js?v=1"></script>
+</body>
+</html>
