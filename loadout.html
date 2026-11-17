@@ -4,62 +4,63 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#090909">
-<meta name="description" content="SEXSI LOADOUT LAB — създай своята комбинация от нож и ръкавици за Standoff 2.">
+<meta name="description" content="SEXSI LOADOUT LAB — каталог с ножове, ръкавици и комбинации за Standoff 2.">
 <title>SEXSI LOADOUT LAB | SEXSI TOURNAMENTS</title>
 <style>
 *{box-sizing:border-box}
-:root{--red:#ed252d;--red2:#ff454b;--bg:#080808;--panel:#111114;--line:rgba(255,255,255,.1);--muted:#929292}
+:root{--red:#ed252d;--red2:#ff555c;--bg:#080808;--panel:#111114;--line:rgba(255,255,255,.1);--muted:#929292}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif;min-height:100vh}
 body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:48px 48px}
-header{height:72px;padding:0 6%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:rgba(8,8,8,.92);position:relative;z-index:2}
+header{height:72px;padding:0 6%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:rgba(8,8,8,.94);position:relative;z-index:2}
 .logo{font-size:25px;font-weight:1000;font-style:italic;letter-spacing:1px;color:#fff;text-decoration:none}.logo span{color:var(--red)}
-header nav{display:flex;gap:22px;align-items:center}
-header nav a{color:#aaa;text-decoration:none;font-size:11px;font-weight:900;letter-spacing:1px}
-header nav a:hover{color:#fff}
+header nav{display:flex;gap:22px;align-items:center}header nav a{color:#aaa;text-decoration:none;font-size:11px;font-weight:900;letter-spacing:1px}header nav a:hover{color:#fff}
 main{position:relative;z-index:1;max-width:1320px;margin:auto;padding:42px 5% 70px}
 .eyebrow{color:var(--red2);font-size:10px;font-weight:900;letter-spacing:4px}
-h1{font-size:clamp(34px,6vw,64px);line-height:.95;letter-spacing:-2px;margin:12px 0}
-h1 span{color:var(--red)}
-.intro{color:#999;max-width:600px;font-size:14px;line-height:1.7;margin:16px 0 30px}
-.lab{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(290px,.8fr);gap:18px;align-items:stretch}
-.stage{min-height:510px;position:relative;overflow:hidden;border:1px solid rgba(237,37,45,.3);border-radius:14px;background:radial-gradient(ellipse at 50% 48%,rgba(115,20,26,.25),transparent 52%),linear-gradient(145deg,#171719,#090909 65%);display:flex;align-items:center;justify-content:center}
-.stage:before{content:"";position:absolute;inset:0;opacity:.22;background:linear-gradient(135deg,transparent 49.8%,rgba(255,255,255,.08) 50%,transparent 50.2%),linear-gradient(45deg,transparent 49.8%,rgba(255,255,255,.05) 50%,transparent 50.2%);background-size:80px 80px}
-.stage-glow{position:absolute;width:340px;height:340px;border-radius:50%;background:rgba(237,37,45,.12);filter:blur(85px)}
-#loadoutCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}.stage-hint{position:absolute;bottom:15px;left:0;right:0;text-align:center;color:#777;font-size:9px;font-weight:900;letter-spacing:1.5px;pointer-events:none}
-.stage-content{position:relative;text-align:center;padding:30px;max-width:490px}
-.stage-icon{width:76px;height:76px;margin:0 auto 22px;border:1px solid rgba(237,37,45,.5);border-radius:22px;display:grid;place-items:center;background:rgba(237,37,45,.08);font-size:32px;box-shadow:0 0 45px rgba(237,37,45,.12)}
-.stage-content h2{font-size:18px;letter-spacing:2px;margin:0 0 10px}
-.stage-content p{color:#999;font-size:12px;line-height:1.7;margin:0}
-.stage-tag{display:inline-block;margin-top:20px;padding:8px 12px;border:1px solid rgba(237,37,45,.4);border-radius:4px;color:#ff8b90;font-size:9px;font-weight:900;letter-spacing:1.5px}
-.stage-corner{position:absolute;top:18px;left:20px;color:#777;font-size:9px;font-weight:900;letter-spacing:2px}
-.stage-corner.right{left:auto;right:20px;color:#e45b61}
-.controls{border:1px solid var(--line);border-radius:14px;background:linear-gradient(160deg,#151517,#0d0d0f);padding:22px}
-.controls h3{font-size:13px;letter-spacing:1.5px;margin:0 0 20px}
-.field{margin:0 0 18px}
-label{display:block;color:#999;font-size:10px;font-weight:900;letter-spacing:1.2px;margin-bottom:8px}
-select{width:100%;background:#090909;border:1px solid #363639;color:#fff;padding:14px 12px;border-radius:6px;font-size:13px;outline:none}
-select:focus{border-color:var(--red)}
-.selection{padding:15px;margin:18px 0;background:#0a0a0b;border:1px solid #29292d;border-radius:8px}
-.selection small{display:block;color:#777;font-size:9px;font-weight:900;letter-spacing:1.4px;margin-bottom:7px}
-.selection strong{font-size:13px}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}.actions button:nth-child(n+3){grid-column:span 2}.saved-wrap{margin-top:20px}.saved-title{display:flex;justify-content:space-between;color:#aaa;font-size:9px;font-weight:900;letter-spacing:1.4px;margin-bottom:9px}.saved-title span{color:var(--red2)}.saved-list{display:grid;gap:7px}.saved-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;background:#09090a;border:1px solid #29292d;border-radius:6px}.saved-item strong{display:block;font-size:10px}.saved-item small{display:block;color:#777;font-size:9px;margin-top:4px}.saved-item button{padding:8px;background:#242428;color:#ddd}.empty-saved{font-size:10px;color:#666;margin:0;padding:10px;border:1px dashed #333;border-radius:6px}
-button{border:0;border-radius:6px;padding:13px 10px;font-size:10px;font-weight:900;letter-spacing:1px;cursor:pointer}
-.primary{background:var(--red);color:white}.primary:hover{background:#c91e26}
+h1{font-size:clamp(34px,6vw,64px);line-height:.95;letter-spacing:-2px;margin:12px 0}h1 span{color:var(--red)}
+.intro{color:#999;max-width:680px;font-size:14px;line-height:1.7;margin:16px 0 30px}
+.builder{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,.7fr);gap:16px;margin-bottom:42px}
+.panel{border:1px solid var(--line);border-radius:12px;background:linear-gradient(145deg,#151517,#0d0d0f);padding:20px}
+.panel h2{font-size:13px;letter-spacing:1.5px;margin:0 0 16px}
+.selected-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.selected-item{min-height:135px;padding:15px;border:1px solid #303034;border-radius:9px;background:linear-gradient(140deg,#1a1a1e,#0b0b0d);position:relative;overflow:hidden}
+.selected-item:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;background:var(--glow,rgba(237,37,45,.18));filter:blur(38px);right:-30px;top:-25px}
+.selected-item small{position:relative;z-index:1;color:#888;font-size:9px;font-weight:900;letter-spacing:1.4px}
+.selected-item strong{display:block;position:relative;z-index:1;font-size:17px;margin-top:35px}
+.selected-item span{position:relative;z-index:1;display:block;color:#aaa;font-size:10px;margin-top:5px}
+.select-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+button,select,input{font:inherit}
+button{border:0;border-radius:6px;padding:12px 13px;font-size:10px;font-weight:900;letter-spacing:.7px;cursor:pointer}
+.primary{background:var(--red);color:#fff}.primary:hover{background:#c91e26}
 .secondary{background:#222;color:#ddd;border:1px solid #3a3a3a}.secondary:hover{border-color:#777}
-.notice{margin-top:16px;padding:12px;border-left:2px solid var(--red);background:rgba(237,37,45,.06);color:#999;font-size:10px;line-height:1.6}
-.notice b{color:#ddd}
-.catalog-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:48px 0 15px}
-.catalog-head h2{font-size:19px;letter-spacing:1px;margin:0}
-.catalog-head p{font-size:11px;color:#777;margin:0}
-.catalog{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.catalog-card{border:1px solid var(--line);background:#111114;border-radius:9px;padding:17px;min-height:112px}
-.catalog-card .symbol{font-size:22px;margin-bottom:12px}
-.catalog-card strong{display:block;font-size:12px;margin-bottom:5px}
-.catalog-card span{color:#777;font-size:10px}
+.field{margin-top:15px}label{display:block;color:#999;font-size:9px;font-weight:900;letter-spacing:1.2px;margin-bottom:7px}
+select{width:100%;background:#090909;border:1px solid #363639;color:#fff;padding:12px;border-radius:6px;font-size:12px;outline:none}select:focus,input:focus{border-color:var(--red)}
+.combo-line{padding:12px;margin-top:13px;background:#09090a;border:1px solid #29292d;border-radius:7px;color:#ddd;font-size:11px;line-height:1.6}
+.saved-wrap{margin-top:16px}.saved-title{display:flex;justify-content:space-between;color:#aaa;font-size:9px;font-weight:900;letter-spacing:1.4px;margin-bottom:9px}.saved-title span{color:var(--red2)}
+.saved-list{display:grid;gap:7px}.saved-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;background:#09090a;border:1px solid #29292d;border-radius:6px}.saved-item strong{display:block;font-size:10px}.saved-item small{display:block;color:#777;font-size:9px;margin-top:4px}.saved-item button{padding:8px}.empty-saved{font-size:10px;color:#666;margin:0;padding:10px;border:1px dashed #333;border-radius:6px}
+.catalog-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:36px 0 16px}
+.catalog-head h2{font-size:20px;letter-spacing:1px;margin:0}.catalog-head p{font-size:11px;color:#777;margin:0}
+.catalog-tools{display:flex;gap:9px;align-items:center;margin-bottom:16px}
+.tabs{display:flex;gap:7px;flex-wrap:wrap}
+.tab{background:#171719;color:#aaa;border:1px solid #303034;padding:11px 15px}.tab.active{background:rgba(237,37,45,.15);color:#fff;border-color:var(--red)}
+#catalogSearch{margin-left:auto;width:min(280px,100%);background:#101012;border:1px solid #333;color:#fff;border-radius:6px;padding:12px;font-size:11px;outline:none}
+.catalog{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.item-card{border:1px solid var(--line);border-radius:10px;background:#111114;overflow:hidden;transition:transform .18s,border-color .18s}
+.item-card:hover{transform:translateY(-3px);border-color:rgba(237,37,45,.55)}
+.art{height:155px;display:grid;place-items:center;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 55%,var(--artglow,rgba(237,37,45,.28)),transparent 58%),linear-gradient(145deg,#242329,#0c0c0f)}
+.art:before,.art:after{content:"";position:absolute;border:1px solid rgba(255,255,255,.07);transform:rotate(35deg);width:190px;height:90px}
+.art:after{transform:rotate(-35deg);width:220px}
+.art svg{width:115px;height:115px;position:relative;z-index:1;filter:drop-shadow(0 12px 12px rgba(0,0,0,.6));overflow:visible}
+.item-info{padding:14px}
+.item-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.item-top strong{font-size:13px}.tag{font-size:8px;font-weight:900;letter-spacing:1px;color:#ff9297;border:1px solid rgba(237,37,45,.35);padding:5px 7px;border-radius:4px}
+.item-info p{font-size:10px;color:#85858a;line-height:1.5;min-height:30px;margin:8px 0 12px}
+.item-info button{width:100%}
+.no-results{grid-column:1/-1;text-align:center;padding:35px;color:#777;border:1px dashed #333;border-radius:8px;font-size:12px}
+.notice{margin-top:20px;color:#777;font-size:10px;line-height:1.6}
 footer{border-top:1px solid var(--line);padding:22px 6%;color:#666;font-size:10px;text-align:center}
-@media(max-width:850px){.lab{grid-template-columns:1fr}.stage{min-height:390px}.catalog{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:520px){header{height:62px;padding:0 5%}header nav{gap:12px}header nav a{font-size:9px}.logo{font-size:21px}main{padding:32px 4% 50px}.stage{min-height:320px}.controls{padding:18px}.catalog{grid-template-columns:1fr 1fr}.catalog-card{padding:13px;min-height:105px}.catalog-head{align-items:start;flex-direction:column}}
+@media(max-width:850px){.builder{grid-template-columns:1fr}.catalog{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){header{height:62px;padding:0 5%}header nav{gap:12px}header nav a{font-size:9px}.logo{font-size:21px}main{padding:32px 4% 50px}.panel{padding:16px}.catalog{grid-template-columns:1fr 1fr;gap:9px}.art{height:125px}.art svg{width:92px;height:92px}.item-info{padding:11px}.item-top strong{font-size:11px}.item-info p{font-size:9px;min-height:42px}.catalog-head{align-items:start;flex-direction:column}.catalog-tools{align-items:stretch;flex-direction:column}#catalogSearch{width:100%;margin:0}.selected-item strong{font-size:14px}.selected-grid{gap:7px}}
 </style>
 </head>
 <body>
@@ -68,36 +69,42 @@ footer{border-top:1px solid var(--line);padding:22px 6%;color:#666;font-size:10p
 <nav><a href="index.html">НАЧАЛО</a><a href="tournaments.html">ТУРНИРИ</a><a href="profile.html">ПРОФИЛ</a></nav>
 </header>
 <main>
-<div class="eyebrow">STANDOFF 2 COMMUNITY TOOL</div>
+<div class="eyebrow">STANDOFF 2 COMMUNITY CATALOG</div>
 <h1>LOADOUT <span>LAB</span></h1>
-<p class="intro">Изгради своята комбинация от нож и ръкавици. Целта е да виждаш двата предмета заедно в една реалистична перспектива от първо лице, а не като две случайни картинки.</p>
-<section class="lab" aria-label="Loadout creator">
-<div class="stage">
-<div class="stage-corner">LIVE PREVIEW / 3D VIEWPORT</div><div class="stage-corner right">PROTOTYPE 01</div>
-<div class="stage-glow"></div>
-<canvas id="loadoutCanvas" aria-label="3D визуализация на нож и ръкавици"></canvas><div id="loadoutAssetStatus" class="stage-corner" style="top:38px;left:20px;color:#e45b61;z-index:2">3D MODEL ASSETS: CHECKING...</div><div class="stage-hint">ПРЕГЛЕД ОТ ПЪРВО ЛИЦЕ · ЗАДРЪЖ И ПЛЪЗНИ, ЗА ДА ЗАВЪРТИШ</div>
+<p class="intro">Разгледай колекцията, избери нож и ръкавици и запази любимите си комбинации. Каталогът е подреден като оръжеен инвентар, без тежки 3D сцени и излишни въртящи се модели.</p>
+
+<section class="builder">
+<div class="panel">
+<h2>ТВОЯТ LOADOUT</h2>
+<div class="selected-grid">
+<div class="selected-item" style="--glow:rgba(237,37,45,.24)"><small>ИЗБРАН НОЖ</small><strong id="chosenKnife">Karambit</strong><span id="chosenSkin">Default finish</span></div>
+<div class="selected-item" style="--glow:rgba(91,126,255,.22)"><small>ИЗБРАНИ РЪКАВИЦИ</small><strong id="chosenGloves">Retro Wave</strong><span id="chosenColor">Оригинални цветове</span></div>
 </div>
-<aside class="controls">
-<h3>СЪЗДАЙ КОМБИНАЦИЯ</h3>
-<div class="field"><label for="knife">ИЗБЕРИ НОЖ</label><select id="knife"><option value="Karambit">Karambit</option><option value="Butterfly">Butterfly</option><option value="Kunai">Kunai</option><option value="Fang">Fang</option><option value="Sting">Sting</option></select></div>
-<div class="field"><label for="knifeSkin">ВИЗИЯ НА НОЖА</label><select id="knifeSkin"><option>Default</option><option>Gradient</option><option>Dragon Glass</option><option>Universe</option><option>Frozen</option></select></div>
-<div class="field"><label for="gloves">ИЗБЕРИ РЪКАВИЦИ</label><select id="gloves"><option>Retro Wave</option><option>Living Flame</option><option>Tiger</option><option>Champion</option><option>Specialist</option></select></div>
-<div class="field"><label for="gloveColor">ЦВЕТОВА ВАРИАЦИЯ</label><select id="gloveColor"><option>Оригинални цветове</option><option>Червено / черно</option><option>Синьо / черно</option><option>Лилаво</option><option>Златно</option></select></div>
-<div class="selection"><small>ТВОЯТА КОМБИНАЦИЯ</small><strong id="comboText">Karambit · Default + Retro Wave</strong></div>
-<div class="actions"><button class="primary" id="randomBtn" type="button">🎲 СЛУЧАЙНА</button><button class="secondary" id="resetBtn" type="button">НУЛИРАЙ</button><button class="secondary" id="saveBtn" type="button">♥ ЗАПАЗИ КОМПЛЕКТА</button><button class="secondary" id="shareBtn" type="button">КОПИРАЙ КОМБИНАЦИЯ</button></div><div class="saved-wrap"><div class="saved-title">ЗАПАЗЕНИ КОМПЛЕКТИ <span id="savedCount">0</span></div><div id="savedLoadouts" class="saved-list"><p class="empty-saved">Все още нямаш запазени комплекти.</p></div></div>
-<div class="notice"><b>3D assets:</b> Свързани са външни GLB прототипи. Ако източникът не е достъпен, сцената автоматично използва процедурните модели. Това не са оригиналните модели от Standoff 2.</div><div class="notice">Източници: <a href="https://polyfork.dev/asset/knife-3d7947" target="_blank" rel="noopener" style="color:#ddd">Polyfork Knife</a> (CC BY 4.0) · <a href="https://www.innerscene.com/tools/library/3d-parts/leather-gloves-81d68a68" target="_blank" rel="noopener" style="color:#ddd">Innerscene Leather Gloves</a> (CC0).</div>
+<div class="field"><label for="knifeSkin">ФИНИШ НА НОЖА</label><select id="knifeSkin"><option>Default</option><option>Gradient</option><option>Dragon Glass</option><option>Universe</option><option>Frozen</option></select></div>
+<div class="field"><label for="gloveColor">ЦВЕТОВА ВАРИАЦИЯ НА РЪКАВИЦИТЕ</label><select id="gloveColor"><option>Оригинални цветове</option><option>Червено / черно</option><option>Синьо / черно</option><option>Лилаво</option><option>Златно</option></select></div>
+<div class="combo-line" id="comboText">Karambit · Default + Retro Wave (Оригинални цветове)</div>
+<div class="select-actions"><button class="primary" id="randomBtn" type="button">🎲 СЛУЧАЙНА КОМБИНАЦИЯ</button><button class="secondary" id="resetBtn" type="button">НУЛИРАЙ</button><button class="secondary" id="saveBtn" type="button">♥ ЗАПАЗИ</button><button class="secondary" id="shareBtn" type="button">КОПИРАЙ</button></div>
+</div>
+<aside class="panel">
+<h2>ЗАПАЗЕНИ КОМПЛЕКТИ <span style="color:var(--red)" id="savedCount">0</span></h2>
+<div id="savedLoadouts" class="saved-list"><p class="empty-saved">Все още нямаш запазени комплекти.</p></div>
+<div class="notice">Запазените комбинации се съхраняват локално в браузъра на устройството ти.</div>
 </aside>
 </section>
-<div class="catalog-head"><h2>КАТАЛОГ НА ПРЕДМЕТИТЕ</h2><p>Начален списък за прототипа · ще бъде разширен</p></div>
-<section class="catalog">
-<div class="catalog-card"><div class="symbol">⚔</div><strong>KNIFE COLLECTION</strong><span>Karambit · Butterfly · Kunai · Fang · Sting</span></div>
-<div class="catalog-card"><div class="symbol">♢</div><strong>GLOVE COLLECTION</strong><span>Retro Wave · Living Flame · Tiger · Champion</span></div>
-<div class="catalog-card"><div class="symbol">◉</div><strong>REAL-TIME COMBINATIONS</strong><span>Една обща перспектива от първо лице</span></div>
-</section>
+
+<div class="catalog-head"><h2>КАТАЛОГ НА ПРЕДМЕТИТЕ</h2><p id="catalogCount">10 предмета</p></div>
+<div class="catalog-tools">
+<div class="tabs" role="tablist" aria-label="Категории">
+<button class="tab active" data-category="all" type="button">ВСИЧКИ</button>
+<button class="tab" data-category="knife" type="button">НОЖОВЕ</button>
+<button class="tab" data-category="gloves" type="button">РЪКАВИЦИ</button>
+</div>
+<input id="catalogSearch" type="search" placeholder="Търси предмет..." aria-label="Търси предмет">
+</div>
+<section class="catalog" id="catalogGrid" aria-live="polite"></section>
+<p class="notice">Визуализациите в каталога са авторски графични илюстрации за интерфейса, а не официални изображения или оригинални игрови модели на Standoff 2.</p>
 </main>
 <footer>SEXSI LOADOUT LAB · НЕОФИЦИАЛЕН ФЕН ПРОЕКТ ЗА STANDOFF 2</footer>
 <script src="loadout-ui.js"></script>
-
-<script type="module" src="loadout-3d.js"></script>
 </body>
 </html>
