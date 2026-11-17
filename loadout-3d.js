@@ -1,4 +1,5 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
 
 const canvas = document.getElementById('loadoutCanvas');
 if (canvas) {
@@ -29,6 +30,61 @@ if (canvas) {
 
   const root = new THREE.Group();
   scene.add(root);
+
+  // Optional external GLB/GLTF assets. Procedural models remain as a fallback.
+  const assetStatus = document.getElementById('loadoutAssetStatus');
+  const gltfLoader = new GLTFLoader();
+  const assetCache = new Map();
+  let assetManifest = { models: {} };
+  let externalKnife = null;
+  let externalGloves = null;
+  function setAssetStatus(message) {
+    if (assetStatus) assetStatus.textContent = message;
+  }
+  async function loadAssetManifest() {
+    try {
+      const response = await fetch('./assets/loadout/manifest.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('manifest unavailable');
+      assetManifest = await response.json();
+      const count = Object.keys(assetManifest.models || {}).length;
+      setAssetStatus(count ? 'ASSET MANIFEST CONNECTED · ' + count + ' MODEL ENTRIES' : 'LOADER READY · 0 MODELS CONNECTED');
+      return true;
+    } catch (error) {
+      setAssetStatus('3D MODEL ASSETS: NOT CONNECTED');
+      return false;
+    }
+  }
+  async function getAsset(url) {
+    if (!url) return null;
+    if (!assetCache.has(url)) {
+      assetCache.set(url, gltfLoader.loadAsync(url).then(gltf => gltf.scene).catch(error => {
+        console.warn('Loadout asset failed:', url, error);
+        assetCache.delete(url);
+        return null;
+      }));
+    }
+    const model = await assetCache.get(url);
+    return model ? model.clone(true) : null;
+  }
+  function applyAssetTransform(model, config = {}) {
+    const scale = Number(config.scale) || 1;
+    model.scale.setScalar(scale);
+    if (Array.isArray(config.position)) model.position.set(...config.position);
+    if (Array.isArray(config.rotation)) model.rotation.set(...config.rotation);
+    model.traverse(node => {
+      if (node.isMesh) {
+        node.castShadow = true;
+        node.receiveShadow = true;
+        if (node.material) {
+          node.material = Array.isArray(node.material)
+            ? node.material.map(material => material.clone())
+            : node.material.clone();
+        }
+      }
+    });
+    return model;
+  }
+
 
   function makePattern(base, accent, kind) {
     const c = document.createElement('canvas');
@@ -115,8 +171,7 @@ if (canvas) {
     const emblem=mesh(g,new THREE.CircleGeometry(.045,20),accentMat,[0,-.31,.28]);
     return g;
   }
-  glove(-1.05,.28,1);
-  glove(1.03,-.34,-1);
+  const proceduralGloves = [glove(-1.05,.28,1), glove(1.03,-.34,-1)];
 
   const knife = new THREE.Group();
   root.add(knife);
@@ -183,6 +238,42 @@ if (canvas) {
   const gloveColors={'Оригинални цветове':0xffffff,'Червено / черно':0xc52b38,'Синьо / черно':0x4978c8,'Лилаво':0x9562c5,'Златно':0xc49a3b};
   const gloveStyles={'Retro Wave':['#252a3a','#f0448b'],'Living Flame':['#351c20','#f07824'],Tiger:['#252018','#d69b27'],Champion:['#20252b','#bfc7d2'],Specialist:['#1d2927','#4caa8b']};
 
+  async function syncExternalAssets() {
+    const selectedKnife = document.getElementById('knife').value;
+    const selectedGloves = document.getElementById('gloves').value;
+    const models = assetManifest.models || {};
+    const knifeConfig = models.knives && models.knives[selectedKnife];
+    const gloveConfig = models.gloves && models.gloves[selectedGloves];
+
+    if (knifeConfig && knifeConfig.src) {
+      const model = await getAsset(knifeConfig.src);
+      if (model) {
+        while (knife.children.length) knife.remove(knife.children[0]);
+        knife.add(applyAssetTransform(model, knifeConfig));
+        externalKnife = selectedKnife;
+      }
+    } else if (externalKnife) {
+      rebuildKnife(selectedKnife);
+      externalKnife = null;
+    }
+
+    if (gloveConfig && gloveConfig.src) {
+      const model = await getAsset(gloveConfig.src);
+      if (model) {
+        proceduralGloves.forEach(item => { item.visible = false; });
+        if (externalGloves) root.remove(externalGloves);
+        externalGloves = applyAssetTransform(model, gloveConfig);
+        root.add(externalGloves);
+      }
+    } else {
+      if (externalGloves) {
+        root.remove(externalGloves);
+        externalGloves = null;
+      }
+      proceduralGloves.forEach(item => { item.visible = true; });
+    }
+  }
+
   function updateLoadout() {
     const type=document.getElementById('knife').value;
     const skin=document.getElementById('knifeSkin').value;
@@ -197,8 +288,10 @@ if (canvas) {
     gloveMaterial.color.setHex(gloveColors[color]||0xffffff);
     accentMat.color.setHex(gloveColors[color]===0xffffff?0xd52b3b:gloveColors[color]);
     gloveMaterial.needsUpdate=true;
+    syncExternalAssets();
   }
   ['knife','knifeSkin','gloves','gloveColor'].forEach(id=>document.getElementById(id).addEventListener('change',updateLoadout));
+  loadAssetManifest().then(connected => { if (connected) syncExternalAssets(); });
   updateLoadout();
 
   let dragging=false,lastX=0,lastY=0;
