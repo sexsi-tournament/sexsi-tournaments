@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "format": "glb-or-gltf",
+  "note": "Add legally usable model files under this folder and register their relative paths here. Knife models should face +Y with the handle near the origin. Glove models may be a combined left/right pair. scale, position and rotation are optional.",
+  "models": {
+    "knives": {},
+    "gloves": {}
+  }
+}
