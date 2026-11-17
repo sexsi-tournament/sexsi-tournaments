@@ -137,6 +137,8 @@ if (canvas) {
       s.moveTo(-.12,0);s.lineTo(-.12,1.03);s.lineTo(-.19,1.35);s.lineTo(0,1.72);s.lineTo(.19,1.35);s.lineTo(.12,1.03);s.lineTo(.12,0);
     } else if(type==='Fang'){
       s.moveTo(-.13,0);s.lineTo(-.18,.62);s.lineTo(-.08,1.05);s.lineTo(.2,1.52);s.lineTo(.13,.86);s.lineTo(.14,0);
+    } else if(type==='Sting') {
+      s.moveTo(-.12,0);s.lineTo(-.16,.9);s.lineTo(0,1.5);s.lineTo(.16,.9);s.lineTo(.12,0);
     } else {
       s.moveTo(-.12,0);s.lineTo(-.16,.9);s.lineTo(0,1.5);s.lineTo(.16,.9);s.lineTo(.12,0);
     }
