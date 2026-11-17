@@ -1123,24 +1123,33 @@ function invalidateEmailPreview(){
 let singleEmailPreview="";
 async function loadSingleEmailPlayers(){
   const select=document.getElementById("singleEmailPlayer");
-  select.innerHTML='<option value="">Зареждане...</option>';
-  const {data,error}=await db.rpc("sexsi_admin_manage_players");
-  if(error){
-    select.innerHTML='<option value="">Грешка при зареждане</option>';
-    document.getElementById("singleEmailMessage").textContent="Неуспешно зареждане на играчите: "+error.message;
-    return;
+  const message=document.getElementById("singleEmailMessage");
+  select.innerHTML='<option value="">Зареждане на играчите...</option>';
+  message.textContent="Свързване със списъка на играчите...";
+  try{
+    const {data,error}=await db.rpc("sexsi_admin_manage_players");
+    if(error)throw error;
+    const players=Array.isArray(data)?data:[];
+    const validPlayers=players.filter(player=>player.user_id&&player.email);
+    select.innerHTML='<option value="">Избери играч...</option>';
+    validPlayers.forEach(player=>{
+      const option=document.createElement("option");
+      option.value=player.user_id;
+      option.textContent=(player.username||"PLAYER")+" · "+player.email;
+      select.appendChild(option);
+    });
+    if(validPlayers.length===0){
+      select.innerHTML='<option value="">Няма играчи с имейл</option>';
+      message.textContent="Не са намерени играчи с регистриран имейл адрес.";
+    }else{
+      message.textContent="Заредени са "+validPlayers.length+" играчи. Избери получател.";
+    }
+    singleEmailPreview="";
+  }catch(error){
+    select.innerHTML='<option value="">Неуспешно зареждане</option>';
+    message.textContent="Грешка при зареждане на играчите: "+(error?.message||"Провери връзката и обнови страницата.");
+    console.error("Single email player loading failed:",error);
   }
-  const players=Array.isArray(data)?data:[];
-  select.innerHTML='<option value="">Избери играч...</option>';
-  players.filter(player=>player.user_id&&player.email).forEach(player=>{
-    const option=document.createElement("option");
-    option.value=player.user_id;
-    option.textContent=(player.username||"PLAYER")+" · "+player.email;
-    option.dataset.email=player.email;
-    select.appendChild(option);
-  });
-  document.getElementById("singleEmailMessage").textContent="Заредени играчи с валиден имейл: "+(select.options.length-1)+".";
-  singleEmailPreview="";
 }
 document.getElementById("singleEmailPlayer").addEventListener("change",()=>{
   singleEmailPreview="";
@@ -1208,10 +1217,25 @@ document.getElementById("sendSingleEmailButton").addEventListener("click",async(
 async function loadEmailRecipients(){
   emailPreviewCount = 0;
   emailPreviewSnapshot = "";
-  document.getElementById("emailAudienceCount").textContent = "—";
-  document.getElementById("emailAudienceStatus").textContent = "Получателите се зареждат от регистрациите за SEXSI 1V1 CUP #001.";
+  const count=document.getElementById("emailAudienceCount");
+  const status=document.getElementById("emailAudienceStatus");
   document.getElementById("sendTournamentEmailsButton").disabled = true;
-  document.getElementById("emailComposeMessage").textContent = "Попълни темата и съобщението, след което натисни „ПРОВЕРИ ПОЛУЧАТЕЛИТЕ“.";
+  count.textContent="…";
+  status.textContent="Зареждам участниците, записани за SEXSI 1V1 CUP #001...";
+  document.getElementById("emailComposeMessage").textContent = "Попълни темата и съобщението, след което провери получателите преди изпращане.";
+  try{
+    const {data,error}=await db.rpc("sexsi_admin_registrations");
+    if(error)throw error;
+    const recipients=[...new Set((Array.isArray(data)?data:[])
+      .map(player=>(player.player_email||"").trim().toLowerCase())
+      .filter(Boolean))];
+    count.textContent=String(recipients.length);
+    status.textContent="Намерени са "+recipients.length+" уникални имейл адреса от регистрациите за SEXSI 1V1 CUP #001. Преди изпращане ще бъде направена повторна защитена проверка.";
+  }catch(error){
+    count.textContent="—";
+    status.textContent="Неуспешно зареждане на получателите: "+(error?.message||"Провери връзката и обнови страницата.");
+    console.error("Bulk email recipients loading failed:",error);
+  }
 }
 
 document.getElementById("emailSubject").addEventListener("input",invalidateEmailPreview);
