@@ -731,6 +731,7 @@ footer{
       <textarea id="emailBody" rows="9" maxlength="10000" placeholder="Напиши съобщението до участниците..." style="display:block;width:100%;max-width:800px;background:#090909;color:white;border:1px solid var(--border);border-radius:7px;padding:13px;resize:vertical;line-height:1.5;"></textarea>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
         <button class="secondary-button" id="previewTournamentEmailsButton" type="button">ПРОВЕРИ ПОЛУЧАТЕЛИТЕ</button>
+        <button class="secondary-button" id="sendTestTournamentEmailButton" type="button">ИЗПРАТИ ТЕСТ ДО АДМИНИСТРАТОРА</button>
         <button class="primary-button" id="sendTournamentEmailsButton" type="button" disabled>ИЗПРАТИ ИМЕЙЛИТЕ</button>
       </div>
       <p class="message" id="emailComposeMessage" aria-live="polite">Първо провери броя на получателите. Имейлите няма да бъдат изпратени при тази проверка.</p>
@@ -1155,6 +1156,33 @@ document.getElementById("sendTournamentEmailsButton").addEventListener("click",a
     button.textContent="ОПИТАЙ ОТНОВО СЛЕД ПРОВЕРКА";
     emailPreviewCount=0;
     emailPreviewSnapshot="";
+  }
+});
+
+
+document.getElementById("sendTestTournamentEmailButton").addEventListener("click",async()=>{
+  const button=document.getElementById("sendTestTournamentEmailButton");
+  const message=document.getElementById("emailComposeMessage");
+  const draft=currentEmailDraft();
+  if(!draft.subject||!draft.message){
+    message.textContent="Попълни тема и съобщение преди теста.";
+    return;
+  }
+  if(!confirm("Ще бъде изпратен ЕДИН тестов имейл само до имейла на администратора. До участниците няма да се изпраща нищо. Продължаваш ли?"))return;
+  button.disabled=true;
+  button.textContent="ИЗПРАЩАНЕ НА ТЕСТ...";
+  try{
+    const {data,error}=await db.functions.invoke("send-tournament-emails",{
+      body:{subject:draft.subject,message:draft.message,test_only:true,dry_run:false}
+    });
+    if(error)throw error;
+    if(!data||data.test_only!==true||data.sent!==1)throw new Error(data?.error||data?.detail||"Тестовият имейл не беше приет.");
+    message.textContent="Тестовият имейл е приет от Resend. Проверѝ входящата поща и папка Спам. До участниците не е изпратено нищо.";
+  }catch(error){
+    message.textContent="Грешка при тестовото изпращане: "+(error.message||"Неизвестна грешка");
+  }finally{
+    button.disabled=false;
+    button.textContent="ИЗПРАТИ ТЕСТ ДО АДМИНИСТРАТОРА";
   }
 });
 
