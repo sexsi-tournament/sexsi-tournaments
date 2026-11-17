@@ -26,6 +26,7 @@ h1 span{color:var(--red)}
 .stage{min-height:510px;position:relative;overflow:hidden;border:1px solid rgba(237,37,45,.3);border-radius:14px;background:radial-gradient(ellipse at 50% 48%,rgba(115,20,26,.25),transparent 52%),linear-gradient(145deg,#171719,#090909 65%);display:flex;align-items:center;justify-content:center}
 .stage:before{content:"";position:absolute;inset:0;opacity:.22;background:linear-gradient(135deg,transparent 49.8%,rgba(255,255,255,.08) 50%,transparent 50.2%),linear-gradient(45deg,transparent 49.8%,rgba(255,255,255,.05) 50%,transparent 50.2%);background-size:80px 80px}
 .stage-glow{position:absolute;width:340px;height:340px;border-radius:50%;background:rgba(237,37,45,.12);filter:blur(85px)}
+#loadoutCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}.stage-hint{position:absolute;bottom:15px;left:0;right:0;text-align:center;color:#777;font-size:9px;font-weight:900;letter-spacing:1.5px;pointer-events:none}
 .stage-content{position:relative;text-align:center;padding:30px;max-width:490px}
 .stage-icon{width:76px;height:76px;margin:0 auto 22px;border:1px solid rgba(237,37,45,.5);border-radius:22px;display:grid;place-items:center;background:rgba(237,37,45,.08);font-size:32px;box-shadow:0 0 45px rgba(237,37,45,.12)}
 .stage-content h2{font-size:18px;letter-spacing:2px;margin:0 0 10px}
@@ -74,11 +75,7 @@ footer{border-top:1px solid var(--line);padding:22px 6%;color:#666;font-size:10p
 <div class="stage">
 <div class="stage-corner">LIVE PREVIEW / 3D VIEWPORT</div><div class="stage-corner right">PROTOTYPE 01</div>
 <div class="stage-glow"></div>
-<div class="stage-content">
-<div class="stage-icon">◈</div>
-<h2>3D PREVIEW INITIALIZING</h2>
-<p>Интерактивна 3D сцена от първо лице. Избраните предмети се визуализират заедно в реално време.</p>
-<div class="stage-tag">REAL-TIME 3D VIEW</div>
+<canvas id="loadoutCanvas" aria-label="3D визуализация на нож и ръкавици"></canvas><div class="stage-hint">ПРЕГЛЕД ОТ ПЪРВО ЛИЦЕ · ЗАДРЪЖ И ПЛЪЗНИ, ЗА ДА ЗАВЪРТИШ</div>
 </div>
 </div>
 <aside class="controls">
@@ -108,5 +105,6 @@ ids.forEach(id=>document.getElementById(id).addEventListener('change',updateComb
 document.getElementById('randomBtn').addEventListener('click',()=>{ids.forEach(id=>{const el=document.getElementById(id);el.selectedIndex=Math.floor(Math.random()*el.options.length)});updateCombo()});
 document.getElementById('resetBtn').addEventListener('click',()=>{ids.forEach(id=>document.getElementById(id).selectedIndex=0);updateCombo()});
 </script>
+<script type="module" src="loadout-3d.js"></script>
 </body>
 </html>
