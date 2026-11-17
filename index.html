@@ -642,6 +642,11 @@ footer{
   .guest-auth-actions{gap:6px}
   .guest-auth-actions a{min-height:33px;padding:8px 9px;font-size:8px}
 }
+
+.quick-link-card{display:flex;flex-direction:column;gap:9px;text-decoration:none;color:#fff;min-height:105px;justify-content:center;transition:transform .2s,border-color .2s}
+.quick-link-card strong{font-size:15px;letter-spacing:.6px}
+.quick-link-card span{font-size:12px;color:#999}
+.quick-link-card:hover{transform:translateY(-3px);border-color:#ed252d}
 </style>
   <link rel="stylesheet" href="elite.css?v=3">
 </head>
@@ -760,7 +765,7 @@ footer{
     <div class="tag">STANDOFF 2 ESPORTS PLATFORM</div>
     <h1>ИГРАЙ<br>СПЕЧЕЛИ<br><span>ДОМИНИРАЙ</span></h1>
     <p>Важното е целта. Изгради отбор. БИЙ СЕ ЗА ТОП МЯСТОТО!</p>
-    <a class="btn" href="#tournaments">РАЗГЛЕДАЙ ТУРНИРИТЕ</a>
+    <a class="btn" href="tournaments.html">РАЗГЛЕДАЙ ТУРНИРИТЕ</a>
   </div>
   </div>
 
@@ -768,81 +773,28 @@ footer{
 
 <section id="featured-tournament">
   <div class="featured-wrap">
-    <div class="official">OFFICIAL TOURNAMENT</div>
+    <div class="official">АКТИВЕН ТУРНИР</div>
     <h2>SEXSI 1V1 CUP <span>#001</span></h2>
     <div class="prize">5 000 GOLD</div>
-    <div class="prize-label">ЗА ПОБЕДИТЕЛЯ</div>
-    <div class="featured-info">
-      16 ИГРАЧИ · БЕЗПЛАТНО УЧАСТИЕ<br>
-      BO1 · ЕДНА ИГРА РЕШАВА МАЧА
-    </div>
-    <div style="color:#ff454b;font-weight:bold">КРАЕН СРОК: 25.11.2026</div>
-    <div style="color:#aaa;margin-top:8px">ТУРНИР: 02.12.2026</div>
+    <div class="prize-label">НАГРАДА ЗА ПОБЕДИТЕЛЯ</div>
+    <div id="registrationStatus" class="status" style="margin:14px 0;color:#48d98a">● ОТВОРЕНО ЗА РЕГИСТРАЦИЯ</div>
+    <div id="registrationCount" class="featured-info">👥 Участници: зареждане... / 16</div>
+    <div class="featured-info">Краен срок: 25.11.2026 · Турнир: 02.12.2026</div>
     <a class="btn" href="tournament-001.html">ПОВЕЧЕ ИНФОРМАЦИЯ</a>
-    <a class="btn" href="profile.html?join=SEXSI-1V1-001">ЗАПИШИ СЕ ЗА ТУРНИРА</a>
-    <button class="btn" type="button" onclick="shareSexsiSite()" style="cursor:pointer;border:0">
-      <span aria-hidden="true">↗</span> ПОКАНИ ПРИЯТЕЛ
-    </button>
-    <p style="color:#999;font-size:12px;margin:8px auto 0;max-width:320px">Сподели SEXSI TOURNAMENTS с приятел и го покани да участва.</p>
-    <a class="btn" href="https://www.tiktok.com/@sexsi.tt.o.b" target="_blank" rel="noopener noreferrer" style="background:#b42335">
-      <span aria-hidden="true">🔴</span> ГЛЕДАЙ НА ЖИВО В TIKTOK
-    </a>
-    <p style="color:#999;font-size:12px;margin:8px auto 0;max-width:320px">Отвори TikTok профила на SEXSI TOURNAMENTS и гледай, когато сме на живо.</p>
+    <a class="btn" href="profile.html?join=SEXSI-1V1-001">ЗАПИШИ СЕ</a>
   </div>
 </section>
 
-<section id="modes">
-  <div class="heading">РЕЖИМИ НА ИГРА</div>
-  <div class="modes">
-    <div class="mode"><strong>1V1</strong><p>Един срещу един</p></div>
-    <div class="mode"><strong>2V2</strong><p>Двама срещу двама</p></div>
-    <div class="mode"><strong>5V5</strong><p>Отборен мач 5vs5</p></div>
-  </div>
-</section>
-
-<section id="tournaments">
-    <div class="heading">ПРЕДСТОЯЩИ ТУРНИРИ</div>
+<section id="homeQuickLinks" style="max-width:1100px;margin:0 auto;padding:10px 20px 35px">
+  <div class="heading" style="text-align:center">БЪРЗ ДОСТЪП</div>
   <div class="cards">
-    <div class="card">
-      <div class="status" id="registrationStatus">● ОТВОРЕНО ЗА РЕГИСТРАЦИЯ</div>
-
-      <h3>SEXSI 1V1 CUP #001</h3>
-      <p>🎮 Игра: STANDOFF 2</p>
-      <p>⚔️ Режим: 1V1 • BO1</p>
-      <p id="registrationCount">👥 Участници: зареждане... / 16</p>
-      <p>💰 Вход: БЕЗПЛАТНО</p>
-
-      <div style="margin:20px 0;padding:15px;background:#211719;border:1px solid #7d2529;border-radius:8px">
-        <div style="color:#e9bd59;font-size:25px;font-weight:900">5 000 GOLD</div>
-        <div style="font-size:12px;color:#aaa">НАГРАДА ЗА ПОБЕДИТЕЛЯ</div>
-      </div>
-
-      <p>📅 Краен срок: 25.11.2026</p>
-      <p>🏆 Турнир: 02.12.2026</p>
-      <a class="btn" href="tournament-001.html">ПОВЕЧЕ ИНФОРМАЦИЯ</a>
-      <div style="margin:14px 0 0;padding:13px;background:rgba(237,37,45,.08);border:1px solid rgba(237,37,45,.3);border-radius:8px;color:#ddd;font-size:12px;line-height:1.7;text-align:center">
-        📧 <strong style="color:#fff">Важно:</strong> 3 дни преди началото на турнира ще получиш имейл с напомняне и важна информация за участието.
-      </div>
-      <a class="btn" href="profile.html?join=SEXSI-1V1-001">ЗАПИШИ СЕ ЗА ТУРНИРА</a>
-    </div>
-
-    <div class="card">
-      <div class="status">● ОЧАКВАЙТЕ СКОРО</div>
-      <h3>SEXSI 2V2 CUP</h3>
-      <p>ИГРА: STANDOFF 2</p>
-      <p>РЕЖИМ: 2V2</p>
-      <p>ДВАМА СРЕЩУ ДВАМА</p>
-    </div>
-
-    <div class="card">
-      <div class="status">● ОЧАКВАЙТЕ СКОРО</div>
-      <h3>SEXSI 5V5 CUP</h3>
-      <p>ИГРА: STANDOFF 2</p>
-      <p>РЕЖИМ: 5V5</p>
-      <p>ОТБОРЕН МАЧ 5vs5</p>
-    </div>
+    <a class="card quick-link-card" href="tournaments.html"><strong>ТУРНИРИ</strong><span>Разгледай всички състезания</span></a>
+    <a class="card quick-link-card" href="matches.html"><strong>МОИТЕ ДУБОИ</strong><span>Следи своите мачове</span></a>
+    <a class="card quick-link-card" href="#bracketAccess"><strong>ТУРНИРНА СХЕМА</strong><span>Отвори схемата на турнира</span></a>
   </div>
 </section>
+
+
 
 <section id="bracketAccess" style="padding:25px 15px;max-width:1100px;margin:auto;text-align:center">
   <h2>🏆 ТУРНИРНА СХЕМА</h2>
@@ -857,30 +809,7 @@ footer{
   </div>
 </section>
 
-<section id="faq" aria-labelledby="faqHeading">
-  <div class="faq-wrap">
-    <div class="heading" id="faqHeading">ЧЕСТО ЗАДАВАНИ ВЪПРОСИ</div>
-    <p class="faq-intro">Всичко важно за участието в турнирите SEXSI TOURNAMENTS.</p>
-    <div class="faq-list">
-      <details class="faq-item">
-        <summary>Как да се запиша за турнир?</summary>
-        <p>Влез или създай профил, добави своя Standoff 2 Game ID и натисни „ЗАПИШИ СЕ ЗА ТУРНИРА“ на страницата на съответния турнир.</p>
-      </details>
-      <details class="faq-item">
-        <summary>Мога ли да се откажа след записване?</summary>
-        <p>Да. Отвори менюто на профила си, избери „МОИТЕ ТУРНИРИ“ и натисни „ОТКАЖИ УЧАСТИЕ“. Отписването е възможно, докато турнирната схема не бъде създадена.</p>
-      </details>
-      <details class="faq-item">
-        <summary>Къде ще видя своите мачове?</summary>
-        <p>След създаването на турнирната схема влез в профила си и отвори „МОИТЕ ТУРНИРИ“. Там ще виждаш личните си двубои, противника, резултата и статуса на мача.</p>
-      </details>
-      <details class="faq-item">
-        <summary>Какво означава BO1?</summary>
-        <p>BO1 означава, че двубоят се решава в една игра. Победителят продължава към следващия кръг.</p>
-      </details>
-    </div>
-  </div>
-</section>
+
 
 </main>
 
