@@ -1,0 +1,2008 @@
+{
+  "updatedAt": "2026-11-17",
+  "source": "Community item database + community image repository; latest Osiris items added from current season references.",
+  "counts": {
+    "knives": 168,
+    "gloves": 54
+  },
+  "items": [
+    {
+      "id": 3011,
+      "name": "Gloves \"Acid\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Project Pandora",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3011.png"
+    },
+    {
+      "id": 3031,
+      "name": "Gloves \"Artificer\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Chameleon",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3031.png"
+    },
+    {
+      "id": 3001,
+      "name": "Gloves \"Autumn\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Revival",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3001.png"
+    },
+    {
+      "id": 3006,
+      "name": "Gloves \"Burning Fists\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Empire",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3006.png"
+    },
+    {
+      "id": 3012,
+      "name": "Gloves \"Camo\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Project Pandora",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3012.png"
+    },
+    {
+      "id": 3008,
+      "name": "Gloves \"Champion\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Empire",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3008.png"
+    },
+    {
+      "id": 3032,
+      "name": "Gloves \"Dragon Glass\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Chameleon",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3032.png"
+    },
+    {
+      "id": 3021,
+      "name": "Gloves \"Dragon Scale\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Fireborn",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3021.png"
+    },
+    {
+      "id": 3049,
+      "name": "Gloves \"Dread\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Gambit",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3049.png"
+    },
+    {
+      "id": 3041,
+      "name": "Gloves \"Feral\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Prey",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3041.png"
+    },
+    {
+      "id": 3046,
+      "name": "Gloves \"Flicker\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Prey",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3046.png"
+    },
+    {
+      "id": 3023,
+      "name": "Gloves \"Flux\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Subjectx",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3023.png"
+    },
+    {
+      "id": 3013,
+      "name": "Gloves \"Fossil\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Project Pandora",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3013.png"
+    },
+    {
+      "id": 3044,
+      "name": "Gloves \"Frond\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Prey",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3044.png"
+    },
+    {
+      "id": 3052,
+      "name": "Gloves \"Gambit\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Gambit",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3052.png"
+    },
+    {
+      "id": 3038,
+      "name": "Gloves \"Gangster\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Reforged",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3038.png"
+    },
+    {
+      "id": 3002,
+      "name": "Gloves \"Geometric\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Revival",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3002.png"
+    },
+    {
+      "id": 3040,
+      "name": "Gloves \"Hanami\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Kitsune Dreams",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3040.png"
+    },
+    {
+      "id": 3014,
+      "name": "Gloves \"Handcraft\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Project Pandora",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3014.png"
+    },
+    {
+      "id": 3025,
+      "name": "Gloves \"Haunt\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Subjectx",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3025.png"
+    },
+    {
+      "id": 3028,
+      "name": "Gloves \"Immolation\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Subjectx",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3028.png"
+    },
+    {
+      "id": 3047,
+      "name": "Gloves \"Impulse\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Event8years",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3047.png"
+    },
+    {
+      "id": 3036,
+      "name": "Gloves \"Ironclad\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Reforged",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3036.png"
+    },
+    {
+      "id": 3004,
+      "name": "Gloves \"Living Flame\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Revival",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3004.png"
+    },
+    {
+      "id": 3042,
+      "name": "Gloves \"Marble\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Prey",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3042.png"
+    },
+    {
+      "id": 3033,
+      "name": "Gloves \"Mimicry\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Chameleon",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3033.png"
+    },
+    {
+      "id": 3027,
+      "name": "Gloves \"Mortal Veil\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Subjectx",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3027.png"
+    },
+    {
+      "id": 3005,
+      "name": "Gloves \"Neuro\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Revival",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3005.png"
+    },
+    {
+      "id": 3019,
+      "name": "Gloves \"Onyx\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Fireborn",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3019.png"
+    },
+    {
+      "id": 3000,
+      "name": "Gloves \"Phoenix Risen\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Revival",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3000.png"
+    },
+    {
+      "id": 3026,
+      "name": "Gloves \"Plague\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Subjectx",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3026.png"
+    },
+    {
+      "id": 3039,
+      "name": "Gloves \"Polymer\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Reforged",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3039.png"
+    },
+    {
+      "id": 3007,
+      "name": "Gloves \"Punk\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Empire",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3007.png"
+    },
+    {
+      "id": 3015,
+      "name": "Gloves \"Raider\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Project Pandora",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3015.png"
+    },
+    {
+      "id": 3048,
+      "name": "Gloves \"Ravage\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Gambit",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3048.png"
+    },
+    {
+      "id": 3034,
+      "name": "Gloves \"Rebellion\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Reforged",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3034.png"
+    },
+    {
+      "id": 3003,
+      "name": "Gloves \"Retro Wave\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Revival",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3003.png"
+    },
+    {
+      "id": 3050,
+      "name": "Gloves \"Ritual\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Gambit",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3050.png"
+    },
+    {
+      "id": 3022,
+      "name": "Gloves \"Royal Rose\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Fireborn",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3022.png"
+    },
+    {
+      "id": 3024,
+      "name": "Gloves \"Shatter\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Subjectx",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3024.png"
+    },
+    {
+      "id": 3054,
+      "name": "Gloves \"Skeletal Hand\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Dia De Muertos",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3054.png"
+    },
+    {
+      "id": 3043,
+      "name": "Gloves \"Slash\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Prey",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3043.png"
+    },
+    {
+      "id": 3037,
+      "name": "Gloves \"Spectral\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Reforged",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3037.png"
+    },
+    {
+      "id": 3045,
+      "name": "Gloves \"Spray\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Prey",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3045.png"
+    },
+    {
+      "id": 3009,
+      "name": "Gloves \"Steam Rider\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Empire",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3009.png"
+    },
+    {
+      "id": 3030,
+      "name": "Gloves \"Stream\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Chameleon",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3030.png"
+    },
+    {
+      "id": 3020,
+      "name": "Gloves \"Tan Hide\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Fireborn",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3020.png"
+    },
+    {
+      "id": 3017,
+      "name": "Gloves \"Templar\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Fireborn",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3017.png"
+    },
+    {
+      "id": 3053,
+      "name": "Gloves \"Tessera\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Gambit",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3053.png"
+    },
+    {
+      "id": 3016,
+      "name": "Gloves \"Thug\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Project Pandora",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3016.png"
+    },
+    {
+      "id": 3035,
+      "name": "Gloves \"Utility\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Reforged",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3035.png"
+    },
+    {
+      "id": 3051,
+      "name": "Gloves \"White Camo\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Gambit",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3051.png"
+    },
+    {
+      "id": 3018,
+      "name": "Gloves \"X-Ray\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Fireborn",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3018.png"
+    },
+    {
+      "id": 3010,
+      "name": "Gloves \"Year Of The Tiger\"",
+      "model": "Gloves",
+      "type": "gloves",
+      "rarity": "Arcane",
+      "collection": "Winter Fun 2022",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/3010.png"
+    },
+    {
+      "id": 240269,
+      "name": "Butterfly \"Arcane Surge\"",
+      "model": "Butterfly",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dia De Muertos",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240269.png"
+    },
+    {
+      "id": 47504,
+      "name": "Butterfly \"Black Widow\"",
+      "model": "Butterfly",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Fable",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/47504.png"
+    },
+    {
+      "id": 97500,
+      "name": "Butterfly \"Cold Flame\"",
+      "model": "Butterfly",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "New Year 2021",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/97500.png"
+    },
+    {
+      "id": 47503,
+      "name": "Butterfly \"Dragon Glass\"",
+      "model": "Butterfly",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Fable",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/47503.png"
+    },
+    {
+      "id": 57501,
+      "name": "Butterfly \"Fire Storm\"",
+      "model": "Butterfly",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Competitive",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/57501.png"
+    },
+    {
+      "id": 240225,
+      "name": "Butterfly \"Gambit\"",
+      "model": "Butterfly",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Gambit",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240225.png"
+    },
+    {
+      "id": 240007,
+      "name": "Butterfly \"Glitch\"",
+      "model": "Butterfly",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Space Vision",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240007.png"
+    },
+    {
+      "id": 240331,
+      "name": "Butterfly \"Jade Stone\"",
+      "model": "Butterfly",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Year Of The Horse",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240331.png"
+    },
+    {
+      "id": 157500,
+      "name": "Butterfly \"Kumo\"",
+      "model": "Butterfly",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Winter Fun 2022",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/157500.png"
+    },
+    {
+      "id": 47502,
+      "name": "Butterfly \"Legacy\"",
+      "model": "Butterfly",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Fable",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/47502.png"
+    },
+    {
+      "id": 240130,
+      "name": "Butterfly \"Ripple\"",
+      "model": "Butterfly",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Nightmare",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240130.png"
+    },
+    {
+      "id": 240059,
+      "name": "Butterfly \"Saphira\"",
+      "model": "Butterfly",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Frosty Chaos",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240059.png"
+    },
+    {
+      "id": 47505,
+      "name": "Butterfly \"Starfall\"",
+      "model": "Butterfly",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Fable",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/47505.png"
+    },
+    {
+      "id": 240319,
+      "name": "Butterfly \"Wild West\"",
+      "model": "Butterfly",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Winter Tale",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240319.png"
+    },
+    {
+      "id": 170021,
+      "name": "Dual Daggers \"Acid\"",
+      "model": "Dual Daggers",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Sharp",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/170021.png"
+    },
+    {
+      "id": 240129,
+      "name": "Dual Daggers \"Contagion\"",
+      "model": "Dual Daggers",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Nightmare",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240129.png"
+    },
+    {
+      "id": 170022,
+      "name": "Dual Daggers \"Demonic Steel\"",
+      "model": "Dual Daggers",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Sharp",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/170022.png"
+    },
+    {
+      "id": 240270,
+      "name": "Dual Daggers \"Flor de Muertos\"",
+      "model": "Dual Daggers",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dia De Muertos",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240270.png"
+    },
+    {
+      "id": 240060,
+      "name": "Dual Daggers \"Frost Nova\"",
+      "model": "Dual Daggers",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Frosty Chaos",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240060.png"
+    },
+    {
+      "id": 170023,
+      "name": "Dual Daggers \"Grunge\"",
+      "model": "Dual Daggers",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Sharp",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/170023.png"
+    },
+    {
+      "id": 180000,
+      "name": "Dual Daggers \"Harmony\"",
+      "model": "Dual Daggers",
+      "type": "knife",
+      "rarity": "Nameless",
+      "collection": "Nameless",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/180000.png"
+    },
+    {
+      "id": 180028,
+      "name": "Dual Daggers \"Jaws\"",
+      "model": "Dual Daggers",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Legends",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/180028.png"
+    },
+    {
+      "id": 170024,
+      "name": "Dual Daggers \"Molten\"",
+      "model": "Dual Daggers",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Sharp",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/170024.png"
+    },
+    {
+      "id": 200017,
+      "name": "Dual Daggers \"Retro Arcade\"",
+      "model": "Dual Daggers",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Hot Winter Party 2023",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/200017.png"
+    },
+    {
+      "id": 240109,
+      "name": "Dual Daggers \"Tiki\"",
+      "model": "Dual Daggers",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Fun And Sun",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240109.png"
+    },
+    {
+      "id": 240033,
+      "name": "Fang \"Aureate\"",
+      "model": "Fang",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Sunstrike",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240033.png"
+    },
+    {
+      "id": 240034,
+      "name": "Fang \"Damascus\"",
+      "model": "Fang",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Sunstrike",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240034.png"
+    },
+    {
+      "id": 240029,
+      "name": "Fang \"Flare\"",
+      "model": "Fang",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Sunstrike",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240029.png"
+    },
+    {
+      "id": 240045,
+      "name": "Fang \"Haunt\"",
+      "model": "Fang",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Subjectx",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240045.png"
+    },
+    {
+      "id": 240321,
+      "name": "Fang \"Ice Storm\"",
+      "model": "Fang",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Winter Tale",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240321.png"
+    },
+    {
+      "id": null,
+      "name": "Fang \"Lapis Lazuli\"",
+      "model": "Fang",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Osiris",
+      "image": null
+    },
+    {
+      "id": 240031,
+      "name": "Fang \"Obsidian\"",
+      "model": "Fang",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Sunstrike",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240031.png"
+    },
+    {
+      "id": 240032,
+      "name": "Fang \"Relic\"",
+      "model": "Fang",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Sunstrike",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240032.png"
+    },
+    {
+      "id": 240058,
+      "name": "Fang \"Saphira\"",
+      "model": "Fang",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Frosty Chaos",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240058.png"
+    },
+    {
+      "id": 240030,
+      "name": "Fang \"Serpent\"",
+      "model": "Fang",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Sunstrike",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240030.png"
+    },
+    {
+      "id": 240155,
+      "name": "Fang \"Wavesong\"",
+      "model": "Fang",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Kitsune Dreams",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240155.png"
+    },
+    {
+      "id": 67702,
+      "name": "Flip \"Arctic\"",
+      "model": "Flip",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Newyear2020",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/67702.png"
+    },
+    {
+      "id": 67701,
+      "name": "Flip \"Dragon Glass\"",
+      "model": "Flip",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Newyear2020",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/67701.png"
+    },
+    {
+      "id": 67705,
+      "name": "Flip \"Frozen\"",
+      "model": "Flip",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Newyear2020",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/67705.png"
+    },
+    {
+      "id": 157700,
+      "name": "Flip \"Holiday Frost\"",
+      "model": "Flip",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Winter Fun 2022",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/157700.png"
+    },
+    {
+      "id": 240011,
+      "name": "Flip \"Magnalium\"",
+      "model": "Flip",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Space Vision",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240011.png"
+    },
+    {
+      "id": 97700,
+      "name": "Flip \"Snow Camo\"",
+      "model": "Flip",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "New Year 2021",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/97700.png"
+    },
+    {
+      "id": 67703,
+      "name": "Flip \"Stone Cold\"",
+      "model": "Flip",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Newyear2020",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/67703.png"
+    },
+    {
+      "id": 67704,
+      "name": "Flip \"Vortex\"",
+      "model": "Flip",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Newyear2020",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/67704.png"
+    },
+    {
+      "id": 73001,
+      "name": "jKommando \"Acid\"",
+      "model": "jKommando",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Rival",
+      "image": null
+    },
+    {
+      "id": 73002,
+      "name": "jKommando \"Ancient\"",
+      "model": "jKommando",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Rival",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/73002.png"
+    },
+    {
+      "id": 157300,
+      "name": "jKommando \"Augustite\"",
+      "model": "jKommando",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Winter Fun 2022",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/157300.png"
+    },
+    {
+      "id": 240056,
+      "name": "jKommando \"Blight\"",
+      "model": "jKommando",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Frosty Chaos",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240056.png"
+    },
+    {
+      "id": 240271,
+      "name": "jKommando \"Engraving\"",
+      "model": "jKommando",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dia De Muertos",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240271.png"
+    },
+    {
+      "id": 73004,
+      "name": "jKommando \"Floral\"",
+      "model": "jKommando",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Rival",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/73004.png"
+    },
+    {
+      "id": 97300,
+      "name": "jKommando \"Frozen\"",
+      "model": "jKommando",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "New Year 2021",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/97300.png"
+    },
+    {
+      "id": 73005,
+      "name": "jKommando \"Iron\"",
+      "model": "jKommando",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Rival",
+      "image": null
+    },
+    {
+      "id": 73006,
+      "name": "jKommando \"Luxury\"",
+      "model": "jKommando",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Rival",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/73006.png"
+    },
+    {
+      "id": 240132,
+      "name": "jKommando \"Plasma\"",
+      "model": "jKommando",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Nightmare",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240132.png"
+    },
+    {
+      "id": 200015,
+      "name": "jKommando \"Prism\"",
+      "model": "jKommando",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Hot Winter Party 2023",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/200015.png"
+    },
+    {
+      "id": 73003,
+      "name": "jKommando \"Reaper\"",
+      "model": "jKommando",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Rival",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/73003.png"
+    },
+    {
+      "id": 73007,
+      "name": "jKommando \"Universe\"",
+      "model": "jKommando",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Rival",
+      "image": null
+    },
+    {
+      "id": 72002,
+      "name": "Karambit \"Claw\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Furious",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/72002.png"
+    },
+    {
+      "id": 97200,
+      "name": "Karambit \"Cold Flame\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "New Year 2021",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/97200.png"
+    },
+    {
+      "id": 72004,
+      "name": "Karambit \"Dragon Glass\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Furious",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/72004.png"
+    },
+    {
+      "id": 97201,
+      "name": "Karambit \"Frozen\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "New Year 2021",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/97201.png"
+    },
+    {
+      "id": 72003,
+      "name": "Karambit \"Gold\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Nameless",
+      "collection": "Nameless",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/72003.png"
+    },
+    {
+      "id": 240290,
+      "name": "Karambit \"Hologram\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Winter Tale",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240290.png"
+    },
+    {
+      "id": null,
+      "name": "Karambit \"Jade Stone\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Osiris",
+      "image": null
+    },
+    {
+      "id": 240014,
+      "name": "Karambit \"Nebula\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Space Vision",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240014.png"
+    },
+    {
+      "id": 240111,
+      "name": "Karambit \"Pelagia\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Fun And Sun",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240111.png"
+    },
+    {
+      "id": 200011,
+      "name": "Karambit \"Purple Camo\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Hot Winter Party 2023",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/200011.png"
+    },
+    {
+      "id": 72006,
+      "name": "Karambit \"Scratch\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Furious",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/72006.png"
+    },
+    {
+      "id": 97203,
+      "name": "Karambit \"Snow Camo\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "New Year 2021",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/97203.png"
+    },
+    {
+      "id": 72007,
+      "name": "Karambit \"Universe\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Furious",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/72007.png"
+    },
+    {
+      "id": 240164,
+      "name": "Karambit \"Vermilion\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Kitsune Dreams",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240164.png"
+    },
+    {
+      "id": 240275,
+      "name": "Karambit \"White Rose\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dia De Muertos",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240275.png"
+    },
+    {
+      "id": 240131,
+      "name": "Karambit \"Widow's Weave\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Nightmare",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240131.png"
+    },
+    {
+      "id": 157200,
+      "name": "Karambit \"Year Of The Tiger\"",
+      "model": "Karambit",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Winter Fun 2022",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/157200.png"
+    },
+    {
+      "id": 180025,
+      "name": "Kukri \"Antique Silver\"",
+      "model": "Kukri",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Legends",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/180025.png"
+    },
+    {
+      "id": 180022,
+      "name": "Kukri \"Ares\"",
+      "model": "Kukri",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Legends",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/180022.png"
+    },
+    {
+      "id": 240227,
+      "name": "Kukri \"Cascade\"",
+      "model": "Kukri",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Syndicate",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240227.png"
+    },
+    {
+      "id": 180026,
+      "name": "Kukri \"Constellations\"",
+      "model": "Kukri",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Legends",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/180026.png"
+    },
+    {
+      "id": 240128,
+      "name": "Kukri \"Decay\"",
+      "model": "Kukri",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Nightmare",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240128.png"
+    },
+    {
+      "id": 200013,
+      "name": "Kukri \"Digital Burst\"",
+      "model": "Kukri",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Hot Winter Party 2023",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/200013.png"
+    },
+    {
+      "id": 180027,
+      "name": "Kukri \"Divine Power\"",
+      "model": "Kukri",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Legends",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/180027.png"
+    },
+    {
+      "id": 180024,
+      "name": "Kukri \"Gold Trim\"",
+      "model": "Kukri",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Legends",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/180024.png"
+    },
+    {
+      "id": 240320,
+      "name": "Kukri \"Pixel Glass\"",
+      "model": "Kukri",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Winter Tale",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240320.png"
+    },
+    {
+      "id": 180023,
+      "name": "Kukri \"Prophet\"",
+      "model": "Kukri",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Legends",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/180023.png"
+    },
+    {
+      "id": 240110,
+      "name": "Kukri \"Sea Glint\"",
+      "model": "Kukri",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Fun And Sun",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240110.png"
+    },
+    {
+      "id": null,
+      "name": "Kukri \"Winged Sun\"",
+      "model": "Kukri",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Osiris",
+      "image": null
+    },
+    {
+      "id": 157800,
+      "name": "Kunai \"Augustite\"",
+      "model": "Kunai",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Winter Fun 2022",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/157800.png"
+    },
+    {
+      "id": 77813,
+      "name": "Kunai \"Bone\"",
+      "model": "Kunai",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Project Z9",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/77813.png"
+    },
+    {
+      "id": 97800,
+      "name": "Kunai \"Cold Flame\"",
+      "model": "Kunai",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "New Year 2021",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/97800.png"
+    },
+    {
+      "id": 240231,
+      "name": "Kunai \"Diffusion\"",
+      "model": "Kunai",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Syndicate",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240231.png"
+    },
+    {
+      "id": 240318,
+      "name": "Kunai \"Fire Horse\"",
+      "model": "Kunai",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Winter Tale",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240318.png"
+    },
+    {
+      "id": 240008,
+      "name": "Kunai \"Glitch\"",
+      "model": "Kunai",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Space Vision",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240008.png"
+    },
+    {
+      "id": 77814,
+      "name": "Kunai \"Luxury\"",
+      "model": "Kunai",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Project Z9",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/77814.png"
+    },
+    {
+      "id": 77815,
+      "name": "Kunai \"Poison\"",
+      "model": "Kunai",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Project Z9",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/77815.png"
+    },
+    {
+      "id": 200014,
+      "name": "Kunai \"Prism\"",
+      "model": "Kunai",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Hot Winter Party 2023",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/200014.png"
+    },
+    {
+      "id": 77816,
+      "name": "Kunai \"Radiation\"",
+      "model": "Kunai",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Project Z9",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/77816.png"
+    },
+    {
+      "id": 77817,
+      "name": "Kunai \"Reaper\"",
+      "model": "Kunai",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Project Z9",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/77817.png"
+    },
+    {
+      "id": 97801,
+      "name": "Kunai \"Snow Camo\"",
+      "model": "Kunai",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "New Year 2021",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/97801.png"
+    },
+    {
+      "id": 240156,
+      "name": "Kunai \"Wavesong\"",
+      "model": "Kunai",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Kitsune Dreams",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240156.png"
+    },
+    {
+      "id": 240154,
+      "name": "M9 Bayonet \"Amber Koi\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Kitsune Dreams",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240154.png"
+    },
+    {
+      "id": 71002,
+      "name": "M9 Bayonet \"Ancient\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Origin",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/71002.png"
+    },
+    {
+      "id": 71001,
+      "name": "M9 Bayonet \"Blue Blood\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Assistance",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/71001.png"
+    },
+    {
+      "id": 240294,
+      "name": "M9 Bayonet \"Citrine\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Valor",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240294.png"
+    },
+    {
+      "id": 240063,
+      "name": "M9 Bayonet \"Dark Shiver\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Frosty Chaos",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240063.png"
+    },
+    {
+      "id": 200012,
+      "name": "M9 Bayonet \"Digital Burst\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Hot Winter Party 2023",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/200012.png"
+    },
+    {
+      "id": 71005,
+      "name": "M9 Bayonet \"Dragon Glass\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Origin",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/71005.png"
+    },
+    {
+      "id": 97100,
+      "name": "M9 Bayonet \"Frozen\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "New Year 2021",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/97100.png"
+    },
+    {
+      "id": 157100,
+      "name": "M9 Bayonet \"Kumo\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Winter Fun 2022",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/157100.png"
+    },
+    {
+      "id": 240228,
+      "name": "M9 Bayonet \"Moonstone\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Syndicate",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240228.png"
+    },
+    {
+      "id": 240295,
+      "name": "M9 Bayonet \"Poison\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Valor",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240295.png"
+    },
+    {
+      "id": 71003,
+      "name": "M9 Bayonet \"Scratch\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Origin",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/71003.png"
+    },
+    {
+      "id": 240293,
+      "name": "M9 Bayonet \"Sketch\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Valor",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240293.png"
+    },
+    {
+      "id": null,
+      "name": "M9 Bayonet \"Treasure Hunter\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Treasure Hunter",
+      "image": null
+    },
+    {
+      "id": 240296,
+      "name": "M9 Bayonet \"Twilight\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Valor",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240296.png"
+    },
+    {
+      "id": 71004,
+      "name": "M9 Bayonet \"Universe\"",
+      "model": "M9 Bayonet",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Origin",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/71004.png"
+    },
+    {
+      "id": 240199,
+      "name": "Mantis \"Citrine\"",
+      "model": "Mantis",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dynasty",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240199.png"
+    },
+    {
+      "id": 240198,
+      "name": "Mantis \"Eclipse\"",
+      "model": "Mantis",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dynasty",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240198.png"
+    },
+    {
+      "id": 240201,
+      "name": "Mantis \"Genesis\"",
+      "model": "Mantis",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dynasty",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240201.png"
+    },
+    {
+      "id": 240317,
+      "name": "Mantis \"Glacier\"",
+      "model": "Mantis",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Winter Tale",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240317.png"
+    },
+    {
+      "id": 240211,
+      "name": "Mantis \"Impact\"",
+      "model": "Mantis",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Event8years",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240211.png"
+    },
+    {
+      "id": 240200,
+      "name": "Mantis \"Nest\"",
+      "model": "Mantis",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dynasty",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240200.png"
+    },
+    {
+      "id": 240272,
+      "name": "Mantis \"Poison\"",
+      "model": "Mantis",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dia De Muertos",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240272.png"
+    },
+    {
+      "id": 240229,
+      "name": "Mantis \"Yokai\"",
+      "model": "Mantis",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Syndicate",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240229.png"
+    },
+    {
+      "id": 240112,
+      "name": "Scorpion \"Ahau\"",
+      "model": "Scorpion",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Fun And Sun",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240112.png"
+    },
+    {
+      "id": 97900,
+      "name": "Scorpion \"Cold Flame\"",
+      "model": "Scorpion",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "New Year 2021",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/97900.png"
+    },
+    {
+      "id": null,
+      "name": "Scorpion \"Golden Glyph\"",
+      "model": "Scorpion",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Osiris",
+      "image": null
+    },
+    {
+      "id": 157900,
+      "name": "Scorpion \"Holiday Frost\"",
+      "model": "Scorpion",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Winter Fun 2022",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/157900.png"
+    },
+    {
+      "id": 240274,
+      "name": "Scorpion \"Howling Ghost\"",
+      "model": "Scorpion",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dia De Muertos",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240274.png"
+    },
+    {
+      "id": 240010,
+      "name": "Scorpion \"Magnalium\"",
+      "model": "Scorpion",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Space Vision",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240010.png"
+    },
+    {
+      "id": 240152,
+      "name": "Scorpion \"Neko Joy\"",
+      "model": "Scorpion",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Kitsune Dreams",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240152.png"
+    },
+    {
+      "id": 87921,
+      "name": "Scorpion \"Scratch\"",
+      "model": "Scorpion",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Scorpion",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/87921.png"
+    },
+    {
+      "id": 87920,
+      "name": "Scorpion \"Sea Eye\"",
+      "model": "Scorpion",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Scorpion",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/87920.png"
+    },
+    {
+      "id": 87922,
+      "name": "Scorpion \"Starfall\"",
+      "model": "Scorpion",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Scorpion",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/87922.png"
+    },
+    {
+      "id": 87919,
+      "name": "Scorpion \"Veil\"",
+      "model": "Scorpion",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Scorpion",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/87919.png"
+    },
+    {
+      "id": 240230,
+      "name": "Stiletto \"Ascend\"",
+      "model": "Stiletto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Syndicate",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240230.png"
+    },
+    {
+      "id": 220024,
+      "name": "Stiletto \"Damascus\"",
+      "model": "Stiletto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Revenge",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/220024.png"
+    },
+    {
+      "id": 240062,
+      "name": "Stiletto \"Dark Shiver\"",
+      "model": "Stiletto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Frosty Chaos",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240062.png"
+    },
+    {
+      "id": 240322,
+      "name": "Stiletto \"Empyrean\"",
+      "model": "Stiletto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Winter Tale",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240322.png"
+    },
+    {
+      "id": 240012,
+      "name": "Stiletto \"Flux\"",
+      "model": "Stiletto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Space Vision",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240012.png"
+    },
+    {
+      "id": 220021,
+      "name": "Stiletto \"Soul Devourer\"",
+      "model": "Stiletto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Revenge",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/220021.png"
+    },
+    {
+      "id": 220023,
+      "name": "Stiletto \"Tie Dye\"",
+      "model": "Stiletto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Revenge",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/220023.png"
+    },
+    {
+      "id": 220022,
+      "name": "Stiletto \"Viper\"",
+      "model": "Stiletto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Revenge",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/220022.png"
+    },
+    {
+      "id": 240153,
+      "name": "Stiletto \"Voidroot\"",
+      "model": "Stiletto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Kitsune Dreams",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240153.png"
+    },
+    {
+      "id": 240133,
+      "name": "Sting \"Arcane Surge\"",
+      "model": "Sting",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Nightmare",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240133.png"
+    },
+    {
+      "id": 240273,
+      "name": "Sting \"Carmine Thorns\"",
+      "model": "Sting",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dia De Muertos",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240273.png"
+    },
+    {
+      "id": 240066,
+      "name": "Sting \"Corrode\"",
+      "model": "Sting",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Outcast",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240066.png"
+    },
+    {
+      "id": 240067,
+      "name": "Sting \"Fleck\"",
+      "model": "Sting",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Outcast",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240067.png"
+    },
+    {
+      "id": 240065,
+      "name": "Sting \"Meld\"",
+      "model": "Sting",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Outcast",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240065.png"
+    },
+    {
+      "id": 240064,
+      "name": "Sting \"Mimicry\"",
+      "model": "Sting",
+      "type": "knife",
+      "rarity": "Nameless",
+      "collection": "Nameless",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240064.png"
+    },
+    {
+      "id": 240069,
+      "name": "Sting \"Oil Sheen\"",
+      "model": "Sting",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Outcast",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240069.png"
+    },
+    {
+      "id": 240113,
+      "name": "Sting \"Pelagia\"",
+      "model": "Sting",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Fun And Sun",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240113.png"
+    },
+    {
+      "id": 240068,
+      "name": "Sting \"Shroud\"",
+      "model": "Sting",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Outcast",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240068.png"
+    },
+    {
+      "id": 240070,
+      "name": "Sting \"Temper Shades\"",
+      "model": "Sting",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Outcast",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240070.png"
+    },
+    {
+      "id": 240251,
+      "name": "Tanto \"Blossom\"",
+      "model": "Tanto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Syndicate",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240251.png"
+    },
+    {
+      "id": 240226,
+      "name": "Tanto \"Celestial Tiger\"",
+      "model": "Tanto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Syndicate",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240226.png"
+    },
+    {
+      "id": 138000,
+      "name": "Tanto \"Dojo\"",
+      "model": "Tanto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dragon Rise",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/138000.png"
+    },
+    {
+      "id": 138005,
+      "name": "Tanto \"Flow\"",
+      "model": "Tanto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dragon Rise",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/138005.png"
+    },
+    {
+      "id": 240061,
+      "name": "Tanto \"Frost Nova\"",
+      "model": "Tanto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Frosty Chaos",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240061.png"
+    },
+    {
+      "id": 240009,
+      "name": "Tanto \"Glitch\"",
+      "model": "Tanto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Space Vision",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240009.png"
+    },
+    {
+      "id": 240151,
+      "name": "Tanto \"Hanami\"",
+      "model": "Tanto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Kitsune Dreams",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240151.png"
+    },
+    {
+      "id": 138002,
+      "name": "Tanto \"Malachite\"",
+      "model": "Tanto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dragon Rise",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/138002.png"
+    },
+    {
+      "id": 138003,
+      "name": "Tanto \"Pearl Abyss\"",
+      "model": "Tanto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dragon Rise",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/138003.png"
+    },
+    {
+      "id": 148000,
+      "name": "Tanto \"Restless\"",
+      "model": "Tanto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Cursed Souls",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/148000.png"
+    },
+    {
+      "id": 200016,
+      "name": "Tanto \"Retro Arcade\"",
+      "model": "Tanto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Hot Winter Party 2023",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/200016.png"
+    },
+    {
+      "id": 240114,
+      "name": "Tanto \"Solstice\"",
+      "model": "Tanto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Fun And Sun",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/240114.png"
+    },
+    {
+      "id": 138004,
+      "name": "Tanto \"Transistor\"",
+      "model": "Tanto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dragon Rise",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/138004.png"
+    },
+    {
+      "id": 138001,
+      "name": "Tanto \"Yakuza\"",
+      "model": "Tanto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Dragon Rise",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/138001.png"
+    },
+    {
+      "id": 158000,
+      "name": "Tanto \"Year Of The Tiger\"",
+      "model": "Tanto",
+      "type": "knife",
+      "rarity": "Arcane",
+      "collection": "Winter Fun 2022",
+      "image": "https://raw.githubusercontent.com/asiriswin-bit/skins_standoff2_ekmedef/main/skins/158000.png"
+    }
+  ]
+}
