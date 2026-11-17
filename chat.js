@@ -121,7 +121,7 @@ async function startConversation(user){
 }
 async function openConversation(id,user){
   activeConversationId=id;activeOtherUser=user;$("emptyState").hidden=true;$("chatPanel").hidden=false;
-  $("chatName").textContent=user.username||"Играч";
+  $("chatName").textContent=user.username||"Играч";document.body.classList.add("chat-open");
   $("chatSubline").textContent=user.is_admin?"АДМИНИСТРАТОР":(user.player_id?"GAME ID: "+user.player_id:"SEXSI TOURNAMENTS");
   $("chatAvatar").textContent=initials(user.username);$("chatAvatar").classList.toggle("admin-avatar",Boolean(user.is_admin));
   $("messageInput").disabled=false;$("sendButton").disabled=false;
@@ -187,6 +187,7 @@ $("enableNotifications").addEventListener("click",async()=>{
   $("enableNotifications").textContent=permission==="granted"?"✓ ИЗВЕСТИЯ":"🔔 ИЗВЕСТИЯ";
   setStatus(permission==="granted"?"Известията са разрешени.":permission==="denied"?"Известията са блокирани от браузъра.":"Не е дадено разрешение.");
 });
+$("backToConversations").addEventListener("click",()=>{document.body.classList.remove("chat-open");});
 $("backToProfile").addEventListener("click",()=>window.location.href="profile.html");
 $("logoutChat").addEventListener("click",async()=>{await db.auth.signOut();window.location.href="profile.html";});
 boot();
