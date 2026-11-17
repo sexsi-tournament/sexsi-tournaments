@@ -17,19 +17,23 @@ if(canvas){
  function glove(x,tilt){const g=new THREE.Group();root.add(g);g.position.set(x,-1.15,.3);g.rotation.z=tilt;box(g,[.68,.88,.34],[0,-.18,0],gloveMat,-.15);box(g,[.72,.2,.37],[0,-.55,.02],trimMat,-.15);for(let i=0;i<4;i++){const px=-.25+i*.17;rod(g,[px,.1,.02],[px,.68-Math.abs(i-1.5)*.07,.04],.08,gloveMat);box(g,[.13,.07,.04],[px,.46,.1],trimMat,-.08)}rod(g,[x<0?.25:-.25,-.08,.03],[x<0?.5:-.5,.26,.06],.09,gloveMat)}
  glove(-1.05,.3);glove(1.05,-.38);
  const knife=new THREE.Group();root.add(knife);knife.position.set(.62,-.05,.5);knife.rotation.z=-.34;
- const shape=new THREE.Shape();shape.moveTo(-.13,0);shape.lineTo(.13,0);shape.lineTo(.17,.8);shape.lineTo(.02,1.45);shape.lineTo(-.13,1.05);shape.lineTo(-.17,.4);shape.close();
+ const shape=new THREE.Shape();
+ const knifeType=document.getElementById('knife').value;
+ if(knifeType==='Karambit'){shape.moveTo(-.13,0);shape.quadraticCurveTo(-.5,.45,-.18,1.12);shape.quadraticCurveTo(.02,1.55,.22,1.32);shape.quadraticCurveTo(.03,1.04,.16,.78);shape.lineTo(.13,0);}
+ else if(knifeType==='Butterfly'){shape.moveTo(-.13,0);shape.lineTo(-.16,.75);shape.lineTo(0,1.52);shape.lineTo(.16,.75);shape.lineTo(.13,0);}
+ else if(knifeType==='Kunai'){shape.moveTo(-.13,0);shape.lineTo(-.12,1.02);shape.lineTo(0,1.62);shape.lineTo(.12,1.02);shape.lineTo(.13,0);}
+ else if(knifeType==='Fang'){shape.moveTo(-.13,0);shape.lineTo(-.2,.55);shape.lineTo(-.08,1.48);shape.lineTo(.18,.92);shape.lineTo(.13,0);}
+ else{shape.moveTo(-.13,0);shape.lineTo(-.15,.9);shape.lineTo(0,1.42);shape.lineTo(.16,.86);shape.lineTo(.13,0);}shape.close();
  const blade=new THREE.Mesh(new THREE.ExtrudeGeometry(shape,{depth:.055,bevelEnabled:true,bevelSegments:2,bevelSize:.025,bevelThickness:.025}),bladeMat);blade.position.y=.12;knife.add(blade);
  box(knife,[.17,.62,.14],[0,-.3,0],gripMat);box(knife,[.34,.09,.17],[0,.02,0],trimMat);
  for(let i=0;i<4;i++)box(knife,[.19,.03,.15],[0,-.12-i*.11,.08],trimMat,-.08);
  const ring=new THREE.Mesh(new THREE.TorusGeometry(.13,.04,10,24),gripMat);ring.position.set(0,-.66,0);knife.add(ring);
- const names=['knife','knifeSkin','gloves','gloveColor'],combo=document.getElementById('comboText');
- function update(){const k=document.getElementById('knife').value,s=document.getElementById('knifeSkin').value,g=document.getElementById('gloves').value,c=document.getElementById('gloveColor').value;combo.textContent=k+' · '+s+' + '+g+' ('+c+')';
+ const names=['knife','knifeSkin','gloves','gloveColor'];
+ function update(){const k=document.getElementById('knife').value,s=document.getElementById('knifeSkin').value,g=document.getElementById('gloves').value,c=document.getElementById('gloveColor').value;
  const colors={'Оригинални цветове':0x25262b,'Червено / черно':0x8e2028,'Синьо / черно':0x203c75,'Лилаво':0x593078,'Златно':0x8b6a24};gloveMat.color.setHex(colors[c]||0x25262b);
  const skins={'Default':0xb8c4d4,'Gradient':0xb95b75,'Dragon Glass':0x267e78,'Universe':0x6754b5,'Frozen':0x8ecde8};bladeMat.color.setHex(skins[s]||0xb8c4d4);
  knife.scale.set(k==='Butterfly'?.86:k==='Kunai'?.92:1,k==='Karambit'?.9:1,1)}
- names.forEach(id=>document.getElementById(id).addEventListener('change',update));
- document.getElementById('randomBtn').addEventListener('click',()=>{names.forEach(id=>{const e=document.getElementById(id);e.selectedIndex=Math.floor(Math.random()*e.options.length)});update()});
- document.getElementById('resetBtn').addEventListener('click',()=>{names.forEach(id=>document.getElementById(id).selectedIndex=0);update()});
+
  let down=false,last=0;canvas.addEventListener('pointerdown',e=>{down=true;last=e.clientX;canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointerup',()=>down=false);canvas.addEventListener('pointercancel',()=>down=false);canvas.addEventListener('pointermove',e=>{if(down){root.rotation.y+=(e.clientX-last)*.008;last=e.clientX}});
  function resize(){const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}new ResizeObserver(resize).observe(host);resize();
  function frame(){requestAnimationFrame(frame);if(!down)root.rotation.y=Math.sin(performance.now()*.0004)*.035;renderer.render(scene,camera)}frame();update();
