@@ -1241,6 +1241,14 @@ footer{
         return;
       }
 
+      const {data:scheduleData,error:scheduleError} = await db.rpc("sexsi_get_public_match_schedules");
+      if(scheduleError){
+        console.error("Bracket schedules error:",scheduleError.message);
+      }else{
+        const schedules = new Map((Array.isArray(scheduleData)?scheduleData:[]).map(item=>[item.match_id,item.scheduled_at]));
+        data.forEach(match=>{match.scheduled_at=schedules.get(match.id)||null;});
+      }
+
       const rounds = [
         "Първи кръг (осминафинали)",
         "Четвъртфинали",
@@ -1281,6 +1289,13 @@ footer{
             " VS " +
             (match.player2_name || "Очаква се");
           card.appendChild(players);
+
+          const schedule = document.createElement("p");
+          schedule.style.cssText = "margin:7px 0;color:#e9bd59;font-size:13px;font-weight:bold";
+          schedule.textContent = match.scheduled_at
+            ? "📅 ДАТА И ЧАС: " + new Date(match.scheduled_at).toLocaleString("bg-BG", {timeZone:"Europe/Sofia",dateStyle:"long",timeStyle:"short"})
+            : "📅 ДАТА И ЧАС: Все още не е насрочен";
+          card.appendChild(schedule);
 
           const score = document.createElement("p");
           score.textContent =
