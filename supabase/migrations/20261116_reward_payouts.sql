@@ -1,179 +1,201 @@
--- SEXSI TOURNAMENTS: награди и изплащания
--- Без промени по matches, profiles, регистрации или турнирната схема.
--- Изпълнява се еднократно в Supabase SQL Editor.
+-- SEXSI TOURNAMENTS: live reward payout schema.
+-- This replaces the earlier draft schema; it matches the production reward_payouts table and reward-proofs bucket.
 
-create table if not exists public.reward_payouts (
-  id uuid primary key default gen_random_uuid(),
-  tournament_name text not null,
-  final_match_id uuid not null references public.matches(id) on delete restrict,
-  winner_user_id uuid not null references auth.users(id) on delete restrict,
-  winner_game_name text not null,
-  winner_game_id text not null,
-  reward_amount integer not null default 5000 check (reward_amount > 0),
-  reward_currency text not null default 'Gold',
-  handed_over_at timestamptz not null default now(),
+CREATE TABLE IF NOT EXISTS public.reward_payouts (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  tournament_id uuid NOT NULL REFERENCES public.tournaments(id) ON DELETE RESTRICT,
+  winner_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE RESTRICT,
+  game_id text,
+  reward_amount integer NOT NULL DEFAULT 5000,
+  reward_currency text NOT NULL DEFAULT 'Gold',
+  status text NOT NULL DEFAULT 'pending',
   proof_path text,
-  status text not null default 'awaiting_confirmation'
-    check (status in ('awaiting_confirmation','confirmed')),
+  admin_note text,
+  created_by uuid REFERENCES auth.users(id),
+  confirmed_by uuid REFERENCES auth.users(id),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  sent_at timestamptz,
   confirmed_at timestamptz,
-  confirmed_by uuid references auth.users(id),
-  created_by uuid not null default auth.uid() references auth.users(id),
-  created_at timestamptz not null default now(),
-  constraint reward_confirmation_consistency check (
-    (status = 'awaiting_confirmation' and confirmed_at is null and confirmed_by is null)
-    or (status = 'confirmed' and confirmed_at is not null and confirmed_by = winner_user_id)
-  ),
-  constraint reward_one_payout_per_final_match unique (final_match_id)
+  CONSTRAINT reward_amount_valid CHECK (reward_amount > 0),
+  CONSTRAINT reward_payouts_status_check CHECK (status IN ('pending','sent','confirmed','cancelled'))
 );
 
-create index if not exists reward_payouts_winner_idx
-  on public.reward_payouts(winner_user_id, created_at desc);
+CREATE UNIQUE INDEX IF NOT EXISTS reward_payouts_one_per_tournament
+  ON public.reward_payouts(tournament_id);
+CREATE INDEX IF NOT EXISTS reward_payouts_winner_idx
+  ON public.reward_payouts(winner_id);
 
-alter table public.reward_payouts enable row level security;
+ALTER TABLE public.reward_payouts ENABLE ROW LEVEL SECURITY;
 
-drop policy if exists "Users can view their own reward payouts" on public.reward_payouts;
-create policy "Users can view their own reward payouts"
-  on public.reward_payouts for select to authenticated
-  using (
-    winner_user_id = auth.uid()
-    or auth.uid() = '13f1ada8-cd05-4c31-8940-4fb1790cb90e'::uuid
+DROP POLICY IF EXISTS reward_select_own ON public.reward_payouts;
+CREATE POLICY reward_select_own ON public.reward_payouts
+  FOR SELECT TO authenticated USING (winner_id = auth.uid());
+
+DROP POLICY IF EXISTS reward_confirm_own ON public.reward_payouts;
+CREATE POLICY reward_confirm_own ON public.reward_payouts
+  FOR UPDATE TO authenticated
+  USING (winner_id = auth.uid() AND status = 'sent')
+  WITH CHECK (
+    winner_id = auth.uid()
+    AND status = 'confirmed'
+    AND confirmed_by = auth.uid()
+    AND confirmed_at IS NOT NULL
   );
 
-revoke all on public.reward_payouts from anon, authenticated;
-grant select on public.reward_payouts to authenticated;
+REVOKE ALL ON public.reward_payouts FROM anon, authenticated;
+GRANT SELECT ON public.reward_payouts TO authenticated;
 
--- Replace the earlier draft RPC, if it was created.
-drop function if exists public.sexsi_admin_create_reward_payout(text,uuid,text,text,integer,text,timestamptz);
+CREATE OR REPLACE FUNCTION public.sexsi_admin_create_reward(p_tournament_id uuid)
+RETURNS uuid
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = ''
+AS $function$
+DECLARE
+  v_match_count integer;
+  v_winner_id uuid;
+  v_game_id text;
+  v_reward_id uuid;
+BEGIN
+  IF auth.uid() IS DISTINCT FROM '13f1ada8-cd05-4c31-8940-4fb1790cb90e'::uuid THEN
+    RAISE EXCEPTION 'Not authorized';
+  END IF;
 
-create or replace function public.sexsi_admin_create_reward_payout(
-  p_tournament_name text,
-  p_final_match_id uuid,
-  p_winner_user_id uuid,
-  p_winner_game_name text,
-  p_winner_game_id text,
-  p_reward_amount integer default 5000,
-  p_proof_path text default null,
-  p_handed_over_at timestamptz default now()
+  IF EXISTS (SELECT 1 FROM public.reward_payouts WHERE tournament_id = p_tournament_id) THEN
+    RAISE EXCEPTION 'Reward already exists for this tournament';
+  END IF;
+
+  SELECT COUNT(*) INTO v_match_count
+  FROM public.matches
+  WHERE tournament_id = p_tournament_id
+    AND round_number = (SELECT MAX(round_number) FROM public.matches WHERE tournament_id = p_tournament_id);
+
+  IF v_match_count <> 1 THEN
+    RAISE EXCEPTION 'Final round must contain exactly one match';
+  END IF;
+
+  SELECT m.winner_id, p.player_id INTO v_winner_id, v_game_id
+  FROM public.matches m
+  JOIN public.profiles p ON p.id = m.winner_id
+  WHERE m.tournament_id = p_tournament_id
+    AND m.round_number = (SELECT MAX(round_number) FROM public.matches WHERE tournament_id = p_tournament_id)
+    AND m.status = 'completed'
+    AND m.winner_id IS NOT NULL;
+
+  IF v_winner_id IS NULL THEN
+    RAISE EXCEPTION 'Final match is not completed or winner is missing';
+  END IF;
+
+  INSERT INTO public.reward_payouts (
+    tournament_id, winner_id, game_id, reward_amount, reward_currency, status, created_by
+  ) VALUES (
+    p_tournament_id, v_winner_id, v_game_id, 5000, 'Gold', 'pending', auth.uid()
+  ) RETURNING id INTO v_reward_id;
+
+  RETURN v_reward_id;
+END;
+$function$;
+
+CREATE OR REPLACE FUNCTION public.sexsi_admin_mark_reward_sent(p_reward_id uuid, p_proof_path text DEFAULT NULL)
+RETURNS text
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = ''
+AS $function$
+BEGIN
+  IF auth.uid() IS DISTINCT FROM '13f1ada8-cd05-4c31-8940-4fb1790cb90e'::uuid THEN
+    RAISE EXCEPTION 'Not authorized';
+  END IF;
+
+  UPDATE public.reward_payouts
+  SET status = 'sent', proof_path = p_proof_path, sent_at = now()
+  WHERE id = p_reward_id AND status = 'pending';
+
+  IF NOT FOUND THEN RAISE EXCEPTION 'Reward not found or already processed'; END IF;
+  RETURN 'Reward marked as sent';
+END;
+$function$;
+
+CREATE OR REPLACE FUNCTION public.sexsi_admin_rewards()
+RETURNS TABLE(
+  reward_id uuid, tournament_id uuid, winner_id uuid, username text, player_id text,
+  reward_amount integer, reward_currency text, reward_status text, proof_path text,
+  created_at timestamptz, sent_at timestamptz, confirmed_at timestamptz
 )
-returns uuid
-language plpgsql
-security definer
-set search_path = ''
-as $$
-declare
-  v_payout_id uuid;
-  v_profile_name text;
-  v_profile_game_id text;
-  v_tournament_id constant uuid := '7c6f2c43-b25d-4a44-a991-4495126e78b1';
-begin
-  if auth.uid() is distinct from '13f1ada8-cd05-4c31-8940-4fb1790cb90e'::uuid then
-    raise exception 'Нямаш права за тази операция.';
-  end if;
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = ''
+AS $function$
+BEGIN
+  IF auth.uid() IS DISTINCT FROM '13f1ada8-cd05-4c31-8940-4fb1790cb90e'::uuid THEN
+    RAISE EXCEPTION 'Not authorized';
+  END IF;
 
-  if nullif(trim(p_tournament_name), '') is null
-     or nullif(trim(p_winner_game_name), '') is null
-     or nullif(trim(p_winner_game_id), '') is null
-     or p_final_match_id is null
-     or p_winner_user_id is null
-     or p_reward_amount is null or p_reward_amount <= 0 then
-    raise exception 'Попълни турнира, шампиона, Game ID и валидна награда.';
-  end if;
+  RETURN QUERY
+  SELECT r.id, r.tournament_id, r.winner_id, p.username, p.player_id,
+    r.reward_amount, r.reward_currency, r.status, r.proof_path,
+    r.created_at, r.sent_at, r.confirmed_at
+  FROM public.reward_payouts r
+  JOIN public.profiles p ON p.id = r.winner_id
+  ORDER BY r.created_at DESC;
+END;
+$function$;
 
-  if p_tournament_name <> 'SEXSI 1V1 CUP #001' then
-    raise exception 'Невалиден турнир за тази награда.';
-  end if;
+CREATE OR REPLACE FUNCTION public.sexsi_confirm_reward(p_reward_id uuid)
+RETURNS text
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = ''
+AS $function$
+BEGIN
+  IF auth.uid() IS NULL THEN RAISE EXCEPTION 'Authentication required'; END IF;
 
-  -- Server-side validation: only the completed final match champion is eligible.
-  if not exists (
-    select 1
-    from public.matches m
-    where m.id = p_final_match_id
-      and m.tournament_id = v_tournament_id
-      and m.round_number = (
-        select max(mx.round_number)
-        from public.matches mx
-        where mx.tournament_id = v_tournament_id
-      )
-      and m.status = 'completed'
-      and m.winner_id = p_winner_user_id
-  ) then
-    raise exception 'Награда може да се запише само за шампиона от завършения финал.';
-  end if;
+  UPDATE public.reward_payouts
+  SET status = 'confirmed', confirmed_by = auth.uid(), confirmed_at = now()
+  WHERE id = p_reward_id AND winner_id = auth.uid() AND status = 'sent';
 
-  select p.username, p.player_id
-    into v_profile_name, v_profile_game_id
-  from public.profiles p
-  where p.id = p_winner_user_id;
+  IF NOT FOUND THEN RAISE EXCEPTION 'Reward not found or not available for confirmation'; END IF;
+  RETURN 'Reward successfully confirmed';
+END;
+$function$;
 
-  if not found
-     or v_profile_name is distinct from trim(p_winner_game_name)
-     or v_profile_game_id is distinct from trim(p_winner_game_id) then
-    raise exception 'Името или Game ID не съвпадат с профила на шампиона.';
-  end if;
+CREATE OR REPLACE FUNCTION public.sexsi_get_my_reward()
+RETURNS TABLE(
+  reward_id uuid, tournament_id uuid, reward_amount integer, reward_currency text,
+  reward_status text, game_id text, proof_path text, created_at timestamptz,
+  sent_at timestamptz, confirmed_at timestamptz
+)
+LANGUAGE sql SET search_path = ''
+AS $function$
+  SELECT r.id, r.tournament_id, r.reward_amount, r.reward_currency, r.status,
+    r.game_id, r.proof_path, r.created_at, r.sent_at, r.confirmed_at
+  FROM public.reward_payouts r
+  WHERE r.winner_id = auth.uid()
+  ORDER BY r.created_at DESC;
+$function$;
 
-  insert into public.reward_payouts (
-    tournament_name, final_match_id, winner_user_id,
-    winner_game_name, winner_game_id, reward_amount,
-    proof_path, handed_over_at, created_by
-  ) values (
-    trim(p_tournament_name), p_final_match_id, p_winner_user_id,
-    trim(p_winner_game_name), trim(p_winner_game_id), p_reward_amount,
-    p_proof_path, coalesce(p_handed_over_at, now()), auth.uid()
-  )
-  returning id into v_payout_id;
+REVOKE ALL ON FUNCTION public.sexsi_admin_create_reward(uuid) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.sexsi_admin_mark_reward_sent(uuid,text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.sexsi_admin_rewards() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.sexsi_confirm_reward(uuid) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.sexsi_get_my_reward() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.sexsi_admin_create_reward(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.sexsi_admin_mark_reward_sent(uuid,text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.sexsi_admin_rewards() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.sexsi_confirm_reward(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.sexsi_get_my_reward() TO authenticated;
 
-  return v_payout_id;
-end;
-$$;
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES ('reward-proofs', 'reward-proofs', false, 5242880, ARRAY['image/jpeg','image/png','image/webp'])
+ON CONFLICT (id) DO UPDATE SET
+  public = false,
+  file_size_limit = EXCLUDED.file_size_limit,
+  allowed_mime_types = EXCLUDED.allowed_mime_types;
 
-create or replace function public.sexsi_confirm_reward_received(p_payout_id uuid)
-returns text
-language plpgsql
-security definer
-set search_path = ''
-as $$
-begin
-  if auth.uid() is null then
-    raise exception 'Трябва да влезеш в профила си.';
-  end if;
+DROP POLICY IF EXISTS reward_proofs_admin_all ON storage.objects;
+CREATE POLICY reward_proofs_admin_all ON storage.objects
+  FOR ALL TO authenticated
+  USING (bucket_id = 'reward-proofs' AND auth.uid() = '13f1ada8-cd05-4c31-8940-4fb1790cb90e'::uuid)
+  WITH CHECK (bucket_id = 'reward-proofs' AND auth.uid() = '13f1ada8-cd05-4c31-8940-4fb1790cb90e'::uuid);
 
-  update public.reward_payouts
-     set status = 'confirmed',
-         confirmed_at = now(),
-         confirmed_by = auth.uid()
-   where id = p_payout_id
-     and winner_user_id = auth.uid()
-     and status = 'awaiting_confirmation';
+DROP POLICY IF EXISTS reward_proofs_read_own ON storage.objects;
+CREATE POLICY reward_proofs_read_own ON storage.objects
+  FOR SELECT TO authenticated
+  USING (bucket_id = 'reward-proofs' AND (storage.foldername(name))[1] = auth.uid()::text);
 
-  if not found then
-    raise exception 'Наградата не е намерена, вече е потвърдена или не принадлежи на този профил.';
-  end if;
-
-  return 'Получаването на наградата е потвърдено.';
-end;
-$$;
-
-revoke all on function public.sexsi_admin_create_reward_payout(text,uuid,uuid,text,text,integer,text,timestamptz) from public;
-grant execute on function public.sexsi_admin_create_reward_payout(text,uuid,uuid,text,text,integer,text,timestamptz) to authenticated;
-revoke all on function public.sexsi_confirm_reward_received(uuid) from public;
-grant execute on function public.sexsi_confirm_reward_received(uuid) to authenticated;
-
-insert into storage.buckets (id, name, public)
-values ('sexsi-reward-proofs', 'sexsi-reward-proofs', false)
-on conflict (id) do nothing;
-
-drop policy if exists "Admin uploads reward proofs" on storage.objects;
-create policy "Admin uploads reward proofs"
-  on storage.objects for insert to authenticated
-  with check (
-    bucket_id = 'sexsi-reward-proofs'
-    and auth.uid() = '13f1ada8-cd05-4c31-8940-4fb1790cb90e'::uuid
-  );
-
-drop policy if exists "Admin reads reward proofs" on storage.objects;
-create policy "Admin reads reward proofs"
-  on storage.objects for select to authenticated
-  using (
-    bucket_id = 'sexsi-reward-proofs'
-    and auth.uid() = '13f1ada8-cd05-4c31-8940-4fb1790cb90e'::uuid
-  );
+DROP POLICY IF EXISTS reward_proofs_upload_own ON storage.objects;
+CREATE POLICY reward_proofs_upload_own ON storage.objects
+  FOR INSERT TO authenticated
+  WITH CHECK (bucket_id = 'reward-proofs' AND (storage.foldername(name))[1] = auth.uid()::text);
