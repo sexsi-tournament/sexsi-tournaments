@@ -71,7 +71,7 @@
 
   var style=document.createElement("style");
   style.textContent=
-    "body>header{position:relative;z-index:1000;}" +
+    "body>header{position:relative;z-index:1000;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 6%;background:#080809;border-bottom:1px solid #292929;}" +
     ".sexsi-global-nav{position:relative;margin-left:auto;}" +
     ".sexsi-global-nav-toggle{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 15px;border:1px solid #ed252d;border-radius:7px;background:#ed252d;color:#fff;font-weight:900;font-size:11px;letter-spacing:.6px;cursor:pointer;}" +
     ".sexsi-global-nav-panel{position:absolute;right:0;top:calc(100% + 10px);width:min(290px,calc(100vw - 32px));max-height:min(75vh,560px);overflow:auto;padding:10px;background:#111;border:1px solid #393939;border-radius:12px;box-shadow:0 16px 40px #000b;z-index:2000;}" +
