@@ -197,7 +197,7 @@ footer{border-top:1px solid var(--line);padding:25px;text-align:center;color:#66
           if(isFinal) card.appendChild(make("div","final-banner","🏆  ГОЛЕМИЯТ ФИНАЛ  🏆"));
           const meta = make("div","match-meta");
           meta.appendChild(make("span","", "МАЧ №" + safe(m.match_number)));
-          const state = m.status === "completed" ? "ЗАВЪРШЕН" : m.status === "ongoing" ? (m.scheduled_at ? "НАСРОЧЕН" : "ГОТОВ ЗА ИГРА") : "ОЧАКВА СЪПЕРНИК";
+          const state = m.status === "completed" ? "ЗАВЪРШЕН" : m.status === "ongoing" ? (m.scheduled_at ? "ГОТОВ ЗА ИГРА" : "ОЧАКВА НАСРОЧВАНЕ") : "ОЧАКВА СЪПЕРНИК";
           meta.appendChild(make("span","match-status" + (m.status === "completed" ? " done" : m.status === "ongoing" ? " ready" : ""),state));
           card.appendChild(meta);
           const p1 = make("div","player" + (m.winner_id && m.winner_id === m.player1_id ? " winner" : ""));
