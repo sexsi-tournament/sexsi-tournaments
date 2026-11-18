@@ -205,7 +205,9 @@ footer{border-top:1px solid var(--line);padding:25px;text-align:center;color:#66
         round.appendChild(title);
         roundMatches.forEach(m => {
           const isFinal = roundNo === 4;
-          const hasWinner = Boolean(m.winner_id || m.winner_name);\n          const isCompletedWinner = m.status === "completed" && hasWinner;\n          const card = make("article","match" + (isFinal ? " match-final" : "") + (isCompletedWinner ? " match-completed" : ""));
+          const hasWinner = Boolean(m.winner_id || m.winner_name);
+          const isCompletedWinner = m.status === "completed" && hasWinner;
+          const card = make("article","match" + (isFinal ? " match-final" : "") + (isCompletedWinner ? " match-completed" : ""));
           if(isFinal) card.appendChild(make("div","final-banner","🏆  ГОЛЕМИЯТ ФИНАЛ  🏆"));
           const meta = make("div","match-meta");
           meta.appendChild(make("span","", "МАЧ №" + safe(m.match_number)));
