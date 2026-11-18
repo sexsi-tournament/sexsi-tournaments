@@ -58,55 +58,27 @@ h1{font-size:clamp(34px,6vw,66px);line-height:1;margin:12px 0 10px;letter-spacin
 .match-schedule-label{font-size:8px;font-weight:900;letter-spacing:1px;color:#b99b5d}
 .match-schedule-value{font-size:12px;color:#f2d58e;font-weight:900}
 .match-schedule-pending{font-size:9px;color:#888;font-weight:800;letter-spacing:.5px}
-/* Completed matches: ornate gold laurel frame */
+/* Completed matches: decorative gold border only, never over content */
 .match.match-completed{
   position:relative;
-  isolation:isolate;
-  border:1px solid #b98a36;
+  border:5px solid transparent;
   border-radius:9px;
   background:
-    radial-gradient(ellipse at 50% 0%,rgba(255,211,122,.19),transparent 68%),
-    linear-gradient(145deg,#29200f 0%,#15120c 48%,#0b0b0c 100%);
+    radial-gradient(ellipse at 50% 0%,rgba(255,211,122,.16),transparent 68%),
+    linear-gradient(145deg,#211a10 0%,#11100d 48%,#0b0b0c 100%) padding-box,
+    repeating-linear-gradient(135deg,
+      #f6d47d 0 2px,
+      #9b6c22 2px 4px,
+      #f2c45d 4px 5px,
+      #4d3514 5px 7px,
+      #d9aa4b 7px 9px,
+      #6d4b1c 9px 11px) border-box;
   box-shadow:
     0 0 0 1px rgba(255,220,139,.24),
     0 0 18px rgba(220,165,58,.24),
     0 0 34px rgba(220,165,58,.10),
-    inset 0 0 22px rgba(255,202,91,.09);
-}
-/* Continuous engraved ornament around the entire card */
-.match.match-completed::before{
-  content:"";
-  position:absolute;
-  z-index:0;
-  pointer-events:none;
-  inset:-3px;
-  border:3px solid transparent;
-  border-radius:11px;
-  background:
-    linear-gradient(transparent,transparent) padding-box,
-    repeating-linear-gradient(135deg,
-      #f6d47d 0 1px,
-      #a87525 1px 3px,
-      #f2c45d 3px 4px,
-      #4d3514 4px 6px,
-      #d9aa4b 6px 7px,
-      #6d4b1c 7px 10px) border-box;
-  box-shadow:0 0 9px rgba(231,184,83,.42);
-}
-.match.match-completed::after{
-  content:"";
-  position:absolute;
-  z-index:0;
-  pointer-events:none;
-  inset:4px;
-  border:1px dotted rgba(255,218,132,.72);
-  border-radius:5px;
-  box-shadow:inset 0 0 8px rgba(239,190,82,.12);
-}
-/* Keep all match information above the decorative frame */
-.match.match-completed > *{
-  position:relative;
-  z-index:1;
+    inset 0 0 0 1px rgba(255,218,132,.55),
+    inset 0 0 22px rgba(255,202,91,.07);
 }
 .match.match-completed .match-meta{color:#e4c47d}
 .match.match-completed .match-status.done{color:#ffe08a;text-shadow:0 0 8px rgba(255,211,122,.45)}
@@ -120,10 +92,17 @@ h1{font-size:clamp(34px,6vw,66px);line-height:1;margin:12px 0 10px;letter-spacin
 }
 /* Keep completed styling visible inside colored tournament rounds */
 .round .match.match-completed{
-  border:1px solid #b98a36;
+  border:5px solid transparent;
   background:
-    radial-gradient(ellipse at 50% 0%,rgba(255,211,122,.19),transparent 68%),
-    linear-gradient(145deg,#29200f 0%,#15120c 48%,#0b0b0c 100%);
+    radial-gradient(ellipse at 50% 0%,rgba(255,211,122,.16),transparent 68%),
+    linear-gradient(145deg,#211a10 0%,#11100d 48%,#0b0b0c 100%) padding-box,
+    repeating-linear-gradient(135deg,
+      #f6d47d 0 2px,
+      #9b6c22 2px 4px,
+      #f2c45d 4px 5px,
+      #4d3514 5px 7px,
+      #d9aa4b 7px 9px,
+      #6d4b1c 9px 11px) border-box;
 }
 
 /* Visual hierarchy by tournament stage */
