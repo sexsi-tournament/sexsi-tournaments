@@ -539,6 +539,43 @@ tr:last-child td{
   font-weight:900;
   align-self:end;
 }
+.forfeit-controls{
+  margin-top:14px;
+  padding:14px;
+  border:1px solid rgba(237,37,45,.35);
+  border-radius:8px;
+  background:#171011;
+}
+.forfeit-controls strong{
+  display:block;
+  color:#ff777c;
+  font-size:12px;
+  margin-bottom:10px;
+}
+.forfeit-actions{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:9px;
+  margin-top:10px;
+}
+.forfeit-actions button{
+  background:#8f1b22;
+  color:#fff;
+  border:0;
+  border-radius:6px;
+  padding:11px;
+  font-size:11px;
+  font-weight:900;
+}
+.forfeit-actions button:disabled{opacity:.55;cursor:wait}
+.forfeit-controls select{
+  width:100%;
+  background:#090909;
+  color:#fff;
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:11px;
+}
 
 
 .match-schedule{display:flex;flex-wrap:wrap;align-items:end;gap:10px;margin-top:14px;padding:12px;background:#171717;border:1px solid var(--border);border-radius:7px}
@@ -1925,9 +1962,11 @@ function createMatchCard(match){
 
   const status=document.createElement("p");
   status.className="match-status";
-  const statusLabel = match.status === "completed" ? "ЗАВЪРШЕН" :
-    match.status === "ongoing" ? (match.scheduled_at ? "ГОТОВ ЗА ИГРА" : "ОЧАКВА НАСРОЧВАНЕ") :
-    "ОЧАКВА СЪПЕРНИК";
+  const statusLabel = match.status === "completed"
+    ? (match.result_type === "forfeit" ? "СЛУЖЕБНО ПРИКЛЮЧЕН" : "ЗАВЪРШЕН")
+    : match.status === "ongoing"
+      ? (match.scheduled_at ? "ГОТОВ ЗА ИГРА" : "ОЧАКВА НАСРОЧВАНЕ")
+      : "ОЧАКВА СЪПЕРНИК";
   status.textContent="СТАТУС: "+statusLabel;
   card.append(title,players);
 
@@ -1998,9 +2037,17 @@ function createMatchCard(match){
     result.textContent="РЕЗУЛТАТ: "+
       (match.score_player1??"-")+" : "+
       (match.score_player2??"-")+
-      " | ПОБЕДИТЕЛ: "+(match.winner_name||"неизвестен");
+      " | ПОБЕДИТЕЛ: "+(match.winner_name||"неизвестен")+
+      (match.result_type==="forfeit"?" | СЛУЖЕБНА ПОБЕДА":"");
 
     card.appendChild(result);
+
+    if(match.result_type==="forfeit"&&match.result_reason){
+      const reason=document.createElement("p");
+      reason.className="message";
+      reason.textContent="ПРИЧИНА: "+match.result_reason;
+      card.appendChild(reason);
+    }
     return card;
   }
   if(!match.player1_id||!match.player2_id){
@@ -2125,6 +2172,73 @@ function createMatchCard(match){
 
   controls.append(score1Label,score2Label,winnerLabel,saveButton);
   card.appendChild(controls);
+
+  const forfeitPanel=document.createElement("div");
+  forfeitPanel.className="forfeit-controls";
+
+  const forfeitHeading=document.createElement("strong");
+  forfeitHeading.textContent="АДМИНИСТРАТИВНО РЕШЕНИЕ · СЛУЖЕБЕН РЕЗУЛТАТ";
+
+  const reasonSelect=document.createElement("select");
+  reasonSelect.setAttribute("aria-label","Причина за служебния резултат");
+  [
+    ["","Избери причина..."],
+    ["Липса на отговор","Липса на отговор"],
+    ["Неявяване","Неявяване"],
+    ["Отказ от участие","Отказ от участие"],
+    ["Друго","Друго"]
+  ].forEach(([value,label])=>{
+    const option=document.createElement("option");
+    option.value=value;
+    option.textContent=label;
+    reasonSelect.appendChild(option);
+  });
+
+  const forfeitActions=document.createElement("div");
+  forfeitActions.className="forfeit-actions";
+
+  const createForfeitButton=(winnerId,winnerName)=>{
+    const button=document.createElement("button");
+    button.type="button";
+    button.textContent="СЛУЖЕБНА ПОБЕДА ЗА "+winnerName;
+    button.addEventListener("click",async()=>{
+      if(!reasonSelect.value){
+        alert("Избери причина за служебния резултат.");
+        return;
+      }
+      if(!confirm(
+        "Потвърждаваш ли служебна победа за "+winnerName+"?\n\n"+
+        "Причина: "+reasonSelect.value+"\n\n"+
+        "Победителят ще бъде преместен автоматично в следващия кръг."
+      ))return;
+
+      const buttons=forfeitActions.querySelectorAll("button");
+      buttons.forEach(item=>item.disabled=true);
+      button.textContent="ЗАПИСВАНЕ...";
+
+      try{
+        const {data,error}=await db.rpc("sexsi_admin_set_forfeit_result",{
+          p_match_id:match.id,
+          p_winner_id:winnerId,
+          p_reason:reasonSelect.value
+        });
+        if(error)throw error;
+        alert(data||"Служебният резултат е записан.");
+        await loadBracket();
+      }catch(error){
+        alert("Грешка при служебния резултат: "+(error.message||"Неизвестна грешка"));
+        buttons.forEach(item=>item.disabled=false);
+        button.textContent="СЛУЖЕБНА ПОБЕДА ЗА "+winnerName;
+      }
+    });
+    forfeitActions.appendChild(button);
+  };
+
+  createForfeitButton(match.player1_id,match.player1_name||"ИГРАЧ 1");
+  createForfeitButton(match.player2_id,match.player2_name||"ИГРАЧ 2");
+
+  forfeitPanel.append(forfeitHeading,reasonSelect,forfeitActions);
+  card.appendChild(forfeitPanel);
 
   return card;
 }
