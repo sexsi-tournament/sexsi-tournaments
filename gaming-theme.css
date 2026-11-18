@@ -1,0 +1,49 @@
+/* SEXSI TOURNAMENTS - SHARED DARK CYAN GAMING THEME */
+:root{
+  --sexsi-accent:#27c6df;
+  --sexsi-accent-bright:#65e8f5;
+  --sexsi-bg:#070b10;
+  --sexsi-panel:#101923;
+  --sexsi-border:#203743;
+}
+html{background:var(--sexsi-bg)}
+body{
+  background:
+    radial-gradient(ellipse at 52% 0%,rgba(18,111,139,.19),transparent 46%),
+    radial-gradient(ellipse at 100% 35%,rgba(40,75,160,.10),transparent 38%),
+    linear-gradient(135deg,#070b10 0%,#0a1118 52%,#080d14 100%) !important;
+  color:#f2f7f9;
+}
+header{
+  background:rgba(7,13,19,.92) !important;
+  border-color:rgba(76,164,187,.22) !important;
+  backdrop-filter:blur(10px);
+}
+.logo span,.logo .brand-accent,h1 span,h2,.eyebrow,.kicker,.heading:after{
+  color:var(--sexsi-accent-bright) !important;
+}
+a:hover,nav a:hover{color:var(--sexsi-accent-bright) !important}
+button,.btn,.button,.primary,.primary-btn,[type=submit]{
+  background:linear-gradient(135deg,#159bb8,#08718e) !important;
+  border-color:#27c6df !important;
+  color:#fff !important;
+  box-shadow:0 6px 22px rgba(20,164,194,.16);
+}
+button:hover,.btn:hover,.button:hover,[type=submit]:hover{
+  background:linear-gradient(135deg,#20b8d5,#0b819f) !important;
+}
+.card,.panel,.match-card,.news-card,.round,.workspace,.stat,.intro,.notice,.comment-item{
+  border-color:rgba(74,150,174,.22) !important;
+}
+input,textarea,select{
+  accent-color:var(--sexsi-accent);
+}
+input:focus,textarea:focus,select:focus{
+  border-color:var(--sexsi-accent) !important;
+  outline-color:rgba(39,198,223,.25);
+}
+th{background:#087d99 !important}
+[aria-current=page],.active,.selected{
+  border-color:rgba(39,198,223,.55) !important;
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto !important;transition:none !important}}
