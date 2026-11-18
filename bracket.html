@@ -58,6 +58,17 @@ h1{font-size:clamp(34px,6vw,66px);line-height:1;margin:12px 0 10px;letter-spacin
 .match-schedule-label{font-size:8px;font-weight:900;letter-spacing:1px;color:#b99b5d}
 .match-schedule-value{font-size:12px;color:#f2d58e;font-weight:900}
 .match-schedule-pending{font-size:9px;color:#888;font-weight:800;letter-spacing:.5px}
+/* Completed matches with a confirmed winner */
+.match.match-completed{
+  border-color:rgba(233,189,89,.78);
+  background:radial-gradient(ellipse at 50% 0%,rgba(233,189,89,.13),transparent 75%),linear-gradient(145deg,#211b10,#0d0c0a);
+  box-shadow:0 0 18px rgba(233,189,89,.10),inset 0 0 16px rgba(233,189,89,.035);
+}
+.match.match-completed .match-meta{color:#c9ad70}
+.match.match-completed .match-status.done{color:#ffe08a}
+.match.match-completed .player.winner{color:#ffe08a;text-shadow:0 0 12px rgba(255,211,122,.24)}
+.match.match-completed .match-winner{border-color:rgba(233,189,89,.35);color:#ffe08a}
+
 /* Visual hierarchy by tournament stage */
 .round.round-quarter{border-color:#31516c;background:linear-gradient(180deg,#101d2a,#0c1119)}
 .round.round-quarter .round-title{border-color:rgba(91,164,224,.35)}
@@ -194,7 +205,7 @@ footer{border-top:1px solid var(--line);padding:25px;text-align:center;color:#66
         round.appendChild(title);
         roundMatches.forEach(m => {
           const isFinal = roundNo === 4;
-          const card = make("article","match" + (isFinal ? " match-final" : ""));
+          const hasWinner = Boolean(m.winner_id || m.winner_name);\n          const isCompletedWinner = m.status === "completed" && hasWinner;\n          const card = make("article","match" + (isFinal ? " match-final" : "") + (isCompletedWinner ? " match-completed" : ""));
           if(isFinal) card.appendChild(make("div","final-banner","🏆  ГОЛЕМИЯТ ФИНАЛ  🏆"));
           const meta = make("div","match-meta");
           meta.appendChild(make("span","", "МАЧ №" + safe(m.match_number)));
