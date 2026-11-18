@@ -15,6 +15,7 @@ class PageParser(HTMLParser):
         self.page = page
         self.ids = set()
         self.script_src = None
+        self.in_script = False
         self.script_type = ""
         self.script_parts = []
         self.inline_scripts = []
@@ -40,21 +41,23 @@ class PageParser(HTMLParser):
                 self.local_refs.append(path)
 
         if tag.lower() == "script":
+            self.in_script = True
             self.script_src = attrs.get("src")
             self.script_type = attrs.get("type", "").lower()
             self.script_parts = []
 
     def handle_data(self, data):
-        if self.script_src is not None and self.script_type != "application/ld+json":
+        if self.in_script and self.script_type != "application/ld+json":
             self.script_parts.append(data)
 
     def handle_endtag(self, tag):
-        if tag.lower() == "script" and self.script_src is not None:
+        if tag.lower() == "script" and self.in_script:
             if not self.script_src and self.script_type != "application/ld+json":
                 code = "".join(self.script_parts).strip()
                 if code:
                     self.inline_scripts.append(code)
             self.script_src = None
+            self.in_script = False
             self.script_type = ""
             self.script_parts = []
 
