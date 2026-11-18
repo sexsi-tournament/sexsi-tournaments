@@ -1185,7 +1185,7 @@ footer{
       result.className="menu-my-result";
       result.textContent="РЕЗУЛТАТ: "+(match.score_player1??"—")+" : "+(match.score_player2??"—");
       const status=document.createElement("span");
-      status.textContent="СТАТУС: "+(match.status==="completed"?"ЗАВЪРШЕН":match.status==="ongoing"?"В ХОД":"ПРЕДСТОИ");
+      status.textContent="СТАТУС: "+(match.status==="completed"?"ЗАВЪРШЕН":match.status==="ongoing"?"ГОТОВ ЗА ИГРА":"ОЧАКВА СЪПЕРНИК");
       card.append(title,detail,result,status);
       if(match.winner_name){
         const winner=document.createElement("span");
