@@ -47,135 +47,6 @@ body{
   margin:0;background:var(--bg);color:#fff;
   font-family:Arial,sans-serif;overflow-x:hidden;
 }
-body.intro-active{overflow:hidden}
-
-/* SEXSI INTRO */
-#sexsiIntro{
-  position:fixed;
-  inset:0;
-  z-index:99999;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  overflow:hidden;
-  background:#050505;
-  opacity:1;
-  visibility:visible;
-  animation:introFadeOut .65s ease 1.55s forwards;
-}
-#sexsiIntro:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  opacity:.16;
-  background:
-    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
-  background-size:55px 55px;
-}
-#sexsiIntro:after{
-  content:"";
-  position:absolute;
-  width:550px;
-  height:550px;
-  border-radius:50%;
-  background:rgba(237,37,45,.15);
-  filter:blur(120px);
-  animation:introAmbient 2.2s ease forwards;
-}
-.intro-content{
-  position:relative;
-  z-index:2;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  opacity:0;
-  transform:scale(.88);
-  animation:introReveal .8s cubic-bezier(.2,.8,.2,1) .35s forwards;
-}
-.intro-logo{
-  position:relative;
-  color:#fff;
-  font-size:clamp(58px,12vw,100px);
-  font-weight:1000;
-  font-style:italic;
-  letter-spacing:3px;
-  line-height:1;
-  transform:skewX(-8deg);
-  text-shadow:
-    0 0 12px rgba(255,255,255,.2),
-    0 0 30px rgba(237,37,45,.65),
-    0 0 65px rgba(237,37,45,.4);
-}
-.intro-logo sup{
-  position:relative;
-  top:-.75em;
-  margin-left:3px;
-  color:var(--red2);
-  font-size:15px;
-  font-style:normal;
-  text-shadow:0 0 12px var(--red);
-}
-.intro-line{
-  width:min(320px,70vw);
-  height:2px;
-  margin:22px 0 18px;
-  position:relative;
-  overflow:hidden;
-  background:rgba(237,37,45,.15);
-  box-shadow:0 0 15px rgba(237,37,45,.35);
-}
-.intro-line:before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:-100%;
-  width:100%;
-  height:100%;
-  background:linear-gradient(90deg,transparent,#fff,var(--red),transparent);
-  box-shadow:0 0 18px var(--red);
-  animation:introLaser .8s ease .2s forwards;
-}
-.intro-subtitle{
-  color:#fff;
-  font-size:13px;
-  font-weight:900;
-  letter-spacing:7px;
-  opacity:0;
-  transform:translateY(8px);
-  animation:introText .5s ease .85s forwards;
-}
-.intro-caption{
-  margin-top:13px;
-  color:#777;
-  font-size:9px;
-  font-weight:bold;
-  letter-spacing:4px;
-  opacity:0;
-  animation:introText .5s ease 1.05s forwards;
-}
-@keyframes introReveal{
-  0%{opacity:0;transform:scale(.88);filter:blur(12px)}
-  65%{opacity:1;transform:scale(1.04);filter:blur(0)}
-  100%{opacity:1;transform:scale(1);filter:blur(0)}
-}
-@keyframes introLaser{
-  0%{left:-100%}
-  100%{left:100%}
-}
-@keyframes introText{
-  to{opacity:1;transform:translateY(0)}
-}
-@keyframes introAmbient{
-  0%{transform:scale(.5);opacity:0}
-  50%{opacity:1}
-  100%{transform:scale(1.3);opacity:.65}
-}
-@keyframes introFadeOut{
-  to{opacity:0;visibility:hidden}
-}
-
 body:before{
   content:"";position:fixed;inset:0;pointer-events:none;
   z-index:10;opacity:.13;
@@ -629,7 +500,6 @@ footer{
     animation-duration:.01ms!important;animation-iteration-count:1!important;
     scroll-behavior:auto!important;
   }
-  #sexsiIntro{animation:none;opacity:0;visibility:hidden}
 }
 @media(max-width:900px){
   .guest-header-actions{gap:12px}
@@ -781,37 +651,31 @@ header .player-menu-button .sexsi-en{
   white-space:nowrap;
 }
 
+
+/* DARK GAMING SETUP BACKGROUND - CYAN / BLUE */
+.gaming-setup-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:radial-gradient(ellipse at 52% 36%,rgba(18,111,139,.24),transparent 42%),radial-gradient(ellipse at 88% 18%,rgba(40,75,160,.16),transparent 34%),linear-gradient(135deg,#070b10,#0a1118 48%,#080d14)}
+.gaming-setup-bg:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,7,11,.15),rgba(3,7,11,.72) 72%,#070b10),repeating-linear-gradient(0deg,transparent 0 79px,rgba(92,194,220,.025) 80px),repeating-linear-gradient(90deg,transparent 0 79px,rgba(92,194,220,.025) 80px)}
+.setup-monitor{position:absolute;top:15%;height:34%;border:9px solid #101a22;border-radius:9px;background:radial-gradient(ellipse at 50% 70%,rgba(35,205,225,.42),transparent 48%),linear-gradient(145deg,#102a39,#0b1724 58%,#10152b);box-shadow:0 0 0 1px rgba(91,220,240,.18),0 0 45px rgba(25,174,205,.16),inset 0 0 35px rgba(30,190,220,.12);opacity:.7}
+.setup-monitor-main{left:32%;width:36%;transform:perspective(900px) rotateY(-5deg)}
+.setup-monitor-side{left:70%;top:19%;width:17%;height:27%;transform:perspective(900px) rotateY(-9deg);opacity:.38}
+.setup-monitor:after{content:"";position:absolute;left:47%;bottom:-47px;width:6%;height:40px;background:linear-gradient(90deg,#15232c,#263d49,#101920);box-shadow:0 38px 0 22px rgba(10,18,24,.9)}
+.setup-desk{position:absolute;left:14%;right:8%;top:52%;height:3px;background:linear-gradient(90deg,transparent,rgba(69,206,226,.45),rgba(69,206,226,.18),transparent);box-shadow:0 12px 40px rgba(27,180,210,.14)}
+.setup-keyboard{position:absolute;left:43%;top:57%;width:19%;height:17px;border-radius:4px;transform:skewX(-12deg);background:repeating-linear-gradient(90deg,rgba(91,220,240,.35) 0 2px,transparent 2px 12px),linear-gradient(#172a35,#0c151d);border:1px solid rgba(87,208,230,.2);box-shadow:0 0 24px rgba(35,190,220,.16);opacity:.65}
+.setup-mouse{position:absolute;left:65%;top:56%;width:17px;height:27px;border-radius:9px 9px 11px 11px;border:1px solid rgba(92,213,235,.35);background:linear-gradient(120deg,#1b303b,#0a1219);box-shadow:0 0 18px rgba(35,190,220,.15);opacity:.55}
+.ambient:before,.ambient:after{background:#16a9c7!important;opacity:.11}
+body:after{background:repeating-linear-gradient(115deg,transparent 0 145px,rgba(37,174,205,.035) 146px,rgba(55,193,220,.18) 147px,transparent 150px 290px)!important;filter:drop-shadow(0 0 7px rgba(38,180,210,.35))!important}
+.hero{background:radial-gradient(ellipse at 76% 38%,rgba(18,125,155,.20),transparent 48%),linear-gradient(110deg,rgba(5,10,15,.88),rgba(7,18,25,.77) 60%,rgba(5,10,15,.88))!important}
+.hero:before{background:rgba(24,174,205,.16)!important}
+.hero:after{background:linear-gradient(90deg,transparent,rgba(45,190,220,.10),transparent)!important}
+@media(max-width:760px){.setup-monitor-main{left:10%;top:18%;width:60%;height:24%;opacity:.28}.setup-monitor-side{left:72%;top:22%;width:22%;height:20%;opacity:.2}.setup-keyboard{left:34%;top:49%;width:30%;opacity:.3}.setup-mouse{top:49%;opacity:.25}.setup-desk{top:46%;opacity:.4}}
+
 </style>
   <link rel="stylesheet" href="elite.css?v=3">
 </head>
 
-<body class="intro-active">
+<body>
 
-<div id="sexsiIntro" aria-label="SEXSI TOURNAMENTS intro">
-  <div class="intro-content">
-    <div class="intro-logo">SEXSI<sup>®</sup></div>
-    <div class="intro-line"></div>
-    <div class="intro-subtitle">TOURNAMENTS</div>
-    <div class="intro-caption">COMPETE · DOMINATE · CONQUER</div>
-  </div>
-</div>
-
-<script>
-(function(){
-  const intro = document.getElementById("sexsiIntro");
-
-  function closeIntro(){
-    document.body.classList.remove("intro-active");
-    if(intro) intro.remove();
-  }
-
-  if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){
-    closeIntro();
-  }else{
-    setTimeout(closeIntro,2200);
-  }
-})();
-</script>
+<div class="gaming-setup-bg" aria-hidden="true"><div class="setup-monitor setup-monitor-main"></div><div class="setup-monitor setup-monitor-side"></div><div class="setup-desk"></div><div class="setup-keyboard"></div><div class="setup-mouse"></div></div>
 
 <div class="ambient"></div>
 
