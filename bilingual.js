@@ -19,8 +19,12 @@
     if (!english && trimmed.startsWith("КРЪГ ")) english = "ROUND " + trimmed.slice(5);
     if (!english && trimmed.startsWith("МАЧ №")) english = "MATCH #" + trimmed.slice(5);
     if (!english && trimmed.startsWith("ПОБЕДИТЕЛ: ")) english = "WINNER: " + trimmed.slice(11);
+    if (!english && trimmed.startsWith("ПРОТИВНИК: ")) english = "OPPONENT: " + trimmed.slice(11);
+    if (!english && trimmed.startsWith("РЕЗУЛТАТ: ")) english = "RESULT: " + trimmed.slice(10);
     if (!english && trimmed.startsWith("Намерени двубои: ")) english = "Matches found: " + trimmed.slice(17);
     if (!english && trimmed.startsWith("Коментари · ")) english = "Comments · " + trimmed.slice(12);
+    if (!english && /^.+ XP до .+$/.test(trimmed)) english = trimmed.replace(" XP до ", " XP to ");
+    if (!english && trimmed.startsWith("ОФИЦИАЛНАТА СХЕМА Е ЗАРЕДЕНА · ")) english = trimmed.replace("ОФИЦИАЛНАТА СХЕМА Е ЗАРЕДЕНА · ", "OFFICIAL BRACKET LOADED · ").replace(" ДВУБОЯ СА ЗАВЪРШЕНИ", " MATCHES COMPLETED").replace(" ДВУБОЙ СА ЗАВЪРШЕНИ", " MATCH COMPLETED");
     if (!english) return;
     translated.add(node);
     const span = document.createElement("span");
