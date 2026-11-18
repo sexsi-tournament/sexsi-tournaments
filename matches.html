@@ -153,7 +153,7 @@ async function loadMatches(){
     status.className="status";
     status.textContent=match.status==="completed"
       ?(match.winner_id===userId?"ПОБЕДА":"ЗАГУБА")
-      :match.status==="ongoing"?"ДВУБОЯТ Е В ХОД":"ПРЕДСТОИ";
+      :match.status==="ongoing"?(match.scheduled_at?"ДВУБОЯТ Е НАСРОЧЕН":"ГОТОВ ЗА ИГРА"):"ПРЕДСТОИ";
     status.style.color=match.status==="completed"?"#65e69a":"#e9bd59";
     card.append(top,players,schedule,status);
     list.appendChild(card);
