@@ -51,7 +51,7 @@
       const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
       let node;
       while ((node = walker.nextNode())) addTranslation(node);
-      if (root.querySelectorAll) root.querySelectorAll("[placeholder],[title],[aria-label]").forEach(translateAttributes);
+      if (root.querySelectorAll) root.querySelectorAll("[placeholder],[title],[aria-label],[content]").forEach(translateAttributes);
     }
   };
   const style = document.createElement("style");
