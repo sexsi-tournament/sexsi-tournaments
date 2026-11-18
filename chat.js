@@ -130,10 +130,10 @@ async function openConversation(id,user){
 }
 async function loadMessages(){
   if(!activeConversationId)return;const list=$("messages");clearNode(list);
-  const {data,error}=await db.from("sexsi_messages").select("id,conversation_id,sender_id,recipient_id,body,created_at,read_at").eq("conversation_id",activeConversationId).order("created_at",{ascending:true}).limit(150);
+  const {data,error}=await db.from("sexsi_messages").select("id,conversation_id,sender_id,recipient_id,body,created_at,read_at").eq("conversation_id",activeConversationId).order("created_at",{ascending:false}).limit(150);
   if(error){setStatus("Не успяхме да заредим съобщенията: "+error.message,true);return;}
   if(!data||!data.length){const p=document.createElement("p");p.className="message-empty";p.textContent="Това е началото на разговора. Изпрати първото съобщение.";list.appendChild(p);}
-  else data.forEach(renderMessage);
+  else data.reverse().forEach(renderMessage);
   list.scrollTop=list.scrollHeight;setStatus("");
 }
 function renderMessage(message){
