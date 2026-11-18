@@ -476,14 +476,20 @@ if (tournamentSignupButton) {
 
     if (data === "registered") {
       message.textContent = "Успешно се записа за SEXSI 1V1 CUP #001!";
+      tournamentSignupButton.textContent = "УСПЕШНО ЗАПИСАН";
     } else if (data === "already_registered") {
       message.textContent = "Вече си записан за този турнир.";
+      tournamentSignupButton.textContent = "ВЕЧЕ СИ ЗАПИСАН";
     } else if (data === "full") {
       message.textContent = "Местата са запълнени. Турнирът е с максимум 16 участници.";
+      tournamentSignupButton.textContent = "МЕСТАТА СА ЗАПЪЛНЕНИ";
     } else if (data === "missing_player_id") {
       message.textContent = "Първо добави валидно Standoff 2 ID в профила си.";
+      tournamentSignupButton.disabled = false;
+      tournamentSignupButton.textContent = "ОПИТАЙ ОТНОВО";
     } else if (data === "blocked") {
       message.textContent = "Нямаш право да се запишеш за този турнир. Свържи се с администратора.";
+      tournamentSignupButton.textContent = "ЗАПИСВАНЕТО Е ЗАБРАНЕНО";
     } else if (data === "deadline_passed") {
       message.textContent = "Крайният срок за записване беше 25.11.2026 г.";
       tournamentSignupButton.disabled = true;
@@ -494,8 +500,12 @@ if (tournamentSignupButton) {
       tournamentSignupButton.textContent = "РЕГИСТРАЦИЯТА Е ЗАТВОРЕНА";
     } else if (data === "not_logged_in") {
       message.textContent = "Трябва да влезеш в профила си.";
+      tournamentSignupButton.disabled = false;
+      tournamentSignupButton.textContent = "ОПИТАЙ ОТНОВО";
     } else {
       message.textContent = "Получен е неочакван отговор от сървъра.";
+      tournamentSignupButton.disabled = false;
+      tournamentSignupButton.textContent = "ОПИТАЙ ОТНОВО";
     }
   });
 }
