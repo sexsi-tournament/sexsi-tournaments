@@ -2293,7 +2293,7 @@ async function checkAdminAccess(){
 
   await refreshAllAdminData();
   if(!window.adminUserCountRefreshTimer){
-    window.adminUserCountRefreshTimer=setInterval(loadTotalAuthUsers,5000);
+    window.adminUserCountRefreshTimer=setInterval(loadTotalAuthUsers,30000);
   }
 }
 
