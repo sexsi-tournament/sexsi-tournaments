@@ -172,7 +172,7 @@ footer{padding:28px 7%;border-top:1px solid #292929;color:#777;text-align:center
           const card = make("div","match");
           const top = make("div","match-top");
           top.appendChild(make("span","", "МАЧ №" + safe(m.match_number)));
-          top.appendChild(make("span","", m.status === "completed" ? "ЗАВЪРШЕН" : m.status === "ongoing" ? "ГОТОВ ЗА ИГРА" : "ОЧАКВА СЪПЕРНИК"));
+          top.appendChild(make("span","", m.status === "completed" ? "ЗАВЪРШЕН" : m.status === "ongoing" ? (m.scheduled_at ? "ГОТОВ ЗА ИГРА" : "ОЧАКВА НАСРОЧВАНЕ") : "ОЧАКВА СЪПЕРНИК"));
           card.appendChild(top);
           const players = make("div","match-players");
           players.appendChild(make("span","",safe(m.player1_name)));
