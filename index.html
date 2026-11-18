@@ -717,6 +717,28 @@ footer{
   font-size:12px!important;
   line-height:1.65!important;
 }
+#homeQuickLinks a.quick-link-card .quick-link-cta{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  margin-top:3px;
+  padding:8px 13px;
+  border:1px solid rgba(66,214,197,.55);
+  border-radius:7px;
+  background:rgba(66,214,197,.09);
+  color:#42d6c5!important;
+  font-size:10px!important;
+  font-style:normal;
+  font-weight:900;
+  letter-spacing:1.2px;
+  line-height:1!important;
+  transition:background .2s ease,color .2s ease,transform .2s ease;
+}
+#homeQuickLinks a.quick-link-card:hover .quick-link-cta{
+  background:#42d6c5;
+  color:#071315!important;
+  transform:translateY(-1px);
+}
 #homeQuickLinks a.quick-link-card:hover{
   transform:translateY(-5px)!important;
   background:linear-gradient(145deg,#1b2b30 0%,#111a1e 100%)!important;
@@ -883,9 +905,9 @@ footer{
 <section id="homeQuickLinks" style="max-width:1100px;margin:0 auto;padding:10px 20px 35px">
   <div class="heading" style="text-align:center">БЪРЗ ДОСТЪП</div>
   <div class="cards">
-    <a class="card quick-link-card" href="tournaments.html"><strong>ТУРНИРИ</strong><span>Разгледай всички състезания</span></a>
-    <a class="card quick-link-card" href="matches.html"><strong>МОИТЕ ДВУБОИ</strong><span>Следи своите мачове</span></a>
-    <a class="card quick-link-card" href="bracket.html"><strong>ТУРНИРНА СХЕМА</strong><span>Отвори схемата на турнира</span></a>
+    <a class="card quick-link-card" href="tournaments.html"><strong>ТУРНИРИ</strong><span>Разгледай всички състезания</span><em class="quick-link-cta">НАТИСНИ ТУК</em></a>
+    <a class="card quick-link-card" href="matches.html"><strong>МОИТЕ ДВУБОИ</strong><span>Следи своите мачове</span><em class="quick-link-cta">НАТИСНИ ТУК</em></a>
+    <a class="card quick-link-card" href="bracket.html"><strong>ТУРНИРНА СХЕМА</strong><span>Отвори схемата на турнира</span><em class="quick-link-cta">НАТИСНИ ТУК</em></a>
   </div>
 </section>
 
