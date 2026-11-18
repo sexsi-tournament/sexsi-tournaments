@@ -482,6 +482,16 @@ if (tournamentSignupButton) {
       message.textContent = "Местата са запълнени. Турнирът е с максимум 16 участници.";
     } else if (data === "missing_player_id") {
       message.textContent = "Първо добави валидно Standoff 2 ID в профила си.";
+    } else if (data === "blocked") {
+      message.textContent = "Нямаш право да се запишеш за този турнир. Свържи се с администратора.";
+    } else if (data === "deadline_passed") {
+      message.textContent = "Крайният срок за записване беше 25.11.2026 г.";
+      tournamentSignupButton.disabled = true;
+      tournamentSignupButton.textContent = "ЗАПИСВАНЕТО Е ПРИКЛЮЧИЛО";
+    } else if (data === "closed") {
+      message.textContent = "Регистрацията за този турнир е затворена.";
+      tournamentSignupButton.disabled = true;
+      tournamentSignupButton.textContent = "РЕГИСТРАЦИЯТА Е ЗАТВОРЕНА";
     } else if (data === "not_logged_in") {
       message.textContent = "Трябва да влезеш в профила си.";
     } else {
