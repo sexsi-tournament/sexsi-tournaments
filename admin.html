@@ -1052,7 +1052,6 @@ document.querySelectorAll(".back-dashboard").forEach(button=>{
 });
 document.getElementById("menuLogoutButton")
   .addEventListener("click",async()=>{
-    await db.auth.signOut();
     window.location.href="profile.html";
   });
 
@@ -1926,7 +1925,10 @@ function createMatchCard(match){
 
   const status=document.createElement("p");
   status.className="match-status";
-  status.textContent="СТАТУС: "+(match.status||"неизвестен");
+  const statusLabel = match.status === "completed" ? "ЗАВЪРШЕН" :
+    match.status === "ongoing" ? (match.scheduled_at ? "НАСРОЧЕН" : "ГОТОВ ЗА ИГРА") :
+    "ОЧАКВА СЪПЕРНИК";
+  status.textContent="СТАТУС: "+statusLabel;
   card.append(title,players);
 
   if(match.player1_id&&match.player2_id){
