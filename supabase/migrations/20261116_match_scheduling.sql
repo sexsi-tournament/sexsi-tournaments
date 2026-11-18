@@ -11,7 +11,7 @@ create or replace function public.sexsi_admin_set_match_schedule(
 returns text
 language plpgsql
 security definer
-set search_path = public
+set search_path = ''
 as $$
 begin
   if auth.uid() is distinct from '13f1ada8-cd05-4c31-8940-4fb1790cb90e'::uuid then
