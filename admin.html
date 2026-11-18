@@ -1926,7 +1926,7 @@ function createMatchCard(match){
   const status=document.createElement("p");
   status.className="match-status";
   const statusLabel = match.status === "completed" ? "ЗАВЪРШЕН" :
-    match.status === "ongoing" ? (match.scheduled_at ? "НАСРОЧЕН" : "ГОТОВ ЗА ИГРА") :
+    match.status === "ongoing" ? (match.scheduled_at ? "ГОТОВ ЗА ИГРА" : "ОЧАКВА НАСРОЧВАНЕ") :
     "ОЧАКВА СЪПЕРНИК";
   status.textContent="СТАТУС: "+statusLabel;
   card.append(title,players);
