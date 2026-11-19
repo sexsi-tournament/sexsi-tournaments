@@ -55,16 +55,7 @@ body:before{
     linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
   background-size:55px 55px;
 }
-body:after{
-  content:"";position:fixed;inset:-50%;width:200%;height:200%;
-  pointer-events:none;z-index:1;opacity:.35;
-  background:
-    repeating-linear-gradient(115deg,transparent 0 115px,
-      rgba(255,25,40,.08) 116px,rgba(255,45,55,.5) 117px,
-      rgba(255,25,40,.2) 119px,transparent 122px 245px);
-  filter:drop-shadow(0 0 7px rgba(255,25,40,.8));
-  animation:neonDrift 24s linear infinite;
-}
+
 .ambient{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .ambient:before,.ambient:after{
   content:"";position:absolute;width:420px;height:420px;
@@ -432,7 +423,6 @@ footer{
 @keyframes glow{from{opacity:.5;transform:scale(.9)}to{opacity:1;transform:scale(1.15)}}
 @keyframes shine{0%,65%{transform:translateX(-100%)}85%,100%{transform:translateX(100%)}}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.65)}}
-@keyframes neonDrift{from{transform:translate3d(-2%,-2%,0)}to{transform:translate3d(2%,2%,0)}}
 @keyframes beam{0%{left:-100%}100%{left:150%}}
 @keyframes lineScan{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 @keyframes borderFlow{0%{opacity:.2}50%{opacity:1}100%{opacity:.2}}
@@ -466,11 +456,6 @@ footer{
 }
 /* MOBILE PERFORMANCE: reduce continuous paint and blur effects while scrolling */
 @media(max-width:800px){
-  body:after{
-    animation:none!important;
-    filter:none!important;
-    background:none!important;
-  }
   .ambient:before,.ambient:after{
     animation:none!important;
     filter:none!important;
