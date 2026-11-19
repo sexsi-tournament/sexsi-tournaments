@@ -735,3 +735,29 @@ main .featured-wrap,main .tournament-card{
  background:linear-gradient(145deg,#2a1017 0%,#1b0c11 58%,#13090d 100%)!important;
  border-color:rgba(237,37,45,.34)!important;
 }
+
+
+/* FIX: keep animated neon texture above the page background and below content */
+body{
+  position:relative!important;
+  isolation:isolate!important;
+}
+body::before{
+  content:""!important;
+  position:fixed!important;
+  inset:0!important;
+  z-index:0!important;
+  display:block!important;
+  pointer-events:none!important;
+  opacity:.78!important;
+  mix-blend-mode:screen!important;
+  animation:sexsiGlobalNeonMotion 8s linear infinite!important;
+  will-change:background-position;
+}
+body>*{
+  position:relative;
+  z-index:1;
+}
+@media(prefers-reduced-motion:reduce){
+  body::before{animation:sexsiGlobalNeonMotion 30s linear infinite!important}
+}
