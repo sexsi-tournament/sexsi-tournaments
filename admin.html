@@ -2082,6 +2082,24 @@ function createMatchCard(match){
   score2.value=match.score_player2??"";
   score2Label.appendChild(score2);
 
+  const createStatInput=(labelText,placeholder)=>{
+    const label=document.createElement("label");
+    label.textContent=labelText;
+    const input=document.createElement("input");
+    input.type="number";
+    input.min="0";
+    input.step="1";
+    input.placeholder=placeholder;
+    input.inputMode="numeric";
+    label.appendChild(input);
+    return {label,input};
+  };
+
+  const p1Kills=createStatInput("УБИЙСТВА · ИГРАЧ 1","Kills");
+  const p1Deaths=createStatInput("СМЪРТ · ИГРАЧ 1","Deaths");
+  const p2Kills=createStatInput("УБИЙСТВА · ИГРАЧ 2","Kills");
+  const p2Deaths=createStatInput("СМЪРТ · ИГРАЧ 2","Deaths");
+
   const winnerLabel=document.createElement("label");
   winnerLabel.textContent="ПОБЕДИТЕЛ";
 
@@ -2129,6 +2147,12 @@ function createMatchCard(match){
       return;
     }
 
+    const kdValues=[p1Kills.input.value,p1Deaths.input.value,p2Kills.input.value,p2Deaths.input.value];
+    if(kdValues.some(value=>value==="") || kdValues.some(value=>!Number.isInteger(Number(value)) || Number(value)<0)){
+      alert("Въведи цели неотрицателни стойности за убийства и смъртни случаи на двамата играчи.");
+      return;
+    }
+
     if(!winner.value){
       alert("Избери победител.");
       return;
@@ -2147,12 +2171,16 @@ function createMatchCard(match){
 
     try{
       const {data,error}=await db.rpc(
-        "sexsi_admin_submit_bracket_result",
+        "sexsi_admin_submit_bracket_result_v2",
         {
           p_match_id:match.id,
           p_winner_id:winner.value,
           p_score_player1:result1,
-          p_score_player2:result2
+          p_score_player2:result2,
+          p_player1_kills:Number(p1Kills.input.value),
+          p_player1_deaths:Number(p1Deaths.input.value),
+          p_player2_kills:Number(p2Kills.input.value),
+          p_player2_deaths:Number(p2Deaths.input.value)
         }
       );
       if(error){
@@ -2171,7 +2199,7 @@ function createMatchCard(match){
     }
   });
 
-  controls.append(score1Label,score2Label,winnerLabel,saveButton);
+  controls.append(score1Label,score2Label,p1Kills.label,p1Deaths.label,p2Kills.label,p2Deaths.label,winnerLabel,saveButton);
   card.appendChild(controls);
 
   const forfeitPanel=document.createElement("div");
