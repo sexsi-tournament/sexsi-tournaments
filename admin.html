@@ -2508,19 +2508,17 @@ newsAdminForm.addEventListener("submit",async event=>{
     : await db.from("sexsi_news").insert({...payload,created_by:(await db.auth.getUser()).data.user.id}).select("id").single();
   if(result.error){newsFormMessage.textContent="Грешка: "+result.error.message;return}
 
-  const createdNewsId=!id ? result.data?.id : null;
+  const createdNewsId=!id ? (result.data?.id || null) : null;
   const shouldPublishToDiscord=Boolean(createdNewsId && payload.is_published);
   resetNewsForm();
-  newsFormMessage.textContent=shouldPublishToDiscord
-    ? "Новината е запазена. Изпращане към Discord..."
-    : "Публикацията е запазена.";
-  await loadAdminNews();
 
   if(shouldPublishToDiscord){
+    newsFormMessage.textContent="Новината е запазена. Изпращане към Discord...";
     try{
-      const {data:sessionData}=await db.auth.getSession();
+      const {data:sessionData,error:sessionError}=await db.auth.getSession();
+      if(sessionError)throw sessionError;
       const accessToken=sessionData?.session?.access_token;
-      if(!accessToken)throw new Error("Липсва активна администраторска сесия.");
+      if(!accessToken)throw new Error("Липсва активна администраторска сесия. Влез отново в админ панела.");
       const response=await fetch("https://fyxlwcoochsuzhqostpe.supabase.co/functions/v1/discord-news-publish",{
         method:"POST",
         headers:{
@@ -2531,13 +2529,19 @@ newsAdminForm.addEventListener("submit",async event=>{
         body:JSON.stringify({news_id:createdNewsId})
       });
       const sent=await response.json().catch(()=>({}));
-      if(!response.ok||!sent.success)throw new Error(sent.error||"Discord не потвърди публикацията.");
+      if(!response.ok||!sent.success)throw new Error(sent.details?.message || sent.error || "Discord не потвърди публикацията.");
       newsFormMessage.textContent="Новината е публикувана в сайта и Discord! 🇧🇬🇬🇧";
     }catch(error){
       console.error("Discord news publishing failed:",error);
       newsFormMessage.textContent="Новината е в сайта, но Discord изпращането не успя: "+(error?.message||"неизвестна грешка");
     }
+  }else if(!id && payload.is_published){
+    newsFormMessage.textContent="Новината е в сайта, но Supabase не върна ID. Discord не е извикан.";
+  }else{
+    newsFormMessage.textContent="Публикацията е запазена.";
   }
+
+  await loadAdminNews();
 });
 newsAdminList.addEventListener("click",async event=>{
   const button=event.target.closest("button[data-action]");
