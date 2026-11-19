@@ -63,6 +63,13 @@
     }
     nav.appendChild(a);
   });
+
+  var adminLink=document.createElement("a");
+  adminLink.href="admin.html";
+  adminLink.className="sexsi-admin-nav-link";
+  adminLink.textContent="🛡 АДМИНИСТРАТИВЕН ПАНЕЛ";
+  adminLink.hidden=true;
+  nav.appendChild(adminLink);
   panel.appendChild(nav);
   if(preservedActions) panel.appendChild(preservedActions);
   wrap.appendChild(toggle);
@@ -79,6 +86,8 @@
     ".sexsi-global-nav-panel nav{display:flex;flex-direction:column;gap:5px;margin:0;}" +
     ".sexsi-global-nav-panel nav a{display:block;margin:0;padding:12px 13px;border-radius:7px;background:#191919;color:#eee;text-decoration:none;font-size:11px;font-weight:800;letter-spacing:.3px;}" +
     ".sexsi-global-nav-panel nav a[aria-current=page]{background:#321719;color:#ff777c;border-left:3px solid #ed252d;}" +
+    ".sexsi-global-nav-panel nav a.sexsi-admin-nav-link{margin-top:7px;border:1px solid rgba(237,37,45,.65);background:linear-gradient(110deg,#351014,#1a0b0d);color:#ff777c;font-weight:1000;}" +
+    ".sexsi-global-nav-panel nav a.sexsi-admin-nav-link[hidden]{display:none!important;}" +
     ".sexsi-global-nav-panel .header-actions{display:flex;flex-direction:column;gap:6px;margin-top:8px;}" +
     ".sexsi-global-nav-panel .header-actions>*{width:100%;margin:0;}" +
     "@media(max-width:650px){body>header{flex-direction:row!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;}.sexsi-global-nav-toggle{padding:10px 12px;}}";
@@ -101,4 +110,21 @@
       toggle.setAttribute("aria-expanded","false");
     }
   });
+
+  // Покажи административната връзка само за конкретния администратор.
+  var ADMIN_ID="13f1ada8-cd05-4c31-8940-4fb1790cb90e";
+  var SUPABASE_URL="https://fyxlwcoochsuzhqostpe.supabase.co";
+  var SUPABASE_KEY="sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP";
+  function updateAdminLink(session){
+    adminLink.hidden=!(session && session.user && session.user.id===ADMIN_ID);
+  }
+  function initializeAdminLink(){
+    if(!window.supabase || !window.supabase.createClient) return;
+    var authClient=window.sexsiSupabase || window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+    authClient.auth.getSession().then(function(result){
+      if(!result.error) updateAdminLink(result.data.session);
+    }).catch(function(error){console.error("Admin navigation session error:",error);});
+    authClient.auth.onAuthStateChange(function(event,session){updateAdminLink(session);});
+  }
+  initializeAdminLink();
 })();
