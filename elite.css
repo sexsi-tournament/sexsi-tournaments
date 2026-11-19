@@ -588,64 +588,27 @@ body:after{background:repeating-linear-gradient(115deg,transparent 0 145px,rgba(
 .hero:after{background:linear-gradient(90deg,transparent,rgba(237,37,45,.12),transparent)!important}
 
 
-/* CHAMPIONSHIP ARENA HERO — CSS-built red esports stage */
+/* HOMEPAGE — restrained animated red neon background */
 .championship-hero{
-  isolation:isolate!important;
-  min-height:clamp(590px,72vw,790px)!important;
-  padding:clamp(70px,9vw,125px) 7%!important;
-  background:
-    radial-gradient(ellipse at 50% 72%,rgba(255,28,48,.25),transparent 34%),
-    radial-gradient(ellipse at 50% 0%,rgba(190,18,38,.20),transparent 48%),
-    linear-gradient(180deg,#070608 0%,#13070b 48%,#080708 100%)!important;
+  position:relative!important;isolation:isolate!important;overflow:hidden!important;
+  background:radial-gradient(ellipse at 76% 48%,rgba(190,0,28,.25),transparent 48%),linear-gradient(115deg,#080608 0%,#16070c 52%,#090608 100%)!important;
 }
 .championship-backdrop{
-  position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;
-  background:
-    linear-gradient(180deg,transparent 0 58%,rgba(5,4,6,.3) 70%,#080708 100%),
-    radial-gradient(ellipse at 50% 84%,rgba(255,32,51,.28),transparent 36%),
-    repeating-linear-gradient(90deg,transparent 0 11.8%,rgba(255,255,255,.025) 12%,transparent 12.2%),
-    linear-gradient(115deg,rgba(10,7,10,.9),rgba(27,7,13,.32) 48%,rgba(10,7,10,.9));
+  position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+  background:radial-gradient(ellipse at 78% 55%,rgba(255,0,42,.16),transparent 42%),linear-gradient(180deg,rgba(5,4,6,.05),rgba(5,4,6,.26));
 }
-.championship-backdrop:before{
-  content:"";position:absolute;left:50%;top:-36%;width:min(88vw,1050px);height:min(88vw,1050px);
-  transform:translateX(-50%);border-radius:50%;
-  border:2px solid rgba(255,42,58,.32);
-  box-shadow:0 0 0 18px rgba(255,35,55,.035),0 0 0 42px rgba(255,35,55,.025),
-    inset 0 0 70px rgba(255,25,48,.14),0 0 80px rgba(255,25,48,.18);
-  background:repeating-conic-gradient(from 0deg,rgba(255,40,55,.13) 0deg 1deg,transparent 1deg 9deg);
-  mask-image:linear-gradient(to bottom,#000 0%,transparent 78%);
+.championship-backdrop:before,.championship-backdrop:after{
+  content:"";position:absolute;inset:-55% -35%;pointer-events:none;
+  background:repeating-linear-gradient(118deg,transparent 0 150px,rgba(255,25,55,0) 152px,rgba(255,35,65,.62) 154px,rgba(255,35,65,.10) 157px,transparent 160px 290px);
+  transform:translate3d(-5%,0,0);animation:sexsiNeonFlow 16s linear infinite;
+  filter:drop-shadow(0 0 8px rgba(255,25,55,.78));opacity:.42;
 }
 .championship-backdrop:after{
-  content:"";position:absolute;inset:0;
-  background:
-    linear-gradient(72deg,transparent 0 13%,rgba(255,30,48,.20) 13.3%,transparent 14.5% 85%,rgba(255,30,48,.18) 86%,transparent 87%),
-    linear-gradient(108deg,transparent 0 23%,rgba(255,255,255,.10) 23.2%,transparent 24.5% 76%,rgba(255,255,255,.10) 76.2%,transparent 77.5%),
-    radial-gradient(ellipse at 9% 35%,rgba(255,28,48,.42),transparent 18%),
-    radial-gradient(ellipse at 91% 35%,rgba(255,28,48,.42),transparent 18%),
-    linear-gradient(180deg,transparent 55%,rgba(0,0,0,.42) 76%);
-  mix-blend-mode:screen;opacity:.9;
+  background:repeating-linear-gradient(66deg,transparent 0 205px,rgba(255,35,65,0) 207px,rgba(255,45,75,.55) 209px,rgba(255,45,75,.08) 212px,transparent 215px 380px);
+  transform:translate3d(5%,0,0);animation:sexsiNeonFlowReverse 22s linear infinite;opacity:.28;
 }
-.championship-hero .hero-content{
-  z-index:4;max-width:1100px;margin:0 auto;text-align:center;
-  padding:clamp(25px,5vw,58px) clamp(15px,3vw,38px);
-  border:1px solid rgba(255,55,72,.25);border-radius:18px;
-  background:linear-gradient(145deg,rgba(9,7,9,.66),rgba(12,7,10,.34));
-  box-shadow:0 22px 70px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.07);
-  backdrop-filter:blur(3px);
-}
-.championship-hero .hero-content:before{
-  content:"LIVE ESPORTS ARENA  /  SEXSI TOURNAMENTS";
-  display:block;margin:0 auto 18px;color:#ff6974;
-  font-size:10px;font-weight:900;letter-spacing:.28em;
-}
-.championship-hero .tag{margin:auto}
-.championship-hero h1{max-width:1000px;margin:24px auto 18px;font-size:clamp(32px,5.5vw,68px);letter-spacing:-.045em}
-.championship-hero p{max-width:690px;margin:0 auto;color:#ddd}
-@media(max-width:700px){
-  .championship-hero{min-height:590px!important;padding:55px 5%!important}
-  .championship-hero .hero-content{padding:28px 16px;border-radius:13px}
-  .championship-hero .hero-content:before{font-size:8px;letter-spacing:.16em}
-  .championship-hero h1{font-size:clamp(29px,8vw,42px);letter-spacing:-.04em;line-height:1.12}
-  .championship-backdrop:before{top:-14%;width:125vw;height:125vw}
-}
-@media(prefers-reduced-motion:reduce){.championship-hero:before,.championship-hero:after{animation:none!important}}
+.championship-hero .hero-content{position:relative;z-index:3!important}
+@keyframes sexsiNeonFlow{from{transform:translate3d(-5%,0,0)}to{transform:translate3d(5%,0,0)}}
+@keyframes sexsiNeonFlowReverse{from{transform:translate3d(5%,0,0)}to{transform:translate3d(-5%,0,0)}}
+@media(max-width:760px){.championship-backdrop:before{opacity:.30}.championship-backdrop:after{opacity:.20}}
+@media(prefers-reduced-motion:reduce){.championship-backdrop:before,.championship-backdrop:after{animation:none!important}}
