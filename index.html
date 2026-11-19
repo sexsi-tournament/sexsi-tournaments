@@ -637,6 +637,34 @@ header .player-menu-button .sexsi-en{
 }
 
 
+
+/* PUBLIC LIVE TOURNAMENT BOARD */
+.live-board{max-width:1200px;margin:0 auto;padding:42px 7% 24px}
+.live-board-shell{position:relative;overflow:hidden;padding:26px;border:1px solid rgba(237,37,45,.42);border-radius:14px;background:linear-gradient(135deg,rgba(32,10,13,.96),rgba(12,12,14,.98) 62%);box-shadow:0 14px 45px rgba(0,0,0,.28),0 0 28px rgba(237,37,45,.08)}
+.live-board-shell:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(180deg,transparent,#ed252d,#ff777c,transparent);animation:liveEdge 3.5s ease-in-out infinite}
+@keyframes liveEdge{0%,100%{opacity:.35;transform:translateY(-35%)}50%{opacity:1;transform:translateY(35%)}}
+.live-board-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+.live-board-kicker{color:#ff6268;font-size:10px;font-weight:900;letter-spacing:2.5px}
+.live-board-title{font-size:clamp(21px,3vw,29px);font-weight:1000;margin-top:5px}
+.live-board-status{display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid rgba(237,37,45,.45);border-radius:30px;background:rgba(237,37,45,.1);color:#ff777c;font-size:10px;font-weight:900;letter-spacing:1px}
+.live-board-status:before{content:"";width:7px;height:7px;border-radius:50%;background:#ed252d;box-shadow:0 0 10px #ed252d;animation:pulse 1.7s infinite}
+.live-board-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.live-board-stat{padding:15px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);border-radius:9px}
+.live-board-stat strong{display:block;font-size:27px;color:#fff;font-weight:1000}
+.live-board-stat span{display:block;margin-top:5px;color:#999;font-size:9px;font-weight:900;letter-spacing:.8px}
+.live-board-next{padding:18px;border:1px solid rgba(237,37,45,.3);border-radius:10px;background:radial-gradient(ellipse at 50% 0,rgba(237,37,45,.12),transparent 70%),#0c0c0e}
+.live-board-label{color:#ff777c;font-size:10px;font-weight:900;letter-spacing:1.5px}
+.live-board-versus{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin:13px 0}
+.live-board-player{font-size:clamp(15px,2.5vw,21px);font-weight:900;overflow-wrap:anywhere}
+.live-board-player:last-child{text-align:right}
+.live-board-vs{color:#ed252d;font-weight:1000;font-size:17px}
+.live-board-time{color:#aaa;font-size:12px;line-height:1.6}
+.live-board-recent{display:grid;gap:8px;margin-top:16px}
+.live-board-result{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 13px;background:rgba(255,255,255,.03);border-radius:7px;font-size:12px}
+.live-board-result strong{color:#fff}.live-board-result span{color:#e9bd59;white-space:nowrap;font-weight:900}
+.live-board-foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:14px;color:#777;font-size:10px}
+.live-board-link{color:#ff777c;text-decoration:none;font-weight:900}.live-board-link:hover{color:#fff}
+@media(max-width:600px){.live-board{padding:28px 5% 12px}.live-board-shell{padding:18px 14px}.live-board-stats{gap:7px}.live-board-stat{padding:11px 9px}.live-board-stat strong{font-size:22px}.live-board-stat span{font-size:8px}.live-board-result{font-size:10px}}
 </style>
   <link rel="stylesheet" href="elite.css?v=20261119-red6">
 </head>
@@ -746,6 +774,31 @@ header .player-menu-button .sexsi-en{
     <div class="featured-info">Краен срок: 25.11.2026 · Начало: 02.12.2026 · Двубоите продължават според графика.</div>
     <a class="btn" href="tournament-001.html">ПОВЕЧЕ ИНФОРМАЦИЯ</a>
     <span class="btn" aria-disabled="true" style="cursor:not-allowed;opacity:.72">МЕСТАТА СА ЗАПЪЛНЕНИ</span>
+  </div>
+</section>
+
+<section class="live-board" id="liveTournamentBoard" aria-live="polite">
+  <div class="live-board-shell">
+    <div class="live-board-head">
+      <div><div class="live-board-kicker">SEXSI TOURNAMENTS · LIVE TRACKER</div><div class="live-board-title">ТУРНИРЪТ В ДВИЖЕНИЕ</div></div>
+      <div class="live-board-status" id="liveBoardStatus">ЗАРЕЖДАНЕ НА ДАННИТЕ</div>
+    </div>
+    <div class="live-board-stats">
+      <div class="live-board-stat"><strong id="liveBoardOngoing">—</strong><span>АКТИВНИ ДВУБОИ</span></div>
+      <div class="live-board-stat"><strong id="liveBoardCompleted">—</strong><span>ЗАВЪРШЕНИ МАЧОВЕ</span></div>
+      <div class="live-board-stat"><strong id="liveBoardPending">—</strong><span>ПРЕДСТОЯЩИ МАЧОВЕ</span></div>
+    </div>
+    <div class="live-board-next">
+      <div class="live-board-label" id="liveBoardNextLabel">СЛЕДВАЩ НАСРОЧЕН ДВУБОЙ</div>
+      <div class="live-board-versus">
+        <div class="live-board-player" id="liveBoardPlayer1">Зареждане...</div>
+        <div class="live-board-vs">VS</div>
+        <div class="live-board-player" id="liveBoardPlayer2">Зареждане...</div>
+      </div>
+      <div class="live-board-time" id="liveBoardNextTime">Проверяваме графика...</div>
+    </div>
+    <div class="live-board-recent" id="liveBoardRecent"></div>
+    <div class="live-board-foot"><span id="liveBoardUpdated">Данните се обновяват автоматично.</span><a class="live-board-link" href="bracket.html">ВИЖ ТУРНИРНАТА СХЕМА →</a></div>
   </div>
 </section>
 
@@ -862,6 +915,76 @@ header .player-menu-button .sexsi-en{
     }
   }
 
+
+
+  async function loadLiveTournamentBoard(){
+    const status=document.getElementById("liveBoardStatus");
+    const player1=document.getElementById("liveBoardPlayer1");
+    const player2=document.getElementById("liveBoardPlayer2");
+    const nextTime=document.getElementById("liveBoardNextTime");
+    const recent=document.getElementById("liveBoardRecent");
+    try{
+      const [bracketResponse,scheduleResponse]=await Promise.all([
+        db.rpc("sexsi_get_public_bracket"),
+        db.rpc("sexsi_get_public_match_schedules")
+      ]);
+      if(bracketResponse.error) throw bracketResponse.error;
+      if(scheduleResponse.error) throw scheduleResponse.error;
+      const matches=Array.isArray(bracketResponse.data)?bracketResponse.data:[];
+      const schedules=new Map((Array.isArray(scheduleResponse.data)?scheduleResponse.data:[]).map(item=>[item.match_id,item.scheduled_at]));
+      const now=Date.now();
+      const unfinished=matches.filter(match=>match.status!=="completed");
+      const upcoming=unfinished.map(match=>({...match,scheduled_at:schedules.get(match.id)||null}))
+        .filter(match=>match.scheduled_at && new Date(match.scheduled_at).getTime()>=now)
+        .sort((a,b)=>new Date(a.scheduled_at)-new Date(b.scheduled_at));
+      const completed=matches.filter(match=>match.status==="completed")
+        .sort((a,b)=>Number(b.round_number)-Number(a.round_number)||Number(b.match_number)-Number(a.match_number));
+      const ongoing=matches.filter(match=>match.status==="ongoing").length;
+      const pending=matches.filter(match=>match.status==="pending").length;
+      document.getElementById("liveBoardOngoing").textContent=String(ongoing);
+      document.getElementById("liveBoardCompleted").textContent=String(completed.length);
+      document.getElementById("liveBoardPending").textContent=String(pending);
+      if(upcoming.length){
+        const next=upcoming[0];
+        player1.textContent=next.player1_name||"Очаква се";
+        player2.textContent=next.player2_name||"Очаква се";
+        const date=new Date(next.scheduled_at);
+        nextTime.textContent="МАЧ №"+next.match_number+" · КРЪГ "+next.round_number+" · "+date.toLocaleString("bg-BG",{dateStyle:"full",timeStyle:"short"});
+        document.getElementById("liveBoardNextLabel").textContent="СЛЕДВАЩ НАСРОЧЕН ДВУБОЙ";
+      }else{
+        player1.textContent="Няма насрочен";
+        player2.textContent="двубой";
+        nextTime.textContent=unfinished.length?"Все още няма бъдещ час в графика.":"Всички двубои са приключили.";
+        document.getElementById("liveBoardNextLabel").textContent="ГРАФИК НА ТУРНИРА";
+      }
+      recent.replaceChildren();
+      completed.slice(0,3).forEach(match=>{
+        const row=document.createElement("div");
+        row.className="live-board-result";
+        const names=document.createElement("strong");
+        names.textContent="Мач №"+match.match_number+" · "+(match.winner_name||"Победителят") ;
+        const score=document.createElement("span");
+        score.textContent=match.score_player1+" : "+match.score_player2;
+        row.append(names,score);
+        recent.appendChild(row);
+      });
+      if(!completed.length){
+        const empty=document.createElement("div");
+        empty.className="live-board-foot";
+        empty.textContent="Все още няма приключили двубои.";
+        recent.appendChild(empty);
+      }
+      status.textContent=ongoing>0?"ТУРНИРЪТ Е АКТИВЕН":(upcoming.length?"ПРЕДСТОЯТ ДВУБОИ":"СЛЕДИ ТУРНИРА");
+      document.getElementById("liveBoardUpdated").textContent="Последна актуализация: "+new Date().toLocaleTimeString("bg-BG",{hour:"2-digit",minute:"2-digit"})+" · автоматично обновяване на 15 сек.";
+    }catch(error){
+      console.error("Live tournament board:",error);
+      status.textContent="ВРЕМЕННО НЕДОСТЪПНО";
+      player1.textContent="Данните не са";
+      player2.textContent="достъпни";
+      nextTime.textContent="Опитай да презаредиш страницата след малко.";
+      document.getElementById("liveBoardUpdated").textContent="Възникна проблем при зареждането на турнирните данни.";
+    }
+  }
 
   async function updatePlayerMenu(session){
     const user = session && session.user;
@@ -1280,6 +1403,8 @@ header .player-menu-button .sexsi-en{
 
   loadRegistrationCount();
   setInterval(loadRegistrationCount,15000);
+  loadLiveTournamentBoard();
+  setInterval(loadLiveTournamentBoard,15000);
 
   initializePage();
 
