@@ -916,6 +916,10 @@ footer{
             <option value="ОБЩНОСТ">ОБЩНОСТ</option>
           </select>
         </label>
+        <label style="display:grid;gap:7px">ЛИНК ЗА LIVE БУТОН (ПО ЖЕЛАНИЕ)
+          <input id="newsLiveUrl" type="url" maxlength="500" placeholder="https://www.tiktok.com/@профил" style="width:100%;padding:12px;border-radius:7px;background:#101010;color:#fff;border:1px solid #333">
+          <small style="color:#999;font-size:11px;line-height:1.5">Ако е попълнен TikTok линк, в сайта и Discord ще се появи бутон „ГЛЕДАЙ НА ЖИВО В TIKTOK“.</small>
+        </label>
         <label style="display:flex;align-items:center;gap:9px"><input id="newsPinned" type="checkbox"> ЗАКАЧИ НАЙ-ОТГОРЕ</label>
         <label style="display:flex;align-items:center;gap:9px"><input id="newsPublished" type="checkbox" checked> ПУБЛИКУВАНА ВЕДНАГА</label>
         <div style="display:flex;gap:9px;flex-wrap:wrap">
@@ -2497,6 +2501,7 @@ newsAdminForm.addEventListener("submit",async event=>{
     summary:document.getElementById("newsSummary").value.trim(),
     content:document.getElementById("newsContent").value.trim(),
     category:document.getElementById("newsCategory").value,
+    live_url:document.getElementById("newsLiveUrl").value.trim()||null,
     is_pinned:document.getElementById("newsPinned").checked,
     is_published:document.getElementById("newsPublished").checked,
     published_at:new Date().toISOString()
@@ -2555,6 +2560,7 @@ newsAdminList.addEventListener("click",async event=>{
     document.getElementById("newsSummary").value=data.summary||"";
     document.getElementById("newsContent").value=data.content;
     document.getElementById("newsCategory").value=data.category;
+    document.getElementById("newsLiveUrl").value=data.live_url||"";
     document.getElementById("newsPinned").checked=data.is_pinned;
     document.getElementById("newsPublished").checked=data.is_published;
     document.getElementById("newsEditorHeading").textContent="РЕДАКЦИЯ НА НОВИНА";
