@@ -42,6 +42,7 @@
   var links=[
     ["index.html","НАЧАЛО"],
     ["tournaments.html","ТУРНИРИ"],
+    ["community.html","BG COMMUNITY"],
     ["tournament-001.html","АКТИВЕН ТУРНИР"],
     ["matches.html","МОИТЕ ДВУБОИ"],
     ["bracket.html","ТУРНИРНА СХЕМА"],
