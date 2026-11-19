@@ -712,3 +712,26 @@ th{background:linear-gradient(90deg,#a80f23,#ed252d,#a80f23)!important;color:#ff
 @media(prefers-reduced-motion:reduce){
   body::before{animation:none!important}
 }
+
+
+/* DEEP RED SURFACE PASS — make the red identity visible beyond accents */
+body{
+ background:
+  radial-gradient(ellipse at 50% 8%,rgba(185,18,42,.34),transparent 52%),
+  radial-gradient(ellipse at 100% 76%,rgba(120,10,28,.24),transparent 42%),
+  linear-gradient(135deg,#16070b 0%,#260a12 42%,#19080e 72%,#0d0609 100%)!important;
+}
+body::before{
+ opacity:.42!important;
+ background-image:
+  repeating-linear-gradient(115deg,transparent 0 112px,rgba(255,35,55,0) 114px,rgba(255,45,68,.68) 116px,rgba(255,45,68,.14) 120px,transparent 124px 245px),
+  linear-gradient(rgba(255,55,70,.028) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,55,70,.028) 1px,transparent 1px)!important;
+ animation:sexsiGlobalNeonMotion 14s linear infinite!important;
+}
+main .card,main .panel,main [class*="card"],main [class*="panel"],main [class*="box"],
+main .round,main .mode,main .workspace,main .stat,main .notice,main .comment-item,
+main .featured-wrap,main .tournament-card{
+ background:linear-gradient(145deg,#2a1017 0%,#1b0c11 58%,#13090d 100%)!important;
+ border-color:rgba(237,37,45,.34)!important;
+}
