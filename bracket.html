@@ -54,6 +54,8 @@ h1{font-size:clamp(34px,6vw,66px);line-height:1;margin:12px 0 10px;letter-spacin
 .player-name{min-width:0;overflow-wrap:anywhere}
 .player-score{font-size:14px;font-weight:900;color:#fff;white-space:nowrap}
 .match-winner{margin-top:8px;padding-top:8px;border-top:1px solid #25252a;color:#72e1a2;font-size:9px;font-weight:900;letter-spacing:.8px}
+.match-forfeit-label{margin-top:9px;padding:8px 9px;border:1px solid rgba(240,91,91,.42);border-radius:5px;background:rgba(140,25,30,.16);color:#ff9296;font-size:9px;font-weight:1000;letter-spacing:.9px;text-align:center}
+.match-forfeit-reason{margin-top:6px;color:#c7a6a6;font-size:10px;font-weight:800;text-align:center;letter-spacing:.4px}
 .match-schedule{display:flex;flex-direction:column;gap:4px;margin-top:10px;padding:9px 10px;border:1px solid rgba(233,189,89,.25);border-radius:5px;background:rgba(233,189,89,.055)}
 .match-schedule-label{font-size:8px;font-weight:900;letter-spacing:1px;color:#b99b5d}
 .match-schedule-value{font-size:12px;color:#f2d58e;font-weight:900}
@@ -247,7 +249,8 @@ footer{border-top:1px solid var(--line);padding:25px;text-align:center;color:#66
           if(isFinal) card.appendChild(make("div","final-banner","🏆  ГОЛЕМИЯТ ФИНАЛ  🏆"));
           const meta = make("div","match-meta");
           meta.appendChild(make("span","", "МАЧ №" + safe(m.match_number)));
-          const state = m.status === "completed" ? "ЗАВЪРШЕН" : m.status === "ongoing" ? (m.scheduled_at ? "ГОТОВ ЗА ИГРА" : "ОЧАКВА НАСРОЧВАНЕ") : "ОЧАКВА СЪПЕРНИК";
+          const isForfeit = m.result_type === "forfeit";
+          const state = isForfeit ? "СЛУЖЕБНО ПРИКЛЮЧЕН" : m.status === "completed" ? "ЗАВЪРШЕН" : m.status === "ongoing" ? (m.scheduled_at ? "ГОТОВ ЗА ИГРА" : "ОЧАКВА НАСРОЧВАНЕ") : "ОЧАКВА СЪПЕРНИК";
           meta.appendChild(make("span","match-status" + (m.status === "completed" ? " done" : m.status === "ongoing" ? " ready" : ""),state));
           card.appendChild(meta);
           const p1 = make("div","player" + (m.winner_id && m.winner_id === m.player1_id ? " winner" : ""));
@@ -268,7 +271,12 @@ footer{border-top:1px solid var(--line);padding:25px;text-align:center;color:#66
             schedule.appendChild(make("strong","match-schedule-pending","ОЧАКВА СЕ УГОВАРЯНЕ"));
           }
           card.appendChild(schedule);
-          if(m.winner_name) card.appendChild(make("div","match-winner","ПОБЕДИТЕЛ: " + m.winner_name));
+          if(isForfeit){
+            card.appendChild(make("div","match-forfeit-label","⚑ СЛУЖЕБНА ПОБЕДА: " + safe(m.winner_name)));
+            card.appendChild(make("div","match-forfeit-reason","ПРИЧИНА: " + safe(m.result_reason)));
+          }else if(m.winner_name){
+            card.appendChild(make("div","match-winner","ПОБЕДИТЕЛ: " + m.winner_name));
+          }
           round.appendChild(card);
         });
         container.appendChild(round);
