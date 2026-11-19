@@ -670,27 +670,40 @@ body:after{background:repeating-linear-gradient(115deg,transparent 0 145px,rgba(
 @media(max-width:760px){.setup-monitor-main{left:10%;top:18%;width:60%;height:24%;opacity:.28}.setup-monitor-side{left:72%;top:22%;width:22%;height:20%;opacity:.2}.setup-keyboard{left:34%;top:49%;width:30%;opacity:.3}.setup-mouse{top:49%;opacity:.25}.setup-desk{top:46%;opacity:.4}}
 
 
-/* CHAMPIONSHIP ARENA — homepage-only visual scene */
-.championship-hero{isolation:isolate!important;min-height:650px!important;background:linear-gradient(90deg,rgba(5,5,7,.98) 0%,rgba(7,5,7,.90) 38%,rgba(8,4,7,.48) 72%,rgba(5,5,7,.68) 100%)!important}
-.championship-hero:before,.championship-hero:after{z-index:1!important}
-.championship-hero .hero-content{z-index:8!important;max-width:820px}
-.championship-backdrop{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none;background:radial-gradient(ellipse at 74% 63%,rgba(237,25,43,.24),transparent 36%),radial-gradient(ellipse at 80% 23%,rgba(255,35,54,.17),transparent 33%),linear-gradient(180deg,rgba(5,5,7,.08),rgba(5,5,7,.15) 48%,#070608 100%)}
-.arena-truss{position:absolute;left:28%;right:3%;top:8%;height:12%;border-top:5px solid rgba(100,89,91,.55);border-bottom:2px solid rgba(255,55,68,.35);background:repeating-linear-gradient(90deg,transparent 0 8%,rgba(170,150,150,.24) 8.2% 8.6%,transparent 8.8% 16%);filter:drop-shadow(0 0 14px rgba(255,35,55,.22))}
-.arena-truss:before,.arena-truss:after{content:"";position:absolute;top:-20px;width:12px;height:42px;background:linear-gradient(#d8c4c4,#3a3033);box-shadow:0 0 18px rgba(255,40,55,.65)}
-.arena-truss:before{left:22%}.arena-truss:after{right:20%}
-.arena-beam{position:absolute;top:12%;width:30%;height:68%;transform-origin:top center;opacity:.56;filter:blur(5px);background:linear-gradient(180deg,rgba(255,40,58,.48),rgba(255,25,45,.08) 68%,transparent);clip-path:polygon(46% 0,55% 0,100% 100%,0 100%)}
-.arena-beam-left{left:42%;transform:rotate(17deg)}.arena-beam-right{right:2%;transform:rotate(-19deg);opacity:.43}
-.arena-crowd{position:absolute;left:22%;right:0;bottom:21%;height:20%;opacity:.76;background:radial-gradient(ellipse at 12% 85%,#171116 0 18%,transparent 19%),radial-gradient(ellipse at 28% 92%,#100d12 0 22%,transparent 23%),radial-gradient(ellipse at 49% 88%,#171015 0 21%,transparent 22%),radial-gradient(ellipse at 69% 90%,#100d12 0 24%,transparent 25%),radial-gradient(ellipse at 88% 86%,#171015 0 20%,transparent 21%)}
-.arena-screen{position:absolute;top:27%;width:20%;height:26%;border:7px solid #21191d;border-radius:5px;background:repeating-linear-gradient(0deg,transparent 0 18px,rgba(255,65,78,.13) 19px 20px),linear-gradient(145deg,rgba(77,10,22,.92),rgba(12,8,13,.98) 60%,rgba(110,13,30,.75));box-shadow:0 0 0 1px rgba(255,80,90,.32),0 0 34px rgba(238,25,48,.35),inset 0 0 35px rgba(255,30,50,.18);transform:perspective(700px) rotateY(-12deg)}
-.arena-screen-left{left:32%;opacity:.68}.arena-screen-right{right:5%;top:25%;width:23%;height:30%;transform:perspective(700px) rotateY(12deg);opacity:.82}
-.arena-stage{position:absolute;right:12%;bottom:17%;width:48%;height:16%;background:linear-gradient(180deg,#4b1a25 0%,#1b1118 35%,#09080b 100%);clip-path:polygon(12% 0,88% 0,100% 100%,0 100%);border-top:3px solid #ff354b;box-shadow:0 -12px 45px rgba(255,25,50,.32)}
-.arena-stage:before{content:"";position:absolute;inset:12% 13% 0;background:repeating-linear-gradient(90deg,rgba(255,50,70,0) 0 12%,rgba(255,50,70,.22) 13% 13.5%,transparent 14% 25%)}
-.arena-trophy{position:absolute;right:32%;bottom:32%;width:74px;height:105px;z-index:4;filter:drop-shadow(0 0 18px rgba(255,190,83,.55))}
-.arena-trophy:before{content:"";position:absolute;left:19px;top:0;width:36px;height:48px;background:linear-gradient(100deg,#8c541d,#ffe6a0 38%,#bd792b 72%,#fff0b0);clip-path:polygon(0 0,100% 0,88% 65%,68% 100%,32% 100%,12% 65%)}
-.arena-trophy:after{content:"";position:absolute;left:27px;top:43px;width:20px;height:28px;background:linear-gradient(90deg,#9a5d22,#f8d77d,#9a5d22)}
-.arena-trophy span{position:absolute;left:13px;top:12px;width:48px;height:29px;border:6px solid #e7b85c;border-top:0;border-radius:0 0 25px 25px;box-shadow:0 0 12px rgba(255,220,130,.55)}
-.arena-floor{position:absolute;left:25%;right:-5%;bottom:0;height:24%;background:linear-gradient(180deg,rgba(8,7,10,0),rgba(5,5,7,.96)),repeating-linear-gradient(95deg,transparent 0 8%,rgba(255,30,50,.13) 8.2% 8.5%,transparent 8.8% 17%);transform:perspective(400px) rotateX(25deg);transform-origin:bottom}
-@media(max-width:760px){.championship-hero{min-height:570px!important;padding-top:65px!important;padding-bottom:65px!important}.championship-backdrop{opacity:.58}.arena-truss{left:8%;right:0;top:8%;height:9%}.arena-screen-left{left:20%;top:36%;width:28%;height:20%}.arena-screen-right{right:-3%;top:34%;width:30%;height:22%}.arena-stage{right:0;bottom:14%;width:76%;height:14%}.arena-trophy{right:29%;bottom:28%;transform:scale(.72)}.arena-crowd{left:0;bottom:17%}.arena-beam-left{left:28%}.arena-beam-right{right:-10%}.arena-floor{left:0;height:18%}}
+/* RED NEON MOTION BACKDROP — homepage only */
+.championship-hero{
+  isolation:isolate!important;overflow:hidden!important;min-height:650px!important;
+  background:radial-gradient(ellipse at 72% 48%,rgba(190,0,28,.28),transparent 48%),linear-gradient(115deg,#080608 0%,#16070c 52%,#090608 100%)!important;
+}
+.championship-hero:before,.championship-hero:after{z-index:2!important;pointer-events:none}
+.championship-hero .hero-content{position:relative;z-index:5!important;max-width:820px}
+.championship-backdrop{
+  position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;
+  background:
+    linear-gradient(112deg,transparent 0 22%,rgba(255,20,55,.10) 22.2%,transparent 22.8% 49%,rgba(255,20,55,.08) 49.2%,transparent 49.8%),
+    radial-gradient(ellipse at 78% 55%,rgba(255,0,42,.17),transparent 42%);
+}
+.championship-backdrop:before,.championship-backdrop:after{
+  content:"";position:absolute;inset:-45% -25%;pointer-events:none;
+  background:repeating-linear-gradient(118deg,transparent 0 95px,rgba(255,28,58,0) 96px,rgba(255,28,58,.62) 98px,rgba(255,28,58,.08) 100px,transparent 104px 190px);
+  transform:translate3d(-8%,0,0);animation:sexsiNeonDrift 13s linear infinite;
+  filter:drop-shadow(0 0 7px rgba(255,20,55,.8));
+  opacity:.55;
+}
+.championship-backdrop:after{
+  background:repeating-linear-gradient(68deg,transparent 0 145px,rgba(255,45,70,0) 146px,rgba(255,45,70,.48) 148px,rgba(255,45,70,.06) 151px,transparent 155px 270px);
+  animation:sexsiNeonDriftReverse 18s linear infinite;opacity:.34;
+}
+@keyframes sexsiNeonDrift{from{transform:translate3d(-5%,0,0)}to{transform:translate3d(5%,0,0)}}
+@keyframes sexsiNeonDriftReverse{from{transform:translate3d(5%,0,0)}to{transform:translate3d(-5%,0,0)}}
+@media(max-width:760px){
+ .championship-hero{min-height:570px!important}
+ .championship-backdrop:before{opacity:.38}
+ .championship-backdrop:after{opacity:.22}
+}
+@media(prefers-reduced-motion:reduce){
+ .championship-backdrop:before,.championship-backdrop:after{animation:none}
+}
 
 </style>
   <link rel="stylesheet" href="elite.css?v=20261119-red2">
@@ -780,11 +793,7 @@ body:after{background:repeating-linear-gradient(115deg,transparent 0 145px,rgba(
 
 <main>
 <div class="hero championship-hero" id="home">
-  <div class="championship-backdrop" aria-hidden="true">
-    <div class="arena-truss"></div><div class="arena-beam arena-beam-left"></div><div class="arena-beam arena-beam-right"></div>
-    <div class="arena-crowd"></div><div class="arena-screen arena-screen-left"></div><div class="arena-screen arena-screen-right"></div>
-    <div class="arena-stage"></div><div class="arena-trophy"><span></span></div><div class="arena-floor"></div>
-  </div>
+  <div class="championship-backdrop" aria-hidden="true"></div>
   <div class="hero-content">
     <div class="tag">SEXSI TOURNAMENTS</div>
     <h1>ОРГАНИЗАЦИЯ И ПРОВЕЖДАНЕ НА<br><span>STANDOFF 2 ТУРНИРИ</span></h1>
