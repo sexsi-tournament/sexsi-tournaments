@@ -2519,6 +2519,53 @@ document.getElementById("newsCancelEdit").addEventListener("click",resetNewsForm
 document.getElementById("newsRefreshButton").addEventListener("click",loadAdminNews);
 
 
+
+/* DISCORD TOURNAMENT ANNOUNCEMENT */
+const discordPublishWrap=document.createElement("section");
+discordPublishWrap.style.cssText="margin:20px auto;padding:18px;background:#171717;border:1px solid #ed252d;border-radius:10px;max-width:1200px;width:94%;";
+const discordPublishTitle=document.createElement("h3");
+discordPublishTitle.textContent="DISCORD · SEXSI 1V1 CUP #001";
+discordPublishTitle.style.cssText="margin:0 0 8px;font-size:16px;color:#fff;";
+const discordPublishInfo=document.createElement("p");
+discordPublishInfo.textContent="Публикува официалната информация и бутоните към сайта и турнирната схема в канала 🏆・турнири.";
+discordPublishInfo.style.cssText="color:#aaa;font-size:13px;margin:0 0 14px;";
+const discordPublishButton=document.createElement("button");
+discordPublishButton.type="button";
+discordPublishButton.textContent="ПУБЛИКУВАЙ В DISCORD";
+discordPublishButton.style.cssText="background:#ed252d;color:#fff;border:0;border-radius:7px;padding:13px 18px;font-weight:900;cursor:pointer;";
+const discordPublishStatus=document.createElement("p");
+discordPublishStatus.style.cssText="margin:12px 0 0;color:#aaa;font-size:13px;";
+discordPublishButton.addEventListener("click",async()=>{
+  discordPublishButton.disabled=true;
+  discordPublishButton.textContent="ПУБЛИКУВАНЕ...";
+  discordPublishStatus.textContent="Проверка на администраторския достъп...";
+  try{
+    const {data,error}=await db.auth.getSession();
+    if(error||!data.session)throw new Error("Сесията е изтекла. Влез отново.");
+    const response=await fetch("https://fyxlwcoochsuzhqostpe.supabase.co/functions/v1/discord-tournament-post",{
+      method:"POST",
+      headers:{
+        "Authorization":"Bearer "+data.session.access_token,
+        "apikey":"sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP",
+        "Content-Type":"application/json"
+      },
+      body:"{}"
+    });
+    const result=await response.json();
+    if(!response.ok||!result.success)throw new Error(result.error||"Discord не потвърди публикацията.");
+    discordPublishStatus.textContent="УСПЕШНО ПУБЛИКУВАНО · "+result.participants+"/16 участници · ID: "+result.message_id;
+    discordPublishStatus.style.color="#65e69a";
+    discordPublishButton.textContent="ПУБЛИКУВАНО";
+  }catch(error){
+    discordPublishStatus.textContent="Грешка: "+(error.message||"Неуспешна публикация");
+    discordPublishStatus.style.color="#ff6268";
+    discordPublishButton.disabled=false;
+    discordPublishButton.textContent="ОПИТАЙ ОТНОВО";
+  }
+});
+discordPublishWrap.append(discordPublishTitle,discordPublishInfo,discordPublishButton,discordPublishStatus);
+document.querySelector("main")?.prepend(discordPublishWrap);
+
 checkAdminAccess();
 
 </script>
