@@ -1195,7 +1195,7 @@ header .player-menu-button .sexsi-en{
       result.className="menu-my-result";
       result.textContent="РЕЗУЛТАТ: "+(match.score_player1??"—")+" : "+(match.score_player2??"—");
       const status=document.createElement("span");
-      status.textContent="СТАТУС: "+(match.status==="completed"?"ЗАВЪРШЕН":match.status==="ongoing"?"ГОТОВ ЗА ИГРА":"ОЧАКВА СЪПЕРНИК");
+      status.textContent="СТАТУС: "+(match.status==="completed"?"ЗАВЪРШЕН":match.status==="ongoing"?(match.scheduled_at?"ГОТОВ ЗА ИГРА":"ОЧАКВА НАСРОЧВАНЕ"):(match.player1_id&&match.player2_id?"ОЧАКВА НАСРОЧВАНЕ":"ОЧАКВА СЪПЕРНИК"));
       card.append(title,detail,result,status);
       if(match.winner_name){
         const winner=document.createElement("span");
