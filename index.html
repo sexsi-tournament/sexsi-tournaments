@@ -661,6 +661,7 @@ header .player-menu-button .sexsi-en{
         <a href="news.html">НОВИНИ</a>
         <a href="ranking.html">КЛАСАЦИЯ</a>
         <a href="profile.html#playerDashboard">МОЯТ ПРОФИЛ</a>
+        <a href="admin.html" id="adminNavigationLink" hidden>🛡 АДМИНИСТРАТИВЕН ПАНЕЛ</a>
       </nav>
     </div>
   </div>
@@ -870,6 +871,8 @@ header .player-menu-button .sexsi-en{
     const requestId = ++playerMenuProfileRequest;
     const siteNavigationAuthActions = document.getElementById("siteNavigationAuthActions");
     if(siteNavigationAuthActions) siteNavigationAuthActions.hidden = isAuthenticated;
+    const adminNavigationLink = document.getElementById("adminNavigationLink");
+    if(adminNavigationLink) adminNavigationLink.hidden = !isAdmin;
 
     playerNav.hidden = !isAuthenticated;
     guestNav.hidden = isAuthenticated;
