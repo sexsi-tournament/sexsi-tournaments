@@ -41,6 +41,7 @@ function showPlayerDashboard(user, playerId) {
     isAdmin ? "block" : "none";
 
   loadTournamentRegistration(playerId);
+  loadDiscordLinkStatus();
   loadPlayerXP();
   loadMyTournamentMatches(user.id);
   loadMyRewardPayouts(user.id);
@@ -550,3 +551,79 @@ document.getElementById("logoutButton").addEventListener("click", async function
   document.getElementById("adminPanel").style.display = "none";
   document.getElementById("register").style.display = "block";
 });
+
+
+// DISCORD ACCOUNT LINKING
+async function loadDiscordLinkStatus() {
+  const status = document.getElementById("discordLinkStatus");
+  const button = document.getElementById("connectDiscordButton");
+  if (!status || !button) return;
+
+  const result = new URLSearchParams(window.location.search).get("discord");
+  if (result === "linked") status.textContent = "Discord профилът е свързан успешно.";
+  else if (result === "already-linked") status.textContent = "Този Discord акаунт вече е свързан с друг SEXSI профил.";
+  else if (result === "expired") status.textContent = "Връзката е изтекла. Опитай отново.";
+  else if (result === "error") status.textContent = "Свързването неуспешно. Опитай отново.";
+
+  const { data: sessionData } = await db.auth.getSession();
+  if (!sessionData.session) {
+    status.textContent = "Влез в SEXSI профила си, за да свържеш Discord.";
+    button.disabled = true;
+    return;
+  }
+
+  const { data, error } = await db
+    .from("profiles")
+    .select("discord_user_id")
+    .eq("id", sessionData.session.user.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Discord link status error:", error.message);
+    if (!result) status.textContent = "Статусът на Discord връзката временно не е достъпен.";
+    return;
+  }
+
+  if (data?.discord_user_id) {
+    status.textContent = "Discord акаунтът е свързан.";
+    button.textContent = "DISCORD Е СВЪРЗАН";
+    button.disabled = true;
+  } else {
+    if (!result) status.textContent = "Свържи Discord акаунта си, за да можеш да се записваш за турнири през Discord.";
+    button.disabled = false;
+  }
+}
+
+const connectDiscordButton = document.getElementById("connectDiscordButton");
+if (connectDiscordButton) {
+  connectDiscordButton.addEventListener("click", async function() {
+    const status = document.getElementById("discordLinkStatus");
+    connectDiscordButton.disabled = true;
+    connectDiscordButton.textContent = "СВЪРЗВАНЕ...";
+
+    try {
+      const { data: sessionData, error: sessionError } = await db.auth.getSession();
+      const accessToken = sessionData.session?.access_token;
+      if (sessionError || !accessToken) throw new Error("Първо влез в SEXSI профила си.");
+
+      const response = await fetch("https://fyxlwcoochsuzhqostpe.supabase.co/functions/v1/discord-oauth", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "apikey": SUPABASE_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ action: "start" })
+      });
+      const payload = await response.json();
+      if (!response.ok || !payload.authorization_url) {
+        throw new Error(payload.error || "Неуспешно стартиране на Discord свързването.");
+      }
+      window.location.assign(payload.authorization_url);
+    } catch (error) {
+      status.textContent = error.message || "Възникна грешка.";
+      connectDiscordButton.disabled = false;
+      connectDiscordButton.textContent = "СВЪРЖИ DISCORD";
+    }
+  });
+}
