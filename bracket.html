@@ -249,7 +249,7 @@ footer{border-top:1px solid var(--line);padding:25px;text-align:center;color:#66
           const meta = make("div","match-meta");
           meta.appendChild(make("span","", "МАЧ №" + safe(m.match_number)));
           const isForfeit = m.result_type === "forfeit";
-          const state = isForfeit ? "СЛУЖЕБНО ПРИКЛЮЧЕН" : m.status === "completed" ? "ЗАВЪРШЕН" : m.status === "ongoing" ? (m.scheduled_at ? "ГОТОВ ЗА ИГРА" : "ОЧАКВА НАСРОЧВАНЕ") : "ОЧАКВА СЪПЕРНИК";
+          const state = isForfeit ? "СЛУЖЕБНО ПРИКЛЮЧЕН" : m.status === "completed" ? "ЗАВЪРШЕН" : m.status === "ongoing" ? (m.scheduled_at ? "ГОТОВ ЗА ИГРА" : "ОЧАКВА НАСРОЧВАНЕ") : (m.player1_id && m.player2_id ? "ОЧАКВА НАСРОЧВАНЕ" : "ОЧАКВА СЪПЕРНИК");
           meta.appendChild(make("span","match-status" + (m.status === "completed" ? " done" : m.status === "ongoing" ? " ready" : ""),state));
           card.appendChild(meta);
           const p1 = make("div","player" + (m.winner_id && m.winner_id === m.player1_id ? " winner" : ""));
