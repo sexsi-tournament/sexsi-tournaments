@@ -65,11 +65,12 @@ section{padding:40px 5%}
 <th>ПОБЕДИ</th>
 <th>ЗАГУБИ</th>
 <th>ТОЧКИ</th>
+<th>K/D</th>
 </tr>
 </thead>
 
 <tbody id="rankingList">
-<tr><td colspan="5">Зареждане...</td></tr>
+<tr><td colspan="6">Зареждане...</td></tr>
 </tbody>
 </table>
 </div>
@@ -92,19 +93,19 @@ async function loadRanking() {
   const list = document.getElementById("rankingList");
   const message = document.getElementById("rankingMessage");
 
-  list.innerHTML = "<tr><td colspan='5'>Зареждане...</td></tr>";
+  list.innerHTML = "<tr><td colspan='6'>Зареждане...</td></tr>";
   message.textContent = "";
 
-  const { data, error } = await rankingSupabase.rpc("sexsi_get_ranking");
+  const { data, error } = await rankingSupabase.rpc("sexsi_get_ranking_with_kd");
 
   if (error) {
-    list.innerHTML = "<tr><td colspan='5'>Грешка при зареждане.</td></tr>";
+    list.innerHTML = "<tr><td colspan='6'>Грешка при зареждане.</td></tr>";
     message.textContent = error.message;
     return;
   }
 
   if (!data || data.length === 0) {
-    list.innerHTML = "<tr><td colspan='5'>Все още няма класирани играчи.</td></tr>";
+    list.innerHTML = "<tr><td colspan='6'>Все още няма класирани играчи.</td></tr>";
     return;
   }
 
@@ -118,7 +119,10 @@ async function loadRanking() {
       player.player_name || "PLAYER",
       player.wins,
       player.losses,
-      player.points
+      player.points,
+      (Number(player.deaths || 0) === 0
+        ? (Number(player.kills || 0) > 0 ? "∞" : "—")
+        : (Number(player.kills || 0) / Number(player.deaths || 0)).toFixed(2))
     ].forEach(value => {
       const td = document.createElement("td");
       td.textContent = value ?? 0;
