@@ -562,3 +562,27 @@ body:has(#playerDashboard) > section > h1::after{
 @media(max-width:520px){
   #playerRankBadge.rank-badge{font-size:9px!important;padding:7px 9px!important;letter-spacing:.09em!important}
 }
+
+
+/* SITE-WIDE RED ARENA OVERRIDES — restore the original red identity */
+:root{--elite-red:#ed252d;--elite-red-bright:#ff4350}
+#homeQuickLinks>.heading{color:#f2e9ea!important}
+#homeQuickLinks a.quick-link-card,#homeQuickLinks a.quick-link-card.card{color:#fff!important;background:linear-gradient(145deg,#251216 0%,#171013 58%,#100d0f 100%)!important;border:1px solid rgba(237,37,45,.42)!important;box-shadow:0 12px 30px rgba(0,0,0,.34),0 0 18px rgba(237,37,45,.07)!important}
+#homeQuickLinks a.quick-link-card:before{background:#ed252d!important}
+#homeQuickLinks a.quick-link-card:after,#homeQuickLinks a.quick-link-card .quick-link-cta{color:#ff626b!important}
+#homeQuickLinks a.quick-link-card .quick-link-cta{border-color:rgba(237,37,45,.55)!important;background:rgba(237,37,45,.12)!important}
+#homeQuickLinks a.quick-link-card:hover{background:linear-gradient(145deg,#35151b 0%,#1b1014 100%)!important;border-color:#ed252d!important;box-shadow:0 18px 38px rgba(0,0,0,.42),0 0 24px rgba(237,37,45,.16)!important}
+#homeQuickLinks a.quick-link-card:hover .quick-link-cta{background:#ed252d!important;color:#fff!important}
+#homeQuickLinks a.quick-link-card:focus-visible{outline-color:#ff4350!important}
+.gaming-setup-bg{background:radial-gradient(ellipse at 75% 18%,rgba(237,37,45,.20),transparent 38%),linear-gradient(135deg,#10090b,#160b0e 48%,#080809)!important}
+.gaming-setup-bg:before{background:linear-gradient(180deg,rgba(8,4,5,.12),rgba(8,4,5,.78) 72%,#080809),repeating-linear-gradient(0deg,transparent 0 79px,rgba(237,37,45,.035) 80px),repeating-linear-gradient(90deg,transparent 0 79px,rgba(237,37,45,.035) 80px)!important}
+.setup-monitor{border-color:#1c1013!important;background:radial-gradient(ellipse at 50% 70%,rgba(237,37,45,.42),transparent 48%),linear-gradient(145deg,#35131b,#1c0d12 58%,#100b0e)!important;box-shadow:0 0 0 1px rgba(237,37,45,.24),0 0 45px rgba(237,37,45,.18),inset 0 0 35px rgba(237,37,45,.12)!important}
+.setup-monitor:after{background:linear-gradient(90deg,#241014,#3a171d,#130b0d)!important}
+.setup-desk{background:linear-gradient(90deg,transparent,rgba(237,37,45,.55),rgba(237,37,45,.2),transparent)!important;box-shadow:0 12px 40px rgba(237,37,45,.16)!important}
+.setup-keyboard{background:repeating-linear-gradient(90deg,rgba(255,80,90,.4) 0 2px,transparent 2px 12px),linear-gradient(#35151b,#170d10)!important;border-color:rgba(237,37,45,.3)!important;box-shadow:0 0 24px rgba(237,37,45,.18)!important}
+.setup-mouse{border-color:rgba(255,80,90,.4)!important;background:linear-gradient(120deg,#35151b,#170d10)!important;box-shadow:0 0 18px rgba(237,37,45,.16)!important}
+.ambient:before,.ambient:after{background:#ed252d!important;opacity:.11}
+body:after{background:repeating-linear-gradient(115deg,transparent 0 145px,rgba(237,37,45,.035) 146px,rgba(255,65,80,.16) 147px,transparent 150px 290px)!important;filter:drop-shadow(0 0 7px rgba(237,37,45,.35))!important}
+.hero{background:radial-gradient(ellipse at 76% 38%,rgba(150,18,35,.22),transparent 48%),linear-gradient(110deg,rgba(10,5,7,.9),rgba(24,8,12,.8) 60%,rgba(10,5,7,.9))!important}
+.hero:before{background:rgba(237,37,45,.16)!important}
+.hero:after{background:linear-gradient(90deg,transparent,rgba(237,37,45,.12),transparent)!important}
