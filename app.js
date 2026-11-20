@@ -558,7 +558,7 @@ async function loadDiscordLinkStatus() {
   const status = document.getElementById("discordLinkStatus");
   const button = document.getElementById("connectDiscordButton");
   const syncButton = document.getElementById("syncDiscordRoleButton");
-  if (!status || !button || !syncButton) return;
+  if (!status || !button) return;
 
   const result = new URLSearchParams(window.location.search).get("discord");
   if (result === "linked") status.textContent = "Discord профилът е свързан успешно.";
@@ -588,7 +588,7 @@ async function loadDiscordLinkStatus() {
   if (data?.discord_user_id) {
     status.textContent = "Discord е свързан. Проверка на ролята...";
     button.style.display = "none";
-    syncButton.style.display = "none";
+    if (syncButton) syncButton.style.display = "none";
     try {
       const response = await fetch("https://fyxlwcoochsuzhqostpe.supabase.co/functions/v1/discord-oauth", {
         method: "POST",
