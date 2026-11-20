@@ -560,9 +560,16 @@ async function loadDiscordLinkStatus() {
   const syncButton = document.getElementById("syncDiscordRoleButton");
   if (!status || !button) return;
 
-  const result = new URLSearchParams(window.location.search).get("discord");
-  if (result === "linked") status.textContent = "Discord профилът е свързан успешно.";
-  else if (result === "already-linked") status.textContent = "Този Discord акаунт вече е свързан с друг SEXSI профил.";
+  const params = new URLSearchParams(window.location.search);
+  const result = params.get("discord");
+  const callbackRole = params.get("discord_role");
+  if (result === "linked") {
+    status.textContent = callbackRole === "assigned"
+      ? "Discord е свързан и ролята VERIFIED PLAYER е дадена."
+      : callbackRole === "failed"
+        ? "Discord е свързан, но проверката за ролята не е успешна. Извършва се повторен опит..."
+        : "Discord профилът е свързан успешно. Проверяваме ролята...";
+  } else if (result === "already-linked") status.textContent = "Този Discord акаунт вече е свързан с друг SEXSI профил.";
   else if (result === "expired") status.textContent = "Връзката е изтекла. Опитай отново.";
   else if (result === "error") status.textContent = "Свързването неуспешно. Опитай отново.";
 
@@ -603,10 +610,12 @@ async function loadDiscordLinkStatus() {
       if (!response.ok || !payload.success) {
         throw new Error(payload.error || "Ролята не можа да бъде синхронизирана.");
       }
-      status.textContent = "Discord е свързан. Ролята VERIFIED PLAYER е активна.";
+      status.textContent = "Discord е свързан. Ролята VERIFIED PLAYER е потвърдена от Discord.";
+      status.style.color = "#65e69a";
     } catch (error) {
       console.error("Automatic Discord role sync failed:", error);
-      status.textContent = "Discord е свързан, но ролята не можа да бъде обновена.";
+      status.textContent = "Discord е свързан, но ролята НЕ е потвърдена: " + (error.message || "неизвестна грешка");
+      status.style.color = "#ff7777";
     }
   } else {
     if (syncButton) syncButton.style.display = "none";
