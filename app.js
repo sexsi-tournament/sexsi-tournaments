@@ -740,8 +740,9 @@ window.sexsiRegisterForFutureTournament = async function(tournamentId, button, m
     } else if (data === "discord_not_linked") {
       button.textContent = "СВЪРЖИ DISCORD";
       button.disabled = false;
+      button.removeAttribute("data-sexsi-future-signup");
       button.onclick = () => {
-        window.location.href = "profile.html#discordLinkCard";
+        window.location.href = "https://sexsi-tournament.github.io/sexsi-tournaments/profile.html#discordLinkCard";
       };
     } else if (["closed", "deadline_passed", "full", "legacy_tournament"].includes(data)) {
       button.textContent = "ЗАПИСВАНЕТО Е НЕДОСТЪПНО";
