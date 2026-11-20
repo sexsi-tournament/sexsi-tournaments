@@ -609,7 +609,7 @@ async function loadDiscordLinkStatus() {
       status.textContent = "Discord е свързан, но ролята не можа да бъде обновена.";
     }
   } else {
-    syncButton.style.display = "none";
+    if (syncButton) syncButton.style.display = "none";
     button.style.display = "inline-block";
     if (!result) status.textContent = "Свържи Discord акаунта си, за да можеш да се записваш за турнири през Discord.";
     button.disabled = false;
