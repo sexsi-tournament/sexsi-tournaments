@@ -691,3 +691,79 @@ if (connectDiscordButton) {
     }
   });
 }
+
+
+/* FUTURE TOURNAMENT REGISTRATION: Discord linking is mandatory. */
+window.sexsiRegisterForFutureTournament = async function(tournamentId, button, message) {
+  const show = (text) => { if (message) message.textContent = text; };
+  if (!tournamentId || !button || !message) {
+    show("Неуспешна регистрация: липсва информация за турнира.");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "ПРОВЕРКА...";
+
+  try {
+    const { data: sessionData, error: sessionError } = await db.auth.getSession();
+    const session = sessionData?.session;
+    if (sessionError || !session) {
+      show("Първо влез в SEXSI профила си.");
+      button.disabled = false;
+      button.textContent = "ВЛЕЗ И ОПИТАЙ ОТНОВО";
+      return;
+    }
+
+    button.textContent = "ЗАПИСВАНЕ...";
+    const { data, error } = await db.rpc("sexsi_register_for_future_tournament", {
+      p_tournament_id: tournamentId
+    });
+    if (error) throw error;
+
+    const messages = {
+      registered: "Успешно се записа за турнира!",
+      already_registered: "Вече си записан за този турнир.",
+      discord_not_linked: "За участие е задължително да свържеш Discord профила си със SEXSI.",
+      missing_player_id: "Първо добави Standoff 2 Player ID в профила си.",
+      blocked: "Нямаш право да се записваш за турнири. Свържи се с екипа.",
+      closed: "Регистрацията за този турнир не е отворена.",
+      deadline_passed: "Крайният срок за записване е изтекъл.",
+      full: "Всички места за този турнир са заети.",
+      not_logged_in: "Първо влез в SEXSI профила си.",
+      legacy_tournament: "Този турнир използва отделната регистрация за CUP #001."
+    };
+    show(messages[data] || "Регистрацията не беше потвърдена. Опитай отново.");
+
+    if (data === "registered" || data === "already_registered") {
+      button.textContent = data === "registered" ? "УСПЕШНО ЗАПИСАН" : "ВЕЧЕ СИ ЗАПИСАН";
+      button.disabled = true;
+    } else if (data === "discord_not_linked") {
+      button.textContent = "СВЪРЖИ DISCORD";
+      button.disabled = false;
+      button.onclick = () => {
+        window.location.href = "profile.html#discordLinkCard";
+      };
+    } else if (["closed", "deadline_passed", "full", "legacy_tournament"].includes(data)) {
+      button.textContent = "ЗАПИСВАНЕТО Е НЕДОСТЪПНО";
+      button.disabled = true;
+    } else {
+      button.textContent = "ОПИТАЙ ОТНОВО";
+      button.disabled = false;
+    }
+  } catch (error) {
+    console.error("Future tournament registration error:", error);
+    show("Грешка при записването. Опитай отново след малко.");
+    button.disabled = false;
+    button.textContent = "ОПИТАЙ ОТНОВО";
+  }
+};
+
+// Future tournament cards can opt in with data-sexsi-future-signup and
+// data-tournament-id; the card must contain [data-sexsi-registration-message].
+document.addEventListener("click", function(event) {
+  const button = event.target.closest("[data-sexsi-future-signup]");
+  if (!button) return;
+  const card = button.closest("[data-sexsi-tournament-card]") || button.parentElement;
+  const message = card?.querySelector("[data-sexsi-registration-message]");
+  window.sexsiRegisterForFutureTournament(button.dataset.tournamentId, button, message);
+});
