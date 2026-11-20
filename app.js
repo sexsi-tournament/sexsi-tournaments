@@ -538,6 +538,39 @@ document.getElementById("savePlayerGameId").addEventListener("click", async func
   message.textContent = "ID-то е запазено успешно!";
 });
 
+// ПУБЛИКУВАНЕ НА QUIZ BATTLE В DISCORD
+const publishQuizControlButton = document.getElementById("publishQuizControlButton");
+if (publishQuizControlButton) {
+  publishQuizControlButton.addEventListener("click", async function() {
+    const message = document.getElementById("publishQuizControlMessage");
+    publishQuizControlButton.disabled = true;
+    publishQuizControlButton.textContent = "ПУБЛИКУВАНЕ...";
+    message.textContent = "Проверка на администраторския достъп...";
+    try {
+      const { data: sessionData, error: sessionError } = await db.auth.getSession();
+      const accessToken = sessionData.session?.access_token;
+      if (sessionError || !accessToken) throw new Error("Сесията е изтекла. Влез отново в профила си.");
+      const { data, error } = await db.functions.invoke("sexsi-quiz-publish", {
+        body: {}
+      });
+      if (error) throw new Error(error.message || "Грешка при публикуването.");
+      if (!data?.success) throw new Error(data?.error || "Discord не потвърди публикацията.");
+      message.textContent = data.updated
+        ? "Успешно обнових постоянната Quiz Battle публикация в Discord."
+        : "Успешно публикувах Quiz Battle в Discord.";
+      message.style.color = "#65e69a";
+      publishQuizControlButton.textContent = "ОБНОВИ QUIZ BATTLE";
+    } catch (error) {
+      console.error("Quiz control publish error:", error);
+      message.textContent = error.message || "Публикуването не беше успешно.";
+      message.style.color = "#ff7777";
+      publishQuizControlButton.textContent = "ОПИТАЙ ОТНОВО";
+    } finally {
+      publishQuizControlButton.disabled = false;
+    }
+  });
+}
+
 // ИЗХОД ОТ ПРОФИЛА
 document.getElementById("logoutButton").addEventListener("click", async function() {
   const { error } = await db.auth.signOut();
