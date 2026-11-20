@@ -1,0 +1,28 @@
+name: Discord verified-role sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync linked Discord accounts
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+            echo "::error::Add the SUPABASE_SERVICE_ROLE_KEY repository secret in GitHub Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          curl --fail-with-body --silent --show-error \
+            --max-time 180 \
+            -X POST \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+            -H "Content-Type: application/json" \
+            "https://fyxlwcoochsuzhqostpe.supabase.co/functions/v1/discord-role-sync-batch"
