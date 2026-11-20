@@ -728,6 +728,13 @@ footer{
       </button>
 
     </div>
+
+    <div class="panel" style="margin-top:20px;border-color:#7d2529">
+      <h3>🧠 QUIZ BATTLE · DISCORD</h3>
+      <p class="message">Публикува или обновява постоянната контролна публикация с бутоните в канала #quiz-battle.</p>
+      <button class="primary-button" type="button" id="publishQuizControlButton">ПУБЛИКУВАЙ QUIZ BATTLE</button>
+      <p class="message" id="publishQuizControlMessage" aria-live="polite">Готово за публикуване.</p>
+    </div>
       </section>
 
   <section class="admin-view" id="registrationsPanel">
@@ -1024,6 +1031,35 @@ function createCell(row,value){
   const cell=document.createElement("td");
   cell.textContent=value;
   row.appendChild(cell);
+}
+
+/* DISCORD QUIZ CONTROL MESSAGE */
+const publishQuizControlButton=document.getElementById("publishQuizControlButton");
+if(publishQuizControlButton){
+  publishQuizControlButton.addEventListener("click",async()=>{
+    const message=document.getElementById("publishQuizControlMessage");
+    publishQuizControlButton.disabled=true;
+    publishQuizControlButton.textContent="ПУБЛИКУВАНЕ...";
+    message.textContent="Проверка на администраторския достъп...";
+    message.style.color="var(--muted)";
+    try{
+      const {data:sessionData,error:sessionError}=await db.auth.getSession();
+      if(sessionError||!sessionData.session?.access_token)throw new Error("Сесията е изтекла. Влез отново в профила си.");
+      const {data,error}=await db.functions.invoke("sexsi-quiz-publish",{body:{}});
+      if(error)throw new Error(error.message||"Грешка при публикуването.");
+      if(!data?.success)throw new Error(data?.error||"Discord не потвърди публикацията.");
+      message.textContent=data.updated?"Успешно обнових постоянната Quiz Battle публикация в Discord.":"Успешно публикувах Quiz Battle в Discord.";
+      message.style.color="var(--green)";
+      publishQuizControlButton.textContent="ОБНОВИ QUIZ BATTLE";
+    }catch(error){
+      console.error("Quiz control publish error:",error);
+      message.textContent=error.message||"Публикуването не беше успешно.";
+      message.style.color="#ff7777";
+      publishQuizControlButton.textContent="ОПИТАЙ ОТНОВО";
+    }finally{
+      publishQuizControlButton.disabled=false;
+    }
+  });
 }
 
 /* ADMIN MENU */
