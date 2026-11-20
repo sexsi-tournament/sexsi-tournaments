@@ -553,42 +553,6 @@ document.getElementById("logoutButton").addEventListener("click", async function
 });
 
 
-// СИНХРОНИЗИРАНЕ НА DISCORD РОЛЯ ЗА ВЕЧЕ СВЪРЗАН ПРОФИЛ
-const syncDiscordRoleButton = document.getElementById("syncDiscordRoleButton");
-if (syncDiscordRoleButton) {
-  syncDiscordRoleButton.addEventListener("click", async function() {
-    const status = document.getElementById("discordLinkStatus");
-    syncDiscordRoleButton.disabled = true;
-    syncDiscordRoleButton.textContent = "СИНХРОНИЗИРАНЕ...";
-
-    try {
-      const { data: sessionData, error: sessionError } = await db.auth.getSession();
-      const accessToken = sessionData.session?.access_token;
-      if (sessionError || !accessToken) throw new Error("Първо влез в SEXSI профила си.");
-
-      const response = await fetch("https://fyxlwcoochsuzhqostpe.supabase.co/functions/v1/discord-oauth", {
-        method: "POST",
-        headers: {
-          "Authorization": "Bearer " + accessToken,
-          "apikey": SUPABASE_KEY,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ action: "sync_verified_role" })
-      });
-      const payload = await response.json();
-      if (!response.ok || !payload.success) {
-        throw new Error(payload.error || "Неуспешно синхронизиране на Discord ролята.");
-      }
-      status.textContent = "Успешно! Получи ролята VERIFIED PLAYER в Discord.";
-      syncDiscordRoleButton.textContent = "РОЛЯТА Е СИНХРОНИЗИРАНА";
-    } catch (error) {
-      status.textContent = error.message || "Възникна грешка.";
-      syncDiscordRoleButton.disabled = false;
-      syncDiscordRoleButton.textContent = "СИНХРОНИЗИРАЙ DISCORD РОЛЯТА";
-    }
-  });
-}
-
 // DISCORD ACCOUNT LINKING
 async function loadDiscordLinkStatus() {
   const status = document.getElementById("discordLinkStatus");
@@ -622,10 +586,28 @@ async function loadDiscordLinkStatus() {
   }
 
   if (data?.discord_user_id) {
-    status.textContent = "Discord акаунтът е свързан.";
+    status.textContent = "Discord е свързан. Проверка на ролята...";
     button.style.display = "none";
-    syncButton.style.display = "inline-block";
-    syncButton.disabled = false;
+    syncButton.style.display = "none";
+    try {
+      const response = await fetch("https://fyxlwcoochsuzhqostpe.supabase.co/functions/v1/discord-oauth", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + sessionData.session.access_token,
+          "apikey": SUPABASE_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ action: "sync_verified_role" })
+      });
+      const payload = await response.json();
+      if (!response.ok || !payload.success) {
+        throw new Error(payload.error || "Ролята не можа да бъде синхронизирана.");
+      }
+      status.textContent = "Discord е свързан. Ролята VERIFIED PLAYER е активна.";
+    } catch (error) {
+      console.error("Automatic Discord role sync failed:", error);
+      status.textContent = "Discord е свързан, но ролята не можа да бъде обновена.";
+    }
   } else {
     syncButton.style.display = "none";
     button.style.display = "inline-block";
