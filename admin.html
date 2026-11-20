@@ -1079,11 +1079,11 @@ if(publishLftControlButton){
     message.style.color="var(--muted)";
     try{
       const {data:sessionData,error:sessionError}=await db.auth.getSession();
-      if(error||!sessionData?.session?.access_token) throw new Error("Сесията е изтекла. Влез отново в профила си.");
+      if(sessionError||!sessionData?.session?.access_token) throw new Error("Сесията е изтекла. Влез отново в профила си.");
       const {data,error:invokeError}=await db.functions.invoke("discord-lft-publish",{body:{}});
       if(invokeError) throw new Error(invokeError.message||"Грешка при публикуването.");
       if(!data?.success) throw new Error(data?.error||"Discord не потвърди публикацията.");
-      message.textContent="Успешно публикувах панела с двата бутона в #looking-for-team.";
+      message.textContent="Панелът е публикуван успешно в избрания Discord канал.";
       message.style.color="var(--green)";
       publishLftControlButton.textContent="ПУБЛИКУВАЙ ОТНОВО";
     }catch(error){
