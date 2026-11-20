@@ -729,6 +729,12 @@ footer{
 
     </div>
 
+    <div class="panel" style="margin-top:20px;border-color:#287b58">
+      <h3>🤝 ТЪРСЯ ОТБОР · DISCORD</h3>
+      <p class="message">Публикува постоянния панел с бутоните „Търся отбор“ и „Търся играчи“ в канала #looking-for-team.</p>
+      <button class="primary-button" type="button" id="publishLftControlButton">ПУБЛИКУВАЙ ПАНЕЛА</button>
+      <p class="message" id="publishLftControlMessage" aria-live="polite">Готово за публикуване.</p>
+    </div>
     <div class="panel" style="margin-top:20px;border-color:#7d2529">
       <h3>🧠 QUIZ BATTLE · DISCORD</h3>
       <p class="message">Публикува или обновява постоянната контролна публикация с бутоните в канала #quiz-battle.</p>
@@ -1058,6 +1064,35 @@ if(publishQuizControlButton){
       publishQuizControlButton.textContent="ОПИТАЙ ОТНОВО";
     }finally{
       publishQuizControlButton.disabled=false;
+    }
+  });
+}
+
+/* DISCORD LOOKING-FOR-TEAM CONTROL MESSAGE */
+const publishLftControlButton=document.getElementById("publishLftControlButton");
+if(publishLftControlButton){
+  publishLftControlButton.addEventListener("click",async()=>{
+    const message=document.getElementById("publishLftControlMessage");
+    publishLftControlButton.disabled=true;
+    publishLftControlButton.textContent="ПУБЛИКУВАНЕ...";
+    message.textContent="Проверка на администраторския достъп...";
+    message.style.color="var(--muted)";
+    try{
+      const {data:sessionData,error:sessionError}=await db.auth.getSession();
+      if(error||!sessionData?.session?.access_token) throw new Error("Сесията е изтекла. Влез отново в профила си.");
+      const {data,error:invokeError}=await db.functions.invoke("discord-lft-publish",{body:{}});
+      if(invokeError) throw new Error(invokeError.message||"Грешка при публикуването.");
+      if(!data?.success) throw new Error(data?.error||"Discord не потвърди публикацията.");
+      message.textContent="Успешно публикувах панела с двата бутона в #looking-for-team.";
+      message.style.color="var(--green)";
+      publishLftControlButton.textContent="ПУБЛИКУВАЙ ОТНОВО";
+    }catch(error){
+      console.error("LFT control publish error:",error);
+      message.textContent=error.message||"Публикуването не беше успешно.";
+      message.style.color="#ff7777";
+      publishLftControlButton.textContent="ОПИТАЙ ОТНОВО";
+    }finally{
+      publishLftControlButton.disabled=false;
     }
   });
 }
