@@ -2076,6 +2076,8 @@ async function loadTotalAuthUsers(){
     counter.title="Грешка при зареждане на броя потребители.";
   }
 }
+let bracketRoundUnlocked = {};
+
 function getRoundName(round){
   const names={
     1:"ОСМИНАФИНАЛИ",
@@ -2116,6 +2118,15 @@ async function loadBracket(){
 
   message.textContent="Общо двубои: "+data.length;
   document.getElementById("overviewMatches").textContent=formatNumber(data.length);
+
+  bracketRoundUnlocked = {};
+  const roundNumbers=[...new Set(data.map(match=>Number(match.round_number)))].sort((a,b)=>a-b);
+  roundNumbers.forEach(roundNo=>{
+    const previousMatches=data.filter(match=>Number(match.round_number)===roundNo-1);
+    bracketRoundUnlocked[roundNo]=roundNo===1 || (
+      previousMatches.length>0 && previousMatches.every(match=>match.status==="completed")
+    );
+  });
 
   const rounds={};
   data.forEach(match=>{
@@ -2201,11 +2212,14 @@ function createMatchCard(match){
 
   const status=document.createElement("p");
   status.className="match-status";
+  const roundLocked = Number(match.round_number)>1 && !bracketRoundUnlocked[Number(match.round_number)];
   const statusLabel = match.status === "completed"
     ? (match.result_type === "forfeit" ? "СЛУЖЕБНО ПРИКЛЮЧЕН" : "ЗАВЪРШЕН")
-    : match.status === "ongoing"
-      ? (match.scheduled_at ? "ГОТОВ ЗА ИГРА" : "ОЧАКВА НАСРОЧВАНЕ")
-      : "ОЧАКВА СЪПЕРНИК";
+    : roundLocked
+      ? "ЗАКЛЮЧЕН ДО ПРИКЛЮЧВАНЕ НА ПРЕДХОДНИЯ КРЪГ"
+      : match.status === "ongoing"
+        ? (match.scheduled_at ? "ГОТОВ ЗА ИГРА" : "ОЧАКВА НАСРОЧВАНЕ")
+        : "ОЧАКВА СЪПЕРНИК";
   status.textContent="СТАТУС: "+statusLabel;
   card.append(title,players);
 
@@ -2289,6 +2303,14 @@ function createMatchCard(match){
     }
     return card;
   }
+  if(roundLocked){
+    const waiting=document.createElement("p");
+    waiting.className="message";
+    waiting.textContent="Този кръг е заключен. Всички мачове от предходния кръг трябва да приключат, преди да се записва резултат или служебна победа.";
+    card.appendChild(waiting);
+    return card;
+  }
+
   if(!match.player1_id||!match.player2_id){
     const waiting=document.createElement("p");
     waiting.className="message";
