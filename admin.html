@@ -648,6 +648,7 @@ footer{
   <button class="menu-item" data-view="rewards">НАГРАДИ И ИЗПЛАЩАНИЯ</button>
   <button class="menu-item" data-view="analytics">АНАЛИЗИ И ПОСЕЩЕНИЯ</button>
   <button class="menu-item" data-view="news">НОВИНИ</button>
+  <button class="menu-item" data-view="admin-management" data-owner-only hidden>УПРАВЛЕНИЕ НА АДМИНИСТРАТОРИ</button>
 
   <div class="menu-divider"></div>
   <button class="menu-item" id="menuRefreshButton">ОБНОВИ ДАННИТЕ</button>
@@ -734,6 +735,10 @@ footer{
       <button class="dashboard-action" data-open-view="analytics">
         <strong>АНАЛИЗИ И ПОСЕЩЕНИЯ</strong>
         <span>Статистика за посещенията на сайта.</span>
+      </button>
+      <button class="dashboard-action" data-open-view="admin-management" data-owner-only hidden>
+        <strong>АДМИНИСТРАТОРИ</strong>
+        <span>Назначавай и премахвай помощник администратори и преглеждай административния дневник.</span>
       </button>
 
     </div>
@@ -1013,6 +1018,39 @@ footer{
     </div>
   </section>
 
+  <section class="admin-view" id="admin-managementPanel" data-owner-only hidden>
+    <button class="secondary-button back-dashboard">← НАЗАД</button>
+    <div class="section-title">УПРАВЛЕНИЕ НА АДМИНИСТРАТОРИ</div>
+    <p class="section-description">Само собственикът може да назначава или премахва помощник администратори. Те нямат право да създават турнири или да управляват администраторски права.</p>
+    <div class="panel">
+      <h3>НАЗНАЧИ ПОМОЩНИК АДМИНИСТРАТОР</h3>
+      <select id="assistantUserSelect" style="display:block;width:100%;max-width:650px;background:#090909;color:white;border:1px solid var(--border);border-radius:7px;padding:13px;margin:12px 0">
+        <option value="">Зареждане на потребителите...</option>
+      </select>
+      <button class="primary-button" id="assignAssistantButton" type="button">НАЗНАЧИ</button>
+      <p class="message" id="assistantAdminMessage" aria-live="polite">Избери съществуващ потребителски профил.</p>
+    </div>
+    <div class="panel">
+      <h3>АКТИВНИ ПОМОЩНИК АДМИНИСТРАТОРИ</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ПОТРЕБИТЕЛ</th><th>ИМЕЙЛ</th><th>НАЗНАЧЕН НА</th><th>ДЕЙСТВИЕ</th></tr></thead>
+          <tbody id="assistantAdminsList"><tr><td colspan="4">Зареждане...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>АДМИНИСТРАТИВЕН ДНЕВНИК · ПОСЛЕДНИТЕ 200 ДЕЙСТВИЯ</h3>
+      <p class="message" id="adminAuditMessage">Зареждане...</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ДАТА</th><th>АДМИНИСТРАТОР</th><th>ДЕЙСТВИЕ</th><th>ТАБЛИЦА</th><th>ЗАПИС</th></tr></thead>
+          <tbody id="adminAuditList"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
   <section class="admin-view" id="analyticsPanel">
     <button class="secondary-button back-dashboard">← НАЗАД</button>
 
@@ -1092,7 +1130,42 @@ const db = window.supabase.createClient(
   "sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP"
 );
 
-const ADMIN_ID = "13f1ada8-cd05-4c31-8940-4fb1790cb90e";
+let adminAccess = null;
+
+const ADMIN_VIEW_PERMISSIONS = {
+  registrations: "manage_registrations",
+  emails: "send_emails",
+  discord: "view_discord",
+  players: "manage_players",
+  "player-management": "manage_players",
+  matches: "manage_matches",
+  rewards: "manage_rewards",
+  analytics: "view_analytics",
+  news: "manage_news"
+};
+
+function applyAdminPermissions(access){
+  const permissions = new Set(Array.isArray(access?.permissions) ? access.permissions : []);
+  const isOwner = access?.role === "owner";
+
+  document.querySelectorAll("[data-owner-only]").forEach(element => {
+    element.hidden = !isOwner;
+  });
+
+  document.querySelectorAll(".menu-item[data-view], [data-open-view]").forEach(element => {
+    const view = element.dataset.view || element.dataset.openView;
+    const permission = ADMIN_VIEW_PERMISSIONS[view];
+    if(permission) element.hidden = !permissions.has(permission);
+  });
+
+  Object.entries(ADMIN_VIEW_PERMISSIONS).forEach(([view, permission]) => {
+    const panel = document.getElementById(view + "Panel");
+    if(panel) panel.hidden = !permissions.has(permission);
+  });
+
+  const authUsersCard = document.getElementById("overviewAuthUsers")?.closest(".overview-card");
+  if(authUsersCard) authUsersCard.hidden = !isOwner;
+}
 
 function createCell(row,value){
   const cell=document.createElement("td");
@@ -1200,6 +1273,9 @@ function showAdminView(viewName){
   }
   if(viewName==="news"){
     loadAdminNews();
+  }
+  if(viewName==="admin-management"){
+    loadAdminManagement();
   }
 }
 
@@ -2052,13 +2128,13 @@ function drawVisitsChart(daily){
 async function loadAdminData(){
   await loadRegistrations();
   await loadPlayers();
-  await loadTotalAuthUsers();
+  if(adminAccess?.role==="owner") await loadTotalAuthUsers();
   await loadDiscordStats();
 }
 
 async function loadTotalAuthUsers(){
   const counter=document.getElementById("overviewAuthUsers");
-  if(!counter)return;
+  if(!counter || adminAccess?.role!=="owner")return;
 
   try{
     const {data,error}=await db.rpc("sexsi_admin_auth_user_count");
@@ -2686,19 +2762,135 @@ async function checkAdminAccess(){
     return;
   }
 
-  const user=data.session.user;
-  if(user.id!==ADMIN_ID){
+  const {data:access,error:accessError}=await db.rpc("sexsi_admin_get_access");
+  if(accessError || !access?.authorized){
     alert("Нямаш достъп до административния панел.");
-    await db.auth.signOut();
     window.location.href="profile.html";
     return;
   }
 
+  adminAccess=access;
+  applyAdminPermissions(access);
   await refreshAllAdminData();
   if(!window.adminUserCountRefreshTimer){
     window.adminUserCountRefreshTimer=setInterval(loadTotalAuthUsers,30000);
   }
 }
+
+
+/* OWNER-ONLY ADMINISTRATOR MANAGEMENT */
+async function loadAdminManagement(){
+  const message=document.getElementById("assistantAdminMessage");
+  const select=document.getElementById("assistantUserSelect");
+  const list=document.getElementById("assistantAdminsList");
+  const auditMessage=document.getElementById("adminAuditMessage");
+  const auditList=document.getElementById("adminAuditList");
+  if(adminAccess?.role!=="owner")return;
+
+  message.textContent="Зареждане на потребителите...";
+  const [usersResult, assistantsResult, auditResult]=await Promise.all([
+    db.rpc("sexsi_admin_user_directory"),
+    db.rpc("sexsi_admin_list_assistants"),
+    db.rpc("sexsi_admin_audit_list")
+  ]);
+
+  select.replaceChildren();
+  const placeholder=document.createElement("option");
+  placeholder.value="";
+  placeholder.textContent="Избери потребител...";
+  select.appendChild(placeholder);
+
+  if(usersResult.error){
+    message.textContent="Грешка при зареждане на потребителите: "+usersResult.error.message;
+  }else{
+    (usersResult.data||[]).forEach(user=>{
+      const option=document.createElement("option");
+      option.value=user.user_id;
+      option.textContent=(user.username||"PLAYER")+(user.email?" · "+user.email:"");
+      select.appendChild(option);
+    });
+    message.textContent="Намерени потребители: "+(usersResult.data||[]).length;
+  }
+
+  list.replaceChildren();
+  if(assistantsResult.error){
+    const row=list.insertRow();const cell=row.insertCell();cell.colSpan=4;
+    cell.textContent="Грешка: "+assistantsResult.error.message;
+  }else if(!(assistantsResult.data||[]).length){
+    const row=list.insertRow();const cell=row.insertCell();cell.colSpan=4;
+    cell.textContent="Все още няма назначени помощник администратори.";
+  }else{
+    (assistantsResult.data||[]).forEach(assistant=>{
+      const row=list.insertRow();
+      createCell(row,assistant.username||"PLAYER");
+      createCell(row,assistant.email||"—");
+      createCell(row,assistant.assigned_at?new Date(assistant.assigned_at).toLocaleString("bg-BG"):"—");
+      const cell=row.insertCell();
+      const button=document.createElement("button");
+      button.type="button";
+      button.className="player-block-button";
+      button.textContent="ПРЕМАХНИ";
+      button.addEventListener("click",()=>revokeAssistantAdmin(assistant.user_id,assistant.username));
+      cell.appendChild(button);
+    });
+  }
+
+  auditList.replaceChildren();
+  if(auditResult.error){
+    auditMessage.textContent="Грешка при зареждане на дневника: "+auditResult.error.message;
+  }else{
+    const usersById=new Map((usersResult.data||[]).map(user=>[user.user_id,user.username||user.email||user.user_id]));
+    const logs=auditResult.data||[];
+    auditMessage.textContent="Записани действия: "+logs.length;
+    if(!logs.length){
+      const row=auditList.insertRow();const cell=row.insertCell();cell.colSpan=5;
+      cell.textContent="Все още няма административни действия.";
+    }else{
+      logs.forEach(log=>{
+        const row=auditList.insertRow();
+        createCell(row,log.created_at?new Date(log.created_at).toLocaleString("bg-BG"):"—");
+        createCell(row,usersById.get(log.actor_user_id)||log.actor_user_id||"—");
+        createCell(row,log.action||"—");
+        createCell(row,log.table_name||"—");
+        createCell(row,log.row_id||"—");
+      });
+    }
+  }
+}
+
+document.getElementById("assignAssistantButton").addEventListener("click",async()=>{
+  const button=document.getElementById("assignAssistantButton");
+  const message=document.getElementById("assistantAdminMessage");
+  const userId=document.getElementById("assistantUserSelect").value;
+  if(!userId){message.textContent="Първо избери потребител.";return;}
+  button.disabled=true;
+  try{
+    const {data,error}=await db.rpc("sexsi_admin_assign_assistant",{p_user_id:userId});
+    if(error)throw error;
+    if(data!==true)throw new Error("Назначаването не беше потвърдено.");
+    message.textContent="Помощник администраторът е назначен успешно.";
+    await loadAdminManagement();
+  }catch(error){
+    message.textContent="Грешка: "+(error.message||"Неуспешно назначаване.");
+  }finally{
+    button.disabled=false;
+  }
+});
+
+async function revokeAssistantAdmin(userId,username){
+  if(!confirm("Да премахна ли администраторските права на "+(username||"този потребител")+"?"))return;
+  const message=document.getElementById("assistantAdminMessage");
+  try{
+    const {data,error}=await db.rpc("sexsi_admin_revoke_assistant",{p_user_id:userId});
+    if(error)throw error;
+    if(data!==true)throw new Error("Премахването не беше потвърдено.");
+    message.textContent="Правата на помощник администратора са премахнати.";
+    await loadAdminManagement();
+  }catch(error){
+    message.textContent="Грешка: "+(error.message||"Неуспешно премахване.");
+  }
+}
+
 
 document.getElementById("refreshAnalyticsButton")
   .addEventListener("click",loadAnalytics);
