@@ -5,7 +5,6 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const DISCORD_BOT_TOKEN = Deno.env.get("DISCORD_BOT_TOKEN")!;
-const ADMIN_ID = "13f1ada8-cd05-4c31-8940-4fb1790cb90e";
 const CHANNEL_ID = "1572861675223257188";
 const SITE_URL = "https://sexsi-tournament.github.io/sexsi-tournaments/";
 const BRACKET_URL = "https://sexsi-tournament.github.io/sexsi-tournaments/bracket.html";
@@ -61,9 +60,10 @@ Deno.serve(async (req: Request) => {
   const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
   if (!token) return Response.json({ error: "Unauthorized" }, { status: 401, headers: corsHeaders });
 
-  const authClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const authClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { global: { headers: { Authorization: "Bearer " + token } }, auth: { persistSession: false, autoRefreshToken: false } });
   const { data: authData, error: authError } = await authClient.auth.getUser(token);
-  if (authError || authData.user?.id !== ADMIN_ID) {
+  const { data: permitted, error: permissionError } = await authClient.rpc("sexsi_has_admin_permission", { p_permission: "publish_discord" });
+  if (authError || !authData.user || permissionError || permitted !== true) {
     return Response.json({ error: "Forbidden" }, { status: 403, headers: corsHeaders });
   }
 
