@@ -35,10 +35,20 @@ function showPlayerDashboard(user, playerId) {
   document.getElementById("editPlayerGameId").value =
     playerId || "";
 
-  const isAdmin = user.id === ADMIN_ID;
-
-  document.getElementById("adminPanel").style.display =
-    isAdmin ? "block" : "none";
+  const adminPanel = document.getElementById("adminPanel");
+  if (adminPanel) adminPanel.style.display = "none";
+  if (db && user?.id) {
+    db.rpc("sexsi_admin_get_access").then(({ data: access, error }) => {
+      if (error) {
+        console.error("Admin access check failed:", error.message);
+        return;
+      }
+      const authorized = !!access?.authorized;
+      if (adminPanel) adminPanel.style.display = authorized ? "block" : "none";
+      const quizControls = document.getElementById("publishQuizControlButton")?.closest("div");
+      if (quizControls) quizControls.hidden = !access?.permissions?.includes("publish_discord");
+    }).catch(error => console.error("Admin access check failed:", error));
+  }
 
   loadTournamentRegistration(playerId);
   loadDiscordLinkStatus();
