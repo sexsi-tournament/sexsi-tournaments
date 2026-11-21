@@ -45,7 +45,8 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 <div class="card">
 <h2>СЪЗДАЙ АКАУНТ</h2>
 <form id="registerForm">
-<input id="username" type="text" placeholder="Потребителско име" required>
+<input id="username" type="text" placeholder="Потребителско име (3–16 знака)" minlength="3" maxlength="16" autocomplete="username" required>
+<p style="color:#aaa;font-size:12px;line-height:1.5;margin:-4px 0 12px">Разрешени са букви, цифри и долна черта (_) между думите. Без точки и други специални символи. Пример: Player_123</p>
 <input id="playerGameId" type="text" placeholder="Твоето ID в Standoff 2" required>
 <input id="email" type="email" placeholder="Имейл адрес" required>
 <input id="password" type="password" placeholder="Password (minimum 6 characters)" required>
@@ -142,7 +143,7 @@ footer{padding:30px 7%;border-top:1px solid #292929;color:#777;font-size:12px}
 <footer>SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY<a href="privacy.html" style="color:#999;font-size:11px;margin-left:12px">ПОВЕРИТЕЛНОСТ</a>
 </footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="app.js?v=8"></script>
+<script src="app.js?v=9"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="chat-notifications.js?v=1"></script>
 <script src="analytics.js?v=1"></script>
