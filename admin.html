@@ -640,6 +640,7 @@ footer{
   <button class="menu-item active" data-view="dashboard">ОБЩ ПРЕГЛЕД</button>
   <button class="menu-item" data-view="registrations">РЕГИСТРАЦИИ</button>
   <button class="menu-item" data-view="emails">ИМЕЙЛИ КЪМ ИГРАЧИ</button>
+  <button class="menu-item" data-view="discord">DISCORD АКАУНТИ</button>
   <a class="menu-item" href="messages.html" style="display:block;text-decoration:none">СЪОБЩЕНИЯ</a>
   <button class="menu-item" data-view="players">ВСИЧКИ ИГРАЧИ</button>
   <button class="menu-item" data-view="player-management">УПРАВЛЕНИЕ НА ИГРАЧИ</button>
@@ -678,6 +679,10 @@ footer{
         <small>ОБЩО ПОТРЕБИТЕЛИ В SUPABASE</small>
         <strong id="overviewAuthUsers">—</strong>
       </div>
+      <div class="overview-card">
+        <small>СВЪРЗАНИ DISCORD АКАУНТИ</small>
+        <strong id="overviewDiscordConnected">—</strong>
+      </div>
 
       <div class="overview-card">
         <small>ОБЩО ДВУБОИ</small>
@@ -706,6 +711,10 @@ footer{
       <button class="dashboard-action" data-open-view="emails">
         <strong>ИМЕЙЛИ КЪМ ИГРАЧИ</strong>
         <span>Състави съобщение и го изпрати директно до всички участници в SEXSI 1V1 CUP #001.</span>
+      </button>
+      <button class="dashboard-action" data-open-view="discord">
+        <strong>DISCORD АКАУНТИ</strong>
+        <span>Провери колко потребители са свързали Discord профилите си и виж свързаните акаунти.</span>
       </button>
 
       <button class="dashboard-action" data-open-view="players">
@@ -767,6 +776,51 @@ footer{
       </div>
     </div>
   </section>
+  <section class="admin-view" id="discordPanel">
+    <button class="secondary-button back-dashboard">← НАЗАД</button>
+    <div class="section-title">DISCORD АКАУНТИ</div>
+    <p class="section-description">Статистика за свързването на Discord профилите със SEXSI акаунтите.</p>
+
+    <div class="analytics-stats">
+      <div class="analytics-stat active">
+        <small>СВЪРЗАНИ DISCORD АКАУНТИ</small>
+        <strong id="discordConnectedCount">—</strong>
+      </div>
+      <div class="analytics-stat">
+        <small>БЕЗ СВЪРЗАН DISCORD</small>
+        <strong id="discordNotConnectedCount">—</strong>
+      </div>
+      <div class="analytics-stat">
+        <small>ОБЩО ПРОФИЛИ</small>
+        <strong id="discordTotalProfiles">—</strong>
+      </div>
+      <div class="analytics-stat">
+        <small>ПРОЦЕНТ СВЪРЗАНИ</small>
+        <strong id="discordConnectionRate">—</strong>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <h3>СВЪРЗАНИ ПОТРЕБИТЕЛИ</h3>
+        <button class="primary-button" type="button" id="refreshDiscordStatsButton">ОБНОВИ</button>
+      </div>
+      <p class="message" id="discordStatsMessage">Зареждане...</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>SEXSI ПОТРЕБИТЕЛ</th>
+              <th>DISCORD USER ID</th>
+              <th>ДАТА НА ПРОФИЛА</th>
+            </tr>
+          </thead>
+          <tbody id="discordConnectedUsersList"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
   <section class="admin-view" id="emailsPanel">
     <button class="secondary-button back-dashboard">← НАЗАД</button>
     <div class="section-title">ИМЕЙЛИ КЪМ УЧАСТНИЦИТЕ</div>
@@ -1134,6 +1188,9 @@ function showAdminView(viewName){
     loadEmailRecipients();
     loadSingleEmailPlayers();
   }
+  if(viewName==="discord"){
+    loadDiscordStats();
+  }
   if(viewName==="news"){
     loadAdminNews();
   }
@@ -1173,6 +1230,67 @@ document.getElementById("menuRefreshButton")
     closeAdminMenu();
     await refreshAllAdminData();
   });
+
+/* DISCORD ACCOUNT STATISTICS */
+
+function formatDiscordProfileDate(value){
+  if(!value)return "—";
+  const date=new Date(value);
+  return Number.isNaN(date.getTime())?"—":date.toLocaleString("bg-BG");
+}
+
+async function loadDiscordStats(){
+  const message=document.getElementById("discordStatsMessage");
+  const list=document.getElementById("discordConnectedUsersList");
+  if(!message||!list)return;
+
+  message.textContent="Зареждане на Discord статистиката...";
+  list.replaceChildren();
+
+  const {data,error}=await db.rpc("sexsi_admin_discord_stats");
+  if(error){
+    message.textContent="Грешка при зареждане: "+error.message;
+    ["discordConnectedCount","discordNotConnectedCount","discordTotalProfiles","discordConnectionRate","overviewDiscordConnected"]
+      .forEach(id=>{const el=document.getElementById(id);if(el)el.textContent="!";});
+    return;
+  }
+
+  const stats=data||{};
+  const total=Number(stats.total_profiles)||0;
+  const connected=Number(stats.connected_count)||0;
+  const notConnected=Number(stats.not_connected_count)||0;
+  const rate=total?((connected/total)*100).toFixed(1).replace(".",",")+"%":"0%";
+
+  document.getElementById("discordConnectedCount").textContent=formatNumber(connected);
+  document.getElementById("discordNotConnectedCount").textContent=formatNumber(notConnected);
+  document.getElementById("discordTotalProfiles").textContent=formatNumber(total);
+  document.getElementById("discordConnectionRate").textContent=rate;
+  document.getElementById("overviewDiscordConnected").textContent=formatNumber(connected);
+
+  const users=Array.isArray(stats.connected_users)?stats.connected_users:[];
+  users.forEach(user=>{
+    const row=document.createElement("tr");
+    createCell(row,user.username||"Без потребителско име");
+    createCell(row,user.discord_user_id||"—");
+    createCell(row,formatDiscordProfileDate(user.profile_created_at));
+    list.appendChild(row);
+  });
+
+  if(!users.length){
+    const row=document.createElement("tr");
+    const cell=document.createElement("td");
+    cell.colSpan=3;
+    cell.className="player-empty";
+    cell.textContent="Все още няма свързани Discord акаунти.";
+    row.appendChild(cell);
+    list.appendChild(row);
+  }
+
+  message.textContent="Статистиката е обновена успешно. Показани са "+users.length+" свързани акаунта.";
+}
+
+document.getElementById("refreshDiscordStatsButton")
+  ?.addEventListener("click",loadDiscordStats);
 
 /* REGISTRATIONS */
 
@@ -1891,6 +2009,7 @@ async function loadAdminData(){
   await loadRegistrations();
   await loadPlayers();
   await loadTotalAuthUsers();
+  await loadDiscordStats();
 }
 
 async function loadTotalAuthUsers(){
