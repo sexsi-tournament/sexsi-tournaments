@@ -835,6 +835,22 @@ footer{
     </div>
   </section>
 
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <h3>НЕСВЪРЗАНИ ЧЛЕНОВЕ НА DISCORD СЪРВЪРА</h3>
+        <button class="primary-button" type="button" id="refreshDiscordReminderUsersButton">ОБНОВИ СПИСЪКА</button>
+      </div>
+      <p class="message">Показват се реалните членове на SEXSI Discord, чиито Discord профили още не са свързани със SEXSI акаунт. Поканата се изпраща лично и може да се повтори след 24 часа.</p>
+      <p class="message" id="discordReminderUsersMessage" aria-live="polite">Зареждане на членовете...</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>DISCORD ПОТРЕБИТЕЛ</th><th>DISCORD USER ID</th><th>СТАТУС НА ПОКАНАТА</th><th>ДЕЙСТВИЕ</th></tr></thead>
+          <tbody id="discordReminderUsersList"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
   <section class="admin-view" id="emailsPanel">
     <button class="secondary-button back-dashboard">← НАЗАД</button>
     <div class="section-title">ИМЕЙЛИ КЪМ УЧАСТНИЦИТЕ</div>
@@ -1272,6 +1288,7 @@ function showAdminView(viewName){
   }
   if(viewName==="discord"){
     loadDiscordStats();
+    loadDiscordReminderUsers();
   }
   if(viewName==="news"){
     loadAdminNews();
@@ -1376,6 +1393,119 @@ async function loadDiscordStats(){
 
 document.getElementById("refreshDiscordStatsButton")
   ?.addEventListener("click",loadDiscordStats);
+
+function formatReminderDate(value){
+  if(!value)return "";
+  const date=new Date(value);
+  return Number.isNaN(date.getTime())?"":date.toLocaleString("bg-BG");
+}
+
+async function loadDiscordReminderUsers(){
+  const message=document.getElementById("discordReminderUsersMessage");
+  const list=document.getElementById("discordReminderUsersList");
+  if(!message||!list)return;
+  message.textContent="Зареждане на членовете на Discord сървъра...";
+  list.replaceChildren();
+  const refreshButton=document.getElementById("refreshDiscordReminderUsersButton");
+  if(refreshButton)refreshButton.disabled=true;
+  try{
+    const {data,error}=await db.functions.invoke("discord-link-reminders",{body:{action:"list"}});
+    if(error){
+      let detail="";
+      try{
+        const response=error.context;
+        if(response&&typeof response.clone==="function"){
+          const body=await response.clone().json();
+          detail=body?.error||"";
+        }
+      }catch(_){}
+      throw new Error(detail||error.message||"Неуспешно зареждане на Discord членовете.");
+    }
+    if(!data?.success)throw new Error(data?.error||"Неуспешно зареждане на Discord членовете.");
+    const users=Array.isArray(data.users)?data.users:[];
+    users.forEach(user=>{
+      const row=document.createElement("tr");
+      createCell(row,user.username||"Discord потребител");
+      createCell(row,user.discord_user_id||"—");
+      const statusCell=document.createElement("td");
+      if(user.status==="sent")statusCell.textContent="Изпратена"+(user.sent_at?" · "+formatReminderDate(user.sent_at):"");
+      else if(user.status==="failed")statusCell.textContent="Неуспешна"+(user.last_error?" · "+user.last_error:"");
+      else if(user.status==="sending")statusCell.textContent="Изпраща се...";
+      else statusCell.textContent="Не е изпращана";
+      row.appendChild(statusCell);
+      const actionCell=document.createElement("td");
+      const sendButton=document.createElement("button");
+      sendButton.type="button";
+      sendButton.className="primary-button";
+      sendButton.style.padding="8px 10px";
+      sendButton.style.fontSize="10px";
+      sendButton.textContent="ИЗПРАТИ ПОКАНА";
+      if(user.cooldown_until){
+        sendButton.disabled=true;
+        sendButton.textContent="ИЗЧАКАЙ ДО "+formatReminderDate(user.cooldown_until);
+      }
+      sendButton.addEventListener("click",()=>sendDiscordLinkReminder(user.discord_user_id,sendButton));
+      actionCell.appendChild(sendButton);
+      row.appendChild(actionCell);
+      list.appendChild(row);
+    });
+    if(!users.length){
+      const row=document.createElement("tr");
+      const cell=document.createElement("td");
+      cell.colSpan=4;
+      cell.className="player-empty";
+      cell.textContent="Няма несвързани членове на Discord сървъра.";
+      row.appendChild(cell);
+      list.appendChild(row);
+    }
+    message.textContent="Намерени са "+users.length+" несвързани членове от "+(Number(data.member_count)||0)+" членове на Discord сървъра.";
+    message.style.color="var(--muted)";
+  }catch(error){
+    console.error("Discord link reminder list error:",error);
+    message.textContent=error.message||"Възникна грешка при зареждането.";
+    message.style.color="#ff7777";
+  }finally{
+    if(refreshButton)refreshButton.disabled=false;
+  }
+}
+
+async function sendDiscordLinkReminder(discordUserId,button){
+  if(!discordUserId||!button)return;
+  if(!confirm("Да изпратя ли лично Discord съобщение с покана за свързване на този потребител?"))return;
+  const oldText=button.textContent;
+  button.disabled=true;
+  button.textContent="ИЗПРАЩАНЕ...";
+  const message=document.getElementById("discordReminderUsersMessage");
+  try{
+    const {data,error}=await db.functions.invoke("discord-link-reminders",{
+      body:{action:"send",discord_user_id:discordUserId}
+    });
+    if(error){
+      let detail="";
+      try{
+        const response=error.context;
+        if(response&&typeof response.clone==="function"){
+          const body=await response.clone().json();
+          detail=body?.error||"";
+        }
+      }catch(_){}
+      throw new Error(detail||error.message||"Discord не потвърди изпращането.");
+    }
+    if(!data?.success)throw new Error(data?.error||"Discord не потвърди изпращането.");
+    message.textContent=data.message||"Поканата е изпратена успешно.";
+    message.style.color="var(--green)";
+    await loadDiscordReminderUsers();
+  }catch(error){
+    console.error("Discord link reminder send error:",error);
+    message.textContent=error.message||"Поканата не беше изпратена.";
+    message.style.color="#ff7777";
+    button.disabled=false;
+    button.textContent=oldText;
+  }
+}
+
+document.getElementById("refreshDiscordReminderUsersButton")
+  ?.addEventListener("click",loadDiscordReminderUsers);
 
 document.getElementById("publishDiscordStatsButton")
   ?.addEventListener("click",async()=>{
