@@ -1308,7 +1308,18 @@ document.getElementById("publishDiscordStatsButton")
     message.textContent="Свързване с Discord и създаване/обновяване на публичната статистика...";
     try{
       const {data,error}=await db.functions.invoke("discord-stats-publish",{body:{}});
-      if(error)throw new Error(error.message||"Грешка при връзката със Supabase.");
+      if(error){
+        let detail="";
+        try{
+          const response=error.context;
+          if(response&&typeof response.clone==="function"){
+            const body=await response.clone().json();
+            detail=body?.error||"";
+            if(body?.details)detail+=(detail?" · ":"")+JSON.stringify(body.details);
+          }
+        }catch(parseError){}
+        throw new Error(detail||error.message||"Грешка при връзката със Supabase.");
+      }
       if(!data?.success)throw new Error(data?.error||"Discord не потвърди публикуването.");
       message.textContent=(data.created?"Каналът discord-statistics е създаден успешно. ":"Статистиката в discord-statistics е обновена. ")+
         "Свързани акаунти: "+data.connected+" от "+data.total+".";
