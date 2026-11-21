@@ -347,7 +347,7 @@ document.getElementById("registerForm").addEventListener("submit", async functio
   const password = document.getElementById("password").value;
 
   const message = document.getElementById("registerMessage");
-  const usernameRule = /^[\\p{L}\\p{N}]+(?:_[\\p{L}\\p{N}]+)*$/u;
+  const usernameRule = /^[\p{L}\p{N}]+(?:_[\p{L}\p{N}]+)*$/u;
   if (username.length < 3 || username.length > 16 || !usernameRule.test(username)) {
     message.textContent = "Невалидно потребителско име. Използвай 3–16 букви или цифри; разрешена е само единична долна черта между думите. Точки и други символи не са позволени.";
     message.style.color = "#ff7777";
