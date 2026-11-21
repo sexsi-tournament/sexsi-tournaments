@@ -142,9 +142,4 @@
     accessClient.auth.onAuthStateChange(function(event,session){updateAdminLink(session);});
   }
   initializeAdminLink();
-
-  var pwaLoader=document.createElement("script");
-  pwaLoader.src="pwa.js?v=1";
-  pwaLoader.defer=true;
-  document.body.appendChild(pwaLoader);
 })();
