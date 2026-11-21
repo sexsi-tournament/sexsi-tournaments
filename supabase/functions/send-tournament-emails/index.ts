@@ -3,7 +3,6 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import nodemailer from "npm:nodemailer@9.0.6";
 
 const TOURNAMENT_ID = "SEXSI-1V1-001";
-const ADMIN_USER_ID = "13f1ada8-cd05-4c31-8940-4fb1790cb90e";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -78,10 +77,12 @@ Deno.serve(async (req: Request) => {
     }
 
     const authClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: "Bearer " + token } },
       auth: { persistSession: false, autoRefreshToken: false },
     });
     const { data: userData, error: authError } = await authClient.auth.getUser(token);
-    if (authError || userData.user?.id !== ADMIN_USER_ID) {
+    const { data: permitted, error: permissionError } = await authClient.rpc("sexsi_has_admin_permission", { p_permission: "send_emails" });
+    if (authError || !userData.user || permissionError || permitted !== true) {
       return reply({ error: "Forbidden: administrator only" }, 403);
     }
 
