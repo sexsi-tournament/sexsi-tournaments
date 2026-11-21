@@ -801,6 +801,13 @@ footer{
     </div>
 
     <div class="panel">
+      <h3>ПУБЛИЧЕН DISCORD КАНАЛ</h3>
+      <p class="section-description">Създай канала discord-statistics в SEXSI Discord. Всички членове ще могат да виждат статистиката, но само ботът ще може да публикува в него. Повторното натискане обновява съществуващата публикация.</p>
+      <button class="primary-button" type="button" id="publishDiscordStatsButton">СЪЗДАЙ / ОБНОВИ DISCORD КАНАЛА</button>
+      <p class="message" id="publishDiscordStatsMessage">Каналът все още не е създаден от административното табло.</p>
+    </div>
+
+    <div class="panel">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
         <h3>СВЪРЗАНИ ПОТРЕБИТЕЛИ</h3>
         <button class="primary-button" type="button" id="refreshDiscordStatsButton">ОБНОВИ</button>
@@ -1291,6 +1298,32 @@ async function loadDiscordStats(){
 
 document.getElementById("refreshDiscordStatsButton")
   ?.addEventListener("click",loadDiscordStats);
+
+document.getElementById("publishDiscordStatsButton")
+  ?.addEventListener("click",async()=>{
+    const button=document.getElementById("publishDiscordStatsButton");
+    const message=document.getElementById("publishDiscordStatsMessage");
+    button.disabled=true;
+    button.textContent="ПУБЛИКУВАНЕ...";
+    message.textContent="Свързване с Discord и създаване/обновяване на публичната статистика...";
+    try{
+      const {data,error}=await db.functions.invoke("discord-stats-publish",{body:{}});
+      if(error)throw new Error(error.message||"Грешка при връзката със Supabase.");
+      if(!data?.success)throw new Error(data?.error||"Discord не потвърди публикуването.");
+      message.textContent=(data.created?"Каналът discord-statistics е създаден успешно. ":"Статистиката в discord-statistics е обновена. ")+
+        "Свързани акаунти: "+data.connected+" от "+data.total+".";
+      message.style.color="var(--green)";
+      button.textContent="ОБНОВИ ПУБЛИКАЦИЯТА";
+      await loadDiscordStats();
+    }catch(error){
+      console.error("Discord public stats publish error:",error);
+      message.textContent=error.message||"Неуспешно публикуване. Провери правата на бота.";
+      message.style.color="#ff7777";
+      button.textContent="ОПИТАЙ ОТНОВО";
+    }finally{
+      button.disabled=false;
+    }
+  });
 
 /* REGISTRATIONS */
 
