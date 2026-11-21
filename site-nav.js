@@ -112,20 +112,34 @@
     }
   });
 
-  // Покажи административната връзка само за конкретния администратор.
-  var ADMIN_ID="13f1ada8-cd05-4c31-8940-4fb1790cb90e";
+  // Покажи административната връзка само след проверка на реалните права в Supabase.
   var SUPABASE_URL="https://fyxlwcoochsuzhqostpe.supabase.co";
   var SUPABASE_KEY="sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP";
+  var accessClient=null;
+  var accessCheckSequence=0;
   function updateAdminLink(session){
-    adminLink.hidden=!(session && session.user && session.user.id===ADMIN_ID);
+    var sequence=++accessCheckSequence;
+    adminLink.hidden=true;
+    if(!session || !session.user) return;
+    if(!accessClient) return;
+    accessClient.rpc("sexsi_admin_get_access").then(function(result){
+      if(sequence!==accessCheckSequence) return;
+      if(result.error){
+        console.error("Admin navigation permission check failed:",result.error);
+        return;
+      }
+      adminLink.hidden=!result.data?.authorized;
+    }).catch(function(error){
+      console.error("Admin navigation permission check failed:",error);
+    });
   }
   function initializeAdminLink(){
     if(!window.supabase || !window.supabase.createClient) return;
-    var authClient=window.sexsiSupabase || window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-    authClient.auth.getSession().then(function(result){
+    accessClient=window.sexsiSupabase || window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+    accessClient.auth.getSession().then(function(result){
       if(!result.error) updateAdminLink(result.data.session);
     }).catch(function(error){console.error("Admin navigation session error:",error);});
-    authClient.auth.onAuthStateChange(function(event,session){updateAdminLink(session);});
+    accessClient.auth.onAuthStateChange(function(event,session){updateAdminLink(session);});
   }
   initializeAdminLink();
 })();
