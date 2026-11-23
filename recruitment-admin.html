@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="bg"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090909"><title>Recruitment Admin | SEXSI</title>
+<link rel="stylesheet" href="elite.css?v=20261119-red6">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#090909;color:#fff;font-family:Arial,sans-serif}
+main{width:min(1200px,94%);margin:auto;padding:34px 0 70px}
+h1{font-size:clamp(25px,4vw,40px)}p{color:#aaa;line-height:1.5}
+.panel{background:#141414;border:1px solid #303030;border-radius:12px;padding:20px;margin:18px 0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.metric{background:#0d0d0d;border:1px solid #333;border-radius:9px;padding:16px}
+.metric strong{display:block;font-size:28px;color:#ed252d}
+.application{border:1px solid #333;border-radius:10px;padding:17px;margin:12px 0;background:#101010}
+input,textarea,select{width:100%;background:#090909;color:#fff;border:1px solid #444;border-radius:7px;padding:11px;margin:6px 0 12px;font:inherit}
+label{font-size:12px;font-weight:bold;color:#ddd}
+button{background:#ed252d;color:white;border:0;border-radius:7px;padding:11px 15px;font-weight:900;cursor:pointer}
+button.secondary{background:#292929;border:1px solid #555}
+button:disabled{opacity:.5}
+small,.muted{color:#999}
+.status{padding:5px 9px;border-radius:30px;background:#292929;font-size:11px;font-weight:800}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.note{border-top:1px solid #333;padding:8px 0;color:#bbb;font-size:13px}
+@media(max-width:600px){main{padding-top:20px}.panel{padding:15px}}
+</style></head><body>
+<header><a class="logo" href="index.html" style="color:white;text-decoration:none;font-weight:1000;font-size:27px">SEXSI<span style="color:#ed252d">.</span></a></header>
+<main>
+<div class="row"><div><div style="color:#ed252d;font-weight:900;letter-spacing:2px;font-size:11px">STAFF MANAGEMENT</div><h1>RECRUITMENT CONTROL</h1><p>Управление на кандидатури, интервюта и назначения.</p></div><a href="recruitment.html" style="color:#ff6268">Публични позиции ↗</a></div>
+<section class="grid" id="metrics">
+<div class="metric"><span class="muted">Всички кандидатури</span><strong id="totalCount">—</strong></div>
+<div class="metric"><span class="muted">За разглеждане</span><strong id="pendingCount">—</strong></div>
+<div class="metric"><span class="muted">Интервюта</span><strong id="interviewCount">—</strong></div>
+<div class="metric"><span class="muted">Активен екип</span><strong id="staffCount">—</strong></div>
+</section>
+<section class="panel"><div class="row"><h2>КАНДИДАТУРИ</h2><button class="secondary" id="refresh">ОБНОВИ</button></div>
+<div class="grid"><div><label for="filterStatus">ФИЛТЪР ПО СТАТУС</label><select id="filterStatus"><option value="">Всички</option><option value="submitted">Получени</option><option value="under_review">Разглеждат се</option><option value="interview">Интервю</option><option value="approved">Одобрени</option><option value="rejected">Отказани</option><option value="withdrawn">Оттеглени</option><option value="archived">Архивирани</option></select></div><div><label for="filterPosition">ПОЗИЦИЯ</label><select id="filterPosition"><option value="">Всички позиции</option></select></div></div>
+<div id="applications"><p>Зареждане...</p></div><p id="adminMessage" aria-live="polite"></p></section>
+<section class="panel"><h2>ЕКИП НА SEXSI</h2><div id="staffList"><p>Зареждане...</p></div></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+"use strict";
+const URL="https://fyxlwcoochsuzhqostpe.supabase.co",KEY="sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP";
+const db=window.sexsiSupabase||window.supabase.createClient(URL,KEY);
+const $=id=>document.getElementById(id);
+const labels={submitted:"Получена",under_review:"Разглежда се",interview:"Интервю",approved:"Одобрена",rejected:"Отказана",withdrawn:"Оттеглена",archived:"Архивирана"};
+let positions=[],apps=[];
+function node(tag,cls,txt){const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n;}
+function message(t){$("adminMessage").textContent=t;}
+async function init(){
+ const {data:s,error}=await db.auth.getSession();if(error||!s.session){location.href="profile.html";return;}
+ const {data:a,error:e}=await db.rpc("sexsi_admin_get_access");
+ if(e||!a?.authorized||!a.permissions?.includes("manage_recruitment")){$("applications").textContent="Нямаш право за достъп до Recruitment Control.";return;}
+ await loadAll();
+}
+async function loadAll(){
+ message("Зареждане на данните...");
+ const [p,staff]=await Promise.all([
+  db.from("sexsi_recruitment_positions").select("id,title,is_open").order("sort_order"),
+  db.from("sexsi_staff_members").select("id,user_id,role_title,status,appointed_at").order("appointed_at",{ascending:false})
+ ]);
+ if(p.error){message("Грешка при позициите: "+p.error.message);return;}
+ positions=p.data||[];const filter=$("filterPosition");const current=filter.value;filter.replaceChildren(node("option","","Всички позиции"));
+ positions.forEach(x=>{const o=node("option","",x.title);o.value=x.id;filter.append(o);});filter.value=current;
+ if(staff.error){$("staffList").textContent="Грешка при екипа: "+staff.error.message;}else renderStaff(staff.data||[]);
+ await loadApplications();
+}
+async function loadApplications(){
+ const {data,error}=await db.from("sexsi_recruitment_applications").select("id,applicant_id,discord_user_id,experience,motivation,availability,portfolio_url,status,submitted_at,position_id,reviewed_by,reviewed_at,sexsi_recruitment_positions(title)").order("submitted_at",{ascending:false});
+ if(error){message("Грешка при кандидатурите: "+error.message);return;}
+ apps=data||[];
+ $("totalCount").textContent=apps.length;
+ $("pendingCount").textContent=apps.filter(x=>["submitted","under_review"].includes(x.status)).length;
+ $("interviewCount").textContent=apps.filter(x=>x.status==="interview").length;
+ $("staffCount").textContent="…";
+ renderApps();message("");
+ const {count}=await db.from("sexsi_staff_members").select("id",{count:"exact",head:true}).eq("status","active");
+ $("staffCount").textContent=count??"—";
+}
+function renderApps(){
+ const root=$("applications");root.replaceChildren();
+ const status=$("filterStatus").value,pos=$("filterPosition").value;
+ const rows=apps.filter(x=>(!status||x.status===status)&&(!pos||x.position_id===pos));
+ if(!rows.length){root.append(node("p","","Няма кандидатури за избраните филтри."));return;}
+ rows.forEach(app=>{
+  const card=node("article","application"),top=node("div","row");
+  const title=node("h3","",app.sexsi_recruitment_positions?.title||"Позиция");
+  top.append(title,node("span","status",labels[app.status]||app.status));card.append(top);
+  card.append(node("p","","Discord ID: "+app.discord_user_id+" · Подадена: "+new Date(app.submitted_at).toLocaleString("bg-BG")));
+  card.append(node("h4","","Опит и умения"),node("p","",app.experience),node("h4","","Мотивация"),node("p","",app.motivation),node("h4","","Наличност"),node("p","",app.availability));
+  if(app.portfolio_url){const link=node("a","","Отвори портфолио");link.href=app.portfolio_url;link.target="_blank";link.rel="noopener noreferrer";link.style.color="#ff6268";card.append(link);}
+  const select=node("select");Object.entries(labels).forEach(([v,l])=>{const o=node("option","",l);o.value=v;select.append(o);});select.value=app.status;
+  const save=node("button","","ЗАПАЗИ СТАТУС");save.addEventListener("click",()=>updateStatus(app,select.value,save));
+  const note=node("textarea");note.rows=2;note.maxLength=5000;note.placeholder="Вътрешна бележка за екипа...";
+  const addNote=node("button","secondary","ДОБАВИ БЕЛЕЖКА");addNote.addEventListener("click",()=>saveNote(app,note,addNote));
+  const history=node("div","");const loadNotes=node("button","secondary","ПОКАЖИ БЕЛЕЖКИ");loadNotes.addEventListener("click",()=>showNotes(app,history,loadNotes));
+  const actions=node("div","actions");actions.append(select,save,addNote,loadNotes);card.append(note,actions,history);
+  if(app.status==="approved"){const hint=node("p","muted","Одобрена кандидатура. Проверка за назначение се извършва в списъка на екипа.");card.append(hint);}
+  root.append(card);
+ });
+}
+async function updateStatus(app,status,btn){
+ btn.disabled=true;const {data:s}=await db.auth.getSession();
+ const patch={status,reviewed_by:s.session.user.id,reviewed_at:new Date().toISOString()};
+ const {error}=await db.from("sexsi_recruitment_applications").update(patch).eq("id",app.id);
+ btn.disabled=false;if(error){message("Неуспешна промяна: "+error.message);return;}
+ if(status==="approved"){
+  const exists=await db.from("sexsi_staff_members").select("id").eq("application_id",app.id).maybeSingle();
+  if(!exists.data){
+   const {error:staffError}=await db.from("sexsi_staff_members").insert({user_id:app.applicant_id,application_id:app.id,position_id:app.position_id,role_title:app.sexsi_recruitment_positions?.title||"SEXSI Staff",appointed_by:s.session.user.id});
+   if(staffError){message("Кандидатурата е одобрена, но назначаването не се записа: "+staffError.message);await loadApplications();return;}
+  }
+ }
+ message("Статусът е обновен.");await loadApplications();
+}
+async function saveNote(app,field,btn){
+ const value=field.value.trim();if(!value){message("Напиши бележка преди запис.");return;}
+ btn.disabled=true;const {data:s}=await db.auth.getSession();
+ const {error}=await db.from("sexsi_recruitment_notes").insert({application_id:app.id,author_id:s.session.user.id,note:value});
+ btn.disabled=false;if(error){message("Бележката не беше записана: "+error.message);return;}
+ field.value="";message("Бележката е записана.");
+}
+async function showNotes(app,root,btn){
+ btn.disabled=true;const {data,error}=await db.from("sexsi_recruitment_notes").select("note,created_at,author_id").eq("application_id",app.id).order("created_at",{ascending:false});
+ btn.disabled=false;root.replaceChildren();
+ if(error){root.append(node("p","muted","Грешка при зареждане на бележките."));return;}
+ if(!data.length){root.append(node("p","muted","Няма вътрешни бележки."));return;}
+ data.forEach(n=>root.append(node("div","note",new Date(n.created_at).toLocaleString("bg-BG")+" · "+n.note)));
+}
+function renderStaff(rows){
+ const root=$("staffList");root.replaceChildren();
+ if(!rows.length){root.append(node("p","","Все още няма назначени служители."));return;}
+ rows.forEach(person=>{const row=node("div","row");row.style.padding="12px 0";row.style.borderTop="1px solid #333";row.append(node("strong","",person.role_title),node("span","status",person.status==="active"?"АКТИВЕН":person.status.toUpperCase()));row.append(node("small","","User ID: "+person.user_id+" · "+new Date(person.appointed_at).toLocaleDateString("bg-BG")));root.append(row);});
+}
+$("filterStatus").addEventListener("change",renderApps);$("filterPosition").addEventListener("change",renderApps);
+$("refresh").addEventListener("click",loadAll);init();
+})();
+</script><script src="site-nav.js?v=3"></script></body></html>
