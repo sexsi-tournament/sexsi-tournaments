@@ -48,6 +48,7 @@
     ["bracket.html","ТУРНИРНА СХЕМА"],
     ["messages.html","ЛИЧНИ СЪОБЩЕНИЯ"],
     ["news.html","НОВИНИ"],
+    ["recruitment.html","КАРИЕРИ В SEXSI"],
     ["ranking.html","КЛАСАЦИЯ"],
     ["archive.html","АРХИВ"],
     ["profile.html","МОЯТ ПРОФИЛ"],
