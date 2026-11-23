@@ -73,7 +73,12 @@
   adminLink.hidden=true;
   nav.appendChild(adminLink);
 
-  var recruitmentAdminLink=document.createElement("a");\n  recruitmentAdminLink.href="recruitment-admin.html";\n  recruitmentAdminLink.className="sexsi-admin-nav-link";\n  recruitmentAdminLink.textContent="📋 RECRUITMENT CONTROL";\n  recruitmentAdminLink.hidden=true;\n  nav.appendChild(recruitmentAdminLink);
+  var recruitmentAdminLink=document.createElement("a");
+  recruitmentAdminLink.href="recruitment-admin.html";
+  recruitmentAdminLink.className="sexsi-admin-nav-link";
+  recruitmentAdminLink.textContent="📋 RECRUITMENT CONTROL";
+  recruitmentAdminLink.hidden=true;
+  nav.appendChild(recruitmentAdminLink);
   panel.appendChild(nav);
   if(preservedActions) panel.appendChild(preservedActions);
   wrap.appendChild(toggle);
