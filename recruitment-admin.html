@@ -64,7 +64,16 @@ async function loadAll(){
  if(p.error){message("Грешка при позициите: "+p.error.message);return;}
  positions=p.data||[];const filter=$("filterPosition");const current=filter.value;filter.replaceChildren(node("option","","Всички позиции"));
  positions.forEach(x=>{const o=node("option","",x.title);o.value=x.id;filter.append(o);});filter.value=current;
- if(staff.error){$("staffList").textContent="Грешка при екипа: "+staff.error.message;}else renderStaff(staff.data||[]);
+ if(staff.error){$("staffList").textContent="Грешка при екипа: "+staff.error.message;}else{
+  const userIds=[...new Set((staff.data||[]).map(x=>x.user_id).filter(Boolean))];
+  let profileMap={};
+  if(userIds.length){
+   const {data:profiles,error:profileError}=await db.from("profiles").select("id,username").in("id",userIds);
+   if(profileError){$("staffList").textContent="Грешка при зареждане на имената: "+profileError.message;return;}
+   profileMap=Object.fromEntries((profiles||[]).map(x=>[x.id,x.username]));
+  }
+  renderStaff(staff.data||[],profileMap);
+ }
  await loadApplications();
 }
 async function loadApplications(){
@@ -144,7 +153,7 @@ async function showNotes(app,root,btn){
  if(!data.length){root.append(node("p","muted","Няма вътрешни бележки."));return;}
  data.forEach(n=>root.append(node("div","note",new Date(n.created_at).toLocaleString("bg-BG")+" · "+n.note)));
 }
-function renderStaff(rows){
+function renderStaff(rows,profileMap={}){
  const root=$("staffList");root.replaceChildren();
  if(!rows.length){root.append(node("p","","Все още няма назначени служители."));return;}
  rows.forEach(person=>{
@@ -152,8 +161,8 @@ function renderStaff(rows){
   const top=node("div","row");
   top.append(node("strong","",person.role_title||"SEXSI Staff"),node("span","status",({active:"АКТИВЕН",on_leave:"В ОТПУСК",inactive:"НЕАКТИВЕН",removed:"ОСВОБОДЕН"})[person.status]||person.status));
   card.append(top);
-  const discord=person.sexsi_recruitment_applications?.discord_user_id;
-  card.append(node("p","muted","Discord ID: "+(discord||"няма свързана кандидатура")+" · User ID: "+person.user_id+" · Назначен: "+new Date(person.appointed_at).toLocaleDateString("bg-BG")));
+  const username=profileMap[person.user_id];
+  card.append(node("p","muted","Потребител: "+(username||"Няма зададено име")+" · Назначен: "+new Date(person.appointed_at).toLocaleDateString("bg-BG")));
   const roleLabel=node("label","","ДЛЪЖНОСТ / РОЛЯ");
   const role=node("input");role.value=person.role_title||"";role.maxLength=100;role.placeholder="Напр. Moderator";
   const statusLabel=node("label","","СТАТУС");
