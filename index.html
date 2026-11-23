@@ -1020,7 +1020,7 @@ header .player-menu-button .sexsi-en{
         try{
           const {data:moderatorAccess,error:moderatorAccessError} = await db.rpc("sexsi_moderator_get_access");
           if(requestId === playerMenuProfileRequest){
-            moderatorNavigationLink.hidden = !!moderatorAccessError || !moderatorAccess?.authorized;
+            moderatorNavigationLink.hidden = isAdmin || !!moderatorAccessError || !moderatorAccess?.authorized;
           }
         }catch(error){
           console.error("Moderator menu access error:",error);
