@@ -156,12 +156,28 @@
       if(!result.error) updateAdminLink(result.data.session);
     }).catch(function(error){console.error("Admin navigation session error:",error);});
     accessClient.auth.onAuthStateChange(function(event,session){updateAdminLink(session);});
+    var moderatorAccessCheckSequence=0;
     function updateModeratorLink(session){
+      var sequence=++moderatorAccessCheckSequence;
       moderatorLink.hidden=true;
       if(!session || !session.user || !accessClient) return;
-      accessClient.rpc("sexsi_moderator_get_access").then(function(result){
-        moderatorLink.hidden=!!result.error || !result.data?.authorized;
-      }).catch(function(error){console.error("Moderator navigation permission check failed:",error);});
+      // Администраторите използват административния панел, дори ако имат и активен модераторски запис.
+      accessClient.rpc("sexsi_admin_get_access").then(function(adminResult){
+        if(sequence!==moderatorAccessCheckSequence) return;
+        if(adminResult.error){
+          console.error("Moderator navigation admin check failed:",adminResult.error);
+          return;
+        }
+        if(adminResult.data?.authorized) return;
+        return accessClient.rpc("sexsi_moderator_get_access").then(function(result){
+          if(sequence!==moderatorAccessCheckSequence) return;
+          moderatorLink.hidden=!!result.error || !result.data?.authorized;
+        });
+      }).catch(function(error){
+        if(sequence!==moderatorAccessCheckSequence) return;
+        moderatorLink.hidden=true;
+        console.error("Moderator navigation permission check failed:",error);
+      });
     }
     accessClient.auth.getSession().then(function(result){
       if(!result.error) updateModeratorLink(result.data.session);
