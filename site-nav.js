@@ -48,6 +48,7 @@
     ["bracket.html","ТУРНИРНА СХЕМА"],
     ["messages.html","ЛИЧНИ СЪОБЩЕНИЯ"],
     ["news.html","НОВИНИ"],
+    ["recruitment.html","КАРИЕРИ В SEXSI"],
     ["ranking.html","КЛАСАЦИЯ"],
     ["archive.html","АРХИВ"],
     ["profile.html","МОЯТ ПРОФИЛ"],
@@ -71,6 +72,13 @@
   adminLink.textContent="🛡 АДМИНИСТРАТИВЕН ПАНЕЛ";
   adminLink.hidden=true;
   nav.appendChild(adminLink);
+
+  var recruitmentAdminLink=document.createElement("a");
+  recruitmentAdminLink.href="recruitment-admin.html";
+  recruitmentAdminLink.className="sexsi-admin-nav-link";
+  recruitmentAdminLink.textContent="📋 RECRUITMENT CONTROL";
+  recruitmentAdminLink.hidden=true;
+  nav.appendChild(recruitmentAdminLink);
   panel.appendChild(nav);
   if(preservedActions) panel.appendChild(preservedActions);
   wrap.appendChild(toggle);
@@ -129,6 +137,7 @@
         return;
       }
       adminLink.hidden=!result.data?.authorized;
+      recruitmentAdminLink.hidden=!(result.data?.authorized && Array.isArray(result.data?.permissions) && result.data.permissions.includes("manage_recruitment"));
     }).catch(function(error){
       console.error("Admin navigation permission check failed:",error);
     });

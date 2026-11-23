@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090909">
+<title>Кариери | SEXSI TOURNAMENTS</title>
+<meta name="description" content="Кандидатствай за позиция в екипа на SEXSI TOURNAMENTS.">
+<link rel="stylesheet" href="elite.css?v=20261119-red6">
+<style>
+:root{--red:#ed252d;--bg:#090909;--panel:#141414;--muted:#aaa}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif}
+main{width:min(1050px,92%);margin:0 auto;padding:42px 0 70px}
+.hero{padding:34px;border:1px solid #382326;border-radius:16px;background:radial-gradient(ellipse at top right,#381316 0,transparent 55%),#111}
+.eyebrow{color:#ff6268;font-weight:900;letter-spacing:2px;font-size:11px}
+h1{font-size:clamp(30px,6vw,54px);margin:12px 0}p{line-height:1.65;color:#bbb}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:24px 0}
+.card{background:#141414;border:1px solid #303030;border-radius:12px;padding:20px}
+.card h2,.card h3{margin-top:0}
+.role{display:flex;flex-direction:column;gap:10px}
+.role ul{padding-left:18px;color:#aaa;line-height:1.7;font-size:13px;flex:1}
+button{border:0;border-radius:7px;background:var(--red);color:#fff;font-weight:900;padding:13px 18px;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+input,textarea{width:100%;padding:13px;margin:7px 0 14px;background:#090909;color:#fff;border:1px solid #414141;border-radius:7px;font:inherit}
+label{font-size:13px;color:#ddd;font-weight:700}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.status{font-size:12px;color:#aaa;min-height:20px}
+.application{border-top:1px solid #333;padding:13px 0}
+.pill{display:inline-block;padding:5px 9px;border-radius:30px;background:#292929;color:#ddd;font-size:11px;font-weight:800}
+@media(max-width:650px){main{padding-top:24px}.hero{padding:22px}.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><a class="logo" href="index.html" style="color:white;text-decoration:none;font-weight:1000;font-size:27px">SEXSI<span style="color:#ed252d">.</span></a></header>
+<main>
+<section class="hero">
+<div class="eyebrow">JOIN THE TEAM</div>
+<h1>ИЗГРАЖДАЙ SEXSI <span style="color:#ed252d">ЗАЕДНО С НАС.</span></h1>
+<p>Търсим отговорни и мотивирани хора, които искат да участват в развитието на състезателната общност. Разгледай позициите и изпрати кандидатура през своя SEXSI профил.</p>
+</section>
+<section>
+<h2 style="margin:30px 0 8px">ОТВОРЕНИ ПОЗИЦИИ</h2>
+<p style="margin-top:0">Избери ролята, която отговаря на уменията и интересите ти.</p>
+<div id="positions" class="grid"><div class="card">Зареждане на свободните позиции...</div></div>
+</section>
+<section class="card" id="applicationSection" hidden>
+<h2>КАНДИДАТСТВАНЕ</h2>
+<p id="selectedPosition">Избрана позиция</p>
+<form id="applicationForm">
+<input type="hidden" id="positionId">
+<div class="form-grid">
+<div><label for="experience">Опит и умения</label><textarea id="experience" rows="4" maxlength="3000" required placeholder="Опиши релевантния си опит..."></textarea></div>
+<div><label for="motivation">Защо искаш да се присъединиш?</label><textarea id="motivation" rows="4" maxlength="3000" required placeholder="Разкажи ни защо тази позиция е подходяща за теб..."></textarea></div>
+</div>
+<label for="availability">Кога си свободен?</label>
+<input id="availability" maxlength="500" required placeholder="Например: вечер през седмицата и през уикенда">
+<label for="portfolio">Портфолио / примери за работа (незадължително)</label>
+<input id="portfolio" type="url" maxlength="500" placeholder="https://...">
+<button id="submitApplication" type="submit">ИЗПРАТИ КАНДИДАТУРА</button>
+<p class="status" id="formMessage" aria-live="polite"></p>
+</form>
+</section>
+<section class="card" id="myApplications" hidden>
+<h2>МОИТЕ КАНДИДАТУРИ</h2>
+<div id="applicationList"></div>
+</section>
+<section class="card" id="authNotice">
+<h2>КАНДИДАТСТВАНЕТО ИЗИСКВА ПРОФИЛ</h2>
+<p>Влез в SEXSI профила си и свържи Discord акаунта си, за да изпратиш кандидатура.</p>
+<a href="profile.html"><button type="button">КЪМ МОЯ ПРОФИЛ</button></a>
+</section>
+</main>
+<footer style="padding:25px 4%;border-top:1px solid #292929;color:#777;text-align:center;font-size:12px">SEXSI TOURNAMENTS © 2026 · STANDOFF 2 COMMUNITY</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+"use strict";
+const SUPABASE_URL="https://fyxlwcoochsuzhqostpe.supabase.co";
+const SUPABASE_KEY="sb_publishable_B_y2VUBIRuOdtN_57EJplQ_e-xoC5YP";
+const db=window.sexsiSupabase||window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const positionsEl=document.getElementById("positions");
+const formSection=document.getElementById("applicationSection");
+const formMessage=document.getElementById("formMessage");
+let currentUser=null, discordId=null, positions=[];
+const statusLabels={submitted:"Получена",under_review:"Разглежда се",interview:"Покана за интервю",approved:"Одобрена",rejected:"Отказана",withdrawn:"Оттеглена",archived:"Архивирана"};
+function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;}
+async function loadPositions(){
+ const {data,error}=await db.from("sexsi_recruitment_positions").select("id,slug,title,description,requirements").eq("is_open",true).order("sort_order");
+ if(error){positionsEl.replaceChildren(el("div","card","Не успяхме да заредим позициите. Опитай отново по-късно."));console.error(error);return;}
+ positions=data||[];positionsEl.replaceChildren();
+ if(!positions.length){positionsEl.append(el("div","card","В момента няма отворени позиции."));return;}
+ positions.forEach(pos=>{
+  const card=el("article","card role");card.append(el("h3","",pos.title),el("p","",pos.description));
+  const ul=el("ul");(pos.requirements||[]).forEach(req=>ul.append(el("li","",req)));card.append(ul);
+  const btn=el("button","", "КАНДИДАТСТВАЙ");btn.type="button";btn.addEventListener("click",()=>choosePosition(pos));card.append(btn);positionsEl.append(card);
+ });
+}
+function choosePosition(pos){
+ if(!currentUser){document.getElementById("authNotice").scrollIntoView({behavior:"smooth"});return;}
+ if(!discordId){formMessage.textContent="Първо свържи Discord акаунта си от своя SEXSI профил.";formSection.hidden=false;document.getElementById("selectedPosition").textContent=pos.title;document.getElementById("positionId").value=pos.id;formSection.scrollIntoView({behavior:"smooth"});return;}
+ document.getElementById("selectedPosition").textContent="Позиция: "+pos.title;
+ document.getElementById("positionId").value=pos.id;
+ formMessage.textContent="";
+ formSection.hidden=false;formSection.scrollIntoView({behavior:"smooth"});
+}
+async function loadMyApplications(){
+ const {data,error}=await db.from("sexsi_recruitment_applications").select("id,status,submitted_at,position_id,sexsi_recruitment_positions(title)").order("submitted_at",{ascending:false});
+ if(error){console.error(error);return;}
+ const section=document.getElementById("myApplications"),list=document.getElementById("applicationList");
+ if(!data?.length)return;
+ section.hidden=false;list.replaceChildren();
+ data.forEach(app=>{
+  const item=el("div","application");const title=app.sexsi_recruitment_positions?.title||"Позиция";
+  item.append(el("strong","",title),el("span","pill"," "+(statusLabels[app.status]||app.status)),el("p","", "Подадена: "+new Date(app.submitted_at).toLocaleDateString("bg-BG")));
+  list.append(item);
+ });
+}
+async function initialize(){
+ const {data}=await db.auth.getSession();currentUser=data.session?.user||null;
+ if(!currentUser)return;
+ document.getElementById("authNotice").hidden=true;
+ const {data:profile,error}=await db.from("profiles").select("discord_user_id").eq("id",currentUser.id).maybeSingle();
+ if(error)console.error(error);discordId=profile?.discord_user_id||null;
+ await loadMyApplications();
+}
+document.getElementById("applicationForm").addEventListener("submit",async event=>{
+ event.preventDefault();if(!currentUser){formMessage.textContent="Влез в профила си, за да кандидатстваш.";return;}
+ if(!discordId){formMessage.textContent="Свържи Discord акаунта си от профила преди кандидатстване.";return;}
+ const btn=document.getElementById("submitApplication");btn.disabled=true;formMessage.textContent="Изпращане...";
+ const payload={position_id:document.getElementById("positionId").value,applicant_id:currentUser.id,discord_user_id:discordId,experience:document.getElementById("experience").value.trim(),motivation:document.getElementById("motivation").value.trim(),availability:document.getElementById("availability").value.trim(),portfolio_url:document.getElementById("portfolio").value.trim()||null};
+ const {error}=await db.from("sexsi_recruitment_applications").insert(payload);
+ btn.disabled=false;
+ if(error){formMessage.textContent=error.code==="23505"?"Вече имаш активна кандидатура за тази позиция.":(error.message||"Неуспешно изпращане.");return;}
+ formMessage.textContent="Кандидатурата е изпратена успешно.";
+ event.target.reset();formSection.hidden=true;await loadMyApplications();
+});
+loadPositions();initialize();
+})();
+</script>
+<script src="site-nav.js?v=4"></script>
+</body>
+</html>
