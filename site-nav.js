@@ -71,7 +71,9 @@
   adminLink.className="sexsi-admin-nav-link";
   adminLink.textContent="🛡 АДМИНИСТРАТИВЕН ПАНЕЛ";
   adminLink.hidden=true;
-  nav.appendChild(adminLink);\n\n  var recruitmentAdminLink=document.createElement("a");\n  recruitmentAdminLink.href="recruitment-admin.html";\n  recruitmentAdminLink.className="sexsi-admin-nav-link";\n  recruitmentAdminLink.textContent="📋 RECRUITMENT CONTROL";\n  recruitmentAdminLink.hidden=true;\n  nav.appendChild(recruitmentAdminLink);
+  nav.appendChild(adminLink);
+
+  var recruitmentAdminLink=document.createElement("a");\n  recruitmentAdminLink.href="recruitment-admin.html";\n  recruitmentAdminLink.className="sexsi-admin-nav-link";\n  recruitmentAdminLink.textContent="📋 RECRUITMENT CONTROL";\n  recruitmentAdminLink.hidden=true;\n  nav.appendChild(recruitmentAdminLink);
   panel.appendChild(nav);
   if(preservedActions) panel.appendChild(preservedActions);
   wrap.appendChild(toggle);
@@ -129,7 +131,8 @@
         console.error("Admin navigation permission check failed:",result.error);
         return;
       }
-      adminLink.hidden=!result.data?.authorized;\n      recruitmentAdminLink.hidden=!(result.data?.authorized && Array.isArray(result.data?.permissions) && result.data.permissions.includes("manage_recruitment"));
+      adminLink.hidden=!result.data?.authorized;
+      recruitmentAdminLink.hidden=!(result.data?.authorized && Array.isArray(result.data?.permissions) && result.data.permissions.includes("manage_recruitment"));
     }).catch(function(error){
       console.error("Admin navigation permission check failed:",error);
     });
