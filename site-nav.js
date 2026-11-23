@@ -79,6 +79,13 @@
   recruitmentAdminLink.textContent="📋 RECRUITMENT CONTROL";
   recruitmentAdminLink.hidden=true;
   nav.appendChild(recruitmentAdminLink);
+  var moderatorLink=document.createElement("a");
+  moderatorLink.href="moderator.html";
+  moderatorLink.className="sexsi-admin-nav-link";
+  moderatorLink.textContent="🛡 MODERATOR PANEL";
+  moderatorLink.hidden=true;
+  nav.appendChild(moderatorLink);
+
   panel.appendChild(nav);
   if(preservedActions) panel.appendChild(preservedActions);
   wrap.appendChild(toggle);
@@ -149,6 +156,17 @@
       if(!result.error) updateAdminLink(result.data.session);
     }).catch(function(error){console.error("Admin navigation session error:",error);});
     accessClient.auth.onAuthStateChange(function(event,session){updateAdminLink(session);});
+    function updateModeratorLink(session){
+      moderatorLink.hidden=true;
+      if(!session || !session.user || !accessClient) return;
+      accessClient.rpc("sexsi_moderator_get_access").then(function(result){
+        moderatorLink.hidden=!!result.error || !result.data?.authorized;
+      }).catch(function(error){console.error("Moderator navigation permission check failed:",error);});
+    }
+    accessClient.auth.getSession().then(function(result){
+      if(!result.error) updateModeratorLink(result.data.session);
+    }).catch(function(error){console.error("Moderator navigation session error:",error);});
+    accessClient.auth.onAuthStateChange(function(event,session){updateModeratorLink(session);});
   }
   initializeAdminLink();
 
