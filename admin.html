@@ -645,6 +645,7 @@ footer{
   <button class="menu-item" data-view="discord">DISCORD АКАУНТИ</button>
   <a class="menu-item" href="recruitment-admin.html" style="display:block;text-decoration:none">КАНДИДАТУРИ</a>
   <a class="menu-item" href="messages.html" style="display:block;text-decoration:none">СЪОБЩЕНИЯ</a>
+  <button class="menu-item" data-view="moderator-reports">СИГНАЛИ ОТ МОДЕРАТОРИ</button>
   <button class="menu-item" data-view="players">ВСИЧКИ ИГРАЧИ</button>
   <button class="menu-item" data-view="player-management">УПРАВЛЕНИЕ НА ИГРАЧИ</button>
   <button class="menu-item" data-view="matches">ТУРНИРНА СХЕМА</button>
@@ -721,6 +722,10 @@ footer{
         <span>Провери колко потребители са свързали Discord профилите си и виж свързаните акаунти.</span>
       </button>
 
+      <button class="dashboard-action" data-open-view="moderator-reports">
+        <strong>СИГНАЛИ ОТ МОДЕРАТОРИ</strong>
+        <span>Преглед и обработка на докладвани проблеми от модераторския екип.</span>
+      </button>
       <button class="dashboard-action" data-open-view="players">
         <strong>ВСИЧКИ ИГРАЧИ</strong>
         <span>Преглед на профилите и GAME ID на играчите.</span>
@@ -759,6 +764,20 @@ footer{
       <p class="message" id="publishQuizControlMessage" aria-live="polite">Готово за публикуване.</p>
     </div>
       </section>
+
+  <section class="admin-view" id="moderator-reportsPanel">
+    <button class="secondary-button back-dashboard">← НАЗАД</button>
+    <div class="section-title">СИГНАЛИ ОТ МОДЕРАТОРИ</div>
+    <p class="section-description">Преглеждай докладваните проблеми, променяй статуса и оставяй вътрешни бележки.</p>
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <h3>РЕГИСТЪР НА СИГНАЛИТЕ</h3>
+        <button class="secondary-button" id="refreshModeratorReportsButton" type="button">ОБНОВИ</button>
+      </div>
+      <p class="message" id="moderatorReportsMessage" aria-live="polite">Натисни „Обнови“, за да заредиш сигналите.</p>
+      <div id="moderatorReportsList"></div>
+    </div>
+  </section>
 
   <section class="admin-view" id="registrationsPanel">
     <button class="secondary-button back-dashboard">← НАЗАД</button>
@@ -1152,6 +1171,7 @@ const db = window.supabase.createClient(
 let adminAccess = null;
 
 const ADMIN_VIEW_PERMISSIONS = {
+  "moderator-reports": "manage_matches",
   registrations: "manage_registrations",
   emails: "send_emails",
   discord: "view_discord",
@@ -1277,6 +1297,9 @@ function showAdminView(viewName){
   closeAdminMenu();
   window.scrollTo({top:0,behavior:"smooth"});
 
+  if(viewName==="moderator-reports"){
+    loadModeratorReports();
+  }
   if(viewName==="player-management"){
     loadManagedPlayers();
   }
@@ -1333,6 +1356,44 @@ document.getElementById("menuRefreshButton")
     closeAdminMenu();
     await refreshAllAdminData();
   });
+
+/* MODERATOR REPORT ADMINISTRATION */
+const moderatorReportLabels={no_show:"Неявяване",result_dispute:"Оспорен резултат",player_conduct:"Поведение на играч",schedule_issue:"Проблем с графика",suspicious_activity:"Подозрителна активност",other:"Друг проблем"};
+const moderatorReportStatuses={pending:"Чакащ",in_progress:"В процес",reviewed:"Разгледан",resolved:"Решен",rejected:"Отхвърлен"};
+async function loadModeratorReports(){
+ const message=document.getElementById("moderatorReportsMessage"),root=document.getElementById("moderatorReportsList");
+ if(!message||!root)return;
+ message.textContent="Зареждане на сигналите...";root.replaceChildren();
+ const {data,error}=await db.rpc("sexsi_admin_list_moderator_reports");
+ if(error){message.textContent="Грешка при зареждането: "+error.message;message.style.color="#ff7777";return;}
+ const rows=Array.isArray(data)?data:[];
+ message.textContent=rows.length?"Заредени сигнали: "+rows.length:"Все още няма подадени сигнали.";message.style.color="var(--muted)";
+ rows.forEach(report=>{
+  const card=document.createElement("article");card.className="panel";card.style.background="#101010";
+  const heading=document.createElement("div");heading.style.cssText="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px";
+  const title=document.createElement("strong");title.textContent=(moderatorReportLabels[report.report_type]||report.report_type)+" · Мач #"+report.match_number+" · Кръг "+report.round_number;
+  const status=document.createElement("span");status.textContent=moderatorReportStatuses[report.status]||report.status;status.style.cssText="color:#ff777c;font-size:12px;font-weight:900";heading.append(title,status);
+  const meta=document.createElement("p");meta.className="message";meta.textContent="Модератор: "+report.moderator_name+" · "+new Date(report.created_at).toLocaleString("bg-BG");
+  const details=document.createElement("p");details.style.cssText="white-space:pre-wrap;line-height:1.6;margin:12px 0";details.textContent=report.details;
+  const controls=document.createElement("div");controls.style.cssText="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:14px";
+  const select=document.createElement("select");select.className="search-input";select.style.cssText="max-width:none;margin:0";
+  Object.entries(moderatorReportStatuses).forEach(([value,label])=>{const option=document.createElement("option");option.value=value;option.textContent=label;option.selected=value===report.status;select.append(option);});
+  const note=document.createElement("textarea");note.className="search-input";note.style.cssText="max-width:none;margin:0;min-height:44px;resize:vertical";note.placeholder="Вътрешна бележка за администрацията (до 2000 символа)";note.maxLength=2000;note.value=report.admin_note||"";
+  const save=document.createElement("button");save.type="button";save.className="primary-button";save.textContent="ЗАПАЗИ ПРОМЕНИТЕ";
+  const feedback=document.createElement("p");feedback.className="message";
+  save.addEventListener("click",async()=>{
+   save.disabled=true;save.textContent="ЗАПАЗВАНЕ...";feedback.textContent="Записване...";
+   const {error:saveError}=await db.rpc("sexsi_admin_update_moderator_report",{p_report_id:report.id,p_status:select.value,p_admin_note:note.value});
+   save.disabled=false;save.textContent="ЗАПАЗИ ПРОМЕНИТЕ";
+   if(saveError){feedback.textContent="Неуспешно записване: "+saveError.message;feedback.style.color="#ff7777";return;}
+   feedback.textContent="Промените са записани.";feedback.style.color="var(--green)";await loadModeratorReports();
+  });
+  controls.append(select,note,save);card.append(heading,meta,details,controls,feedback);
+  if(report.reviewed_by_name){const reviewer=document.createElement("p");reviewer.className="message";reviewer.textContent="Последна обработка: "+report.reviewed_by_name+(report.reviewed_at?" · "+new Date(report.reviewed_at).toLocaleString("bg-BG"):"");card.append(reviewer);}
+  root.append(card);
+ });
+}
+document.getElementById("refreshModeratorReportsButton")?.addEventListener("click",loadModeratorReports);
 
 /* DISCORD ACCOUNT STATISTICS */
 
