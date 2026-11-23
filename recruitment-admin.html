@@ -46,7 +46,7 @@ const URL="https://fyxlwcoochsuzhqostpe.supabase.co",KEY="sb_publishable_B_y2VUB
 const db=window.sexsiSupabase||window.supabase.createClient(URL,KEY);
 const $=id=>document.getElementById(id);
 const labels={submitted:"Получена",under_review:"Разглежда се",interview:"Интервю",approved:"Одобрена",rejected:"Отказана",withdrawn:"Оттеглена",archived:"Архивирана"};
-let positions=[],apps=[];
+let positions=[],apps=[],applicationProfileMap={};
 function node(tag,cls,txt){const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n;}
 function message(t){$("adminMessage").textContent=t;}
 async function init(){
@@ -66,12 +66,11 @@ async function loadAll(){
  positions.forEach(x=>{const o=node("option","",x.title);o.value=x.id;filter.append(o);});filter.value=current;
  if(staff.error){$("staffList").textContent="Грешка при екипа: "+staff.error.message;}else{
   const userIds=[...new Set((staff.data||[]).map(x=>x.user_id).filter(Boolean))];
-  let profileMap={};
-  if(userIds.length){
-   const {data:profiles,error:profileError}=await db.from("profiles").select("id,username").in("id",userIds);
-   if(profileError){$("staffList").textContent="Грешка при зареждане на имената: "+profileError.message;return;}
-   profileMap=Object.fromEntries((profiles||[]).map(x=>[x.id,x.username]));
-  }
+  const {data:profiles,error:profileError}=userIds.length
+   ? await db.rpc("sexsi_admin_get_profile_names",{p_user_ids:userIds})
+   : {data:[],error:null};
+  if(profileError){$("staffList").textContent="Грешка при зареждане на имената: "+profileError.message;return;}
+  const profileMap=Object.fromEntries((profiles||[]).map(x=>[x.id,x.username]));
   renderStaff(staff.data||[],profileMap);
  }
  await loadApplications();
@@ -80,6 +79,12 @@ async function loadApplications(){
  const {data,error}=await db.from("sexsi_recruitment_applications").select("id,applicant_id,discord_user_id,experience,motivation,availability,portfolio_url,status,submitted_at,position_id,reviewed_by,reviewed_at,sexsi_recruitment_positions(title)").order("submitted_at",{ascending:false});
  if(error){message("Грешка при кандидатурите: "+error.message);return;}
  apps=data||[];
+ const applicantIds=[...new Set(apps.map(x=>x.applicant_id).filter(Boolean))];
+ const {data:profiles,error:profileError}=applicantIds.length
+  ? await db.rpc("sexsi_admin_get_profile_names",{p_user_ids:applicantIds})
+  : {data:[],error:null};
+ if(profileError){message("Грешка при зареждане на имената на кандидатите: "+profileError.message);return;}
+ applicationProfileMap=Object.fromEntries((profiles||[]).map(x=>[x.id,x.username]));
  $("totalCount").textContent=apps.length;
  $("pendingCount").textContent=apps.filter(x=>["submitted","under_review"].includes(x.status)).length;
  $("interviewCount").textContent=apps.filter(x=>x.status==="interview").length;
@@ -97,7 +102,8 @@ function renderApps(){
   const card=node("article","application"),top=node("div","row");
   const title=node("h3","",app.sexsi_recruitment_positions?.title||"Позиция");
   top.append(title,node("span","status",labels[app.status]||app.status));card.append(top);
-  card.append(node("p","","Discord ID: "+app.discord_user_id+" · Подадена: "+new Date(app.submitted_at).toLocaleString("bg-BG")));
+  const applicantName=applicationProfileMap[app.applicant_id];
+  card.append(node("p","",(applicantName?"Потребител: "+applicantName:"Discord ID: "+app.discord_user_id)+" · Подадена: "+new Date(app.submitted_at).toLocaleString("bg-BG")));
   card.append(node("h4","","Опит и умения"),node("p","",app.experience),node("h4","","Мотивация"),node("p","",app.motivation),node("h4","","Наличност"),node("p","",app.availability));
   if(app.portfolio_url){const link=node("a","","Отвори портфолио");link.href=app.portfolio_url;link.target="_blank";link.rel="noopener noreferrer";link.style.color="#ff6268";card.append(link);}
   const select=node("select");Object.entries(labels).forEach(([v,l])=>{const o=node("option","",l);o.value=v;select.append(o);});select.value=app.status;
