@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sexsi-tournament.github.io/sexsi-tournaments/sitemap.xml
