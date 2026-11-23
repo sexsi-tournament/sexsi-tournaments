@@ -59,7 +59,7 @@ async function loadAll(){
  message("Зареждане на данните...");
  const [p,staff]=await Promise.all([
   db.from("sexsi_recruitment_positions").select("id,title,is_open").order("sort_order"),
-  db.from("sexsi_staff_members").select("id,user_id,role_title,status,appointed_at").order("appointed_at",{ascending:false})
+  db.from("sexsi_staff_members").select("id,user_id,application_id,position_id,role_title,status,appointed_at,sexsi_recruitment_applications(discord_user_id)").order("appointed_at",{ascending:false})
  ]);
  if(p.error){message("Грешка при позициите: "+p.error.message);return;}
  positions=p.data||[];const filter=$("filterPosition");const current=filter.value;filter.replaceChildren(node("option","","Всички позиции"));
@@ -132,7 +132,31 @@ async function showNotes(app,root,btn){
 function renderStaff(rows){
  const root=$("staffList");root.replaceChildren();
  if(!rows.length){root.append(node("p","","Все още няма назначени служители."));return;}
- rows.forEach(person=>{const row=node("div","row");row.style.padding="12px 0";row.style.borderTop="1px solid #333";row.append(node("strong","",person.role_title),node("span","status",person.status==="active"?"АКТИВЕН":person.status.toUpperCase()));row.append(node("small","","User ID: "+person.user_id+" · "+new Date(person.appointed_at).toLocaleDateString("bg-BG")));root.append(row);});
+ rows.forEach(person=>{
+  const card=node("article","application");
+  const top=node("div","row");
+  top.append(node("strong","",person.role_title||"SEXSI Staff"),node("span","status",({active:"АКТИВЕН",on_leave:"В ОТПУСК",inactive:"НЕАКТИВЕН",removed:"ОСВОБОДЕН"})[person.status]||person.status));
+  card.append(top);
+  const discord=person.sexsi_recruitment_applications?.discord_user_id;
+  card.append(node("p","muted","Discord ID: "+(discord||"няма свързана кандидатура")+" · User ID: "+person.user_id+" · Назначен: "+new Date(person.appointed_at).toLocaleDateString("bg-BG")));
+  const roleLabel=node("label","","ДЛЪЖНОСТ / РОЛЯ");
+  const role=node("input");role.value=person.role_title||"";role.maxLength=100;role.placeholder="Напр. Moderator";
+  const statusLabel=node("label","","СТАТУС");
+  const status=node("select");
+  [["active","Активен"],["on_leave","В отпуск"],["inactive","Неактивен"],["removed","Освободен"]].forEach(([v,l])=>{const o=node("option","",l);o.value=v;status.append(o);});
+  status.value=person.status;
+  const save=node("button","","ЗАПАЗИ ПРОМЕНИТЕ");
+  save.addEventListener("click",async()=>{
+   const title=role.value.trim();if(!title){message("Въведи длъжност за служителя.");return;}
+   save.disabled=true;
+   const {error}=await db.from("sexsi_staff_members").update({role_title:title,status:status.value,ended_at:["inactive","removed"].includes(status.value)?new Date().toISOString():null}).eq("id",person.id);
+   save.disabled=false;
+   if(error){message("Промените не са записани: "+error.message);return;}
+   message("Данните на служителя са обновени.");await loadAll();
+  });
+  card.append(roleLabel,role,statusLabel,status,save);
+  root.append(card);
+ });
 }
 $("filterStatus").addEventListener("change",renderApps);$("filterPosition").addEventListener("change",renderApps);
 $("refresh").addEventListener("click",loadAll);init();
