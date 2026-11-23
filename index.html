@@ -691,6 +691,7 @@ header .player-menu-button .sexsi-en{
         <a href="ranking.html">КЛАСАЦИЯ</a>
         <a href="profile.html#playerDashboard">МОЯТ ПРОФИЛ</a>
         <a href="admin.html" id="adminNavigationLink" hidden>🛡 АДМИНИСТРАТИВЕН ПАНЕЛ</a>
+        <a href="moderator.html" id="moderatorNavigationLink" hidden>🛡 MODERATOR PANEL</a>
       </nav>
     </div>
   </div>
@@ -1012,6 +1013,20 @@ header .player-menu-button .sexsi-en{
     if(siteNavigationAuthActions) siteNavigationAuthActions.hidden = isAuthenticated;
     const adminNavigationLink = document.getElementById("adminNavigationLink");
     if(adminNavigationLink) adminNavigationLink.hidden = !isAdmin;
+    const moderatorNavigationLink = document.getElementById("moderatorNavigationLink");
+    if(moderatorNavigationLink){
+      moderatorNavigationLink.hidden = true;
+      if(isAuthenticated){
+        try{
+          const {data:moderatorAccess,error:moderatorAccessError} = await db.rpc("sexsi_moderator_get_access");
+          if(requestId === playerMenuProfileRequest){
+            moderatorNavigationLink.hidden = !!moderatorAccessError || !moderatorAccess?.authorized;
+          }
+        }catch(error){
+          console.error("Moderator menu access error:",error);
+        }
+      }
+    }
 
     playerNav.hidden = !isAuthenticated;
     guestNav.hidden = isAuthenticated;
