@@ -1005,10 +1005,21 @@ header .player-menu-button .sexsi-en{
 
   async function updatePlayerMenu(session){
     const user = session && session.user;
-    const isAdmin = !!user && user.id === ADMIN_ID;
+    const requestId = ++playerMenuProfileRequest;
+    let isAdmin = !!user && user.id === ADMIN_ID;
+    if(user){
+      try{
+        const {data:adminAccess,error:adminAccessError} = await db.rpc("sexsi_admin_get_access");
+        if(requestId !== playerMenuProfileRequest) return;
+        if(!adminAccessError) isAdmin = !!adminAccess?.authorized;
+        else console.error("Admin menu access error:",adminAccessError);
+      }catch(error){
+        if(requestId !== playerMenuProfileRequest) return;
+        console.error("Admin menu access error:",error);
+      }
+    }
     const isAuthenticated = !!user;
     const isRegularPlayer = isAuthenticated && !isAdmin;
-    const requestId = ++playerMenuProfileRequest;
     const siteNavigationAuthActions = document.getElementById("siteNavigationAuthActions");
     if(siteNavigationAuthActions) siteNavigationAuthActions.hidden = isAuthenticated;
     const adminNavigationLink = document.getElementById("adminNavigationLink");
