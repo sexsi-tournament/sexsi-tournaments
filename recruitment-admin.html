@@ -102,18 +102,33 @@ function renderApps(){
  });
 }
 async function updateStatus(app,status,btn){
- btn.disabled=true;const {data:s}=await db.auth.getSession();
+ btn.disabled=true;
+ const {data:s}=await db.auth.getSession();
+ if(!s.session){btn.disabled=false;message("Сесията е изтекла. Влез отново.");return;}
  const patch={status,reviewed_by:s.session.user.id,reviewed_at:new Date().toISOString()};
  const {error}=await db.from("sexsi_recruitment_applications").update(patch).eq("id",app.id);
- btn.disabled=false;if(error){message("Неуспешна промяна: "+error.message);return;}
+ if(error){btn.disabled=false;message("Неуспешна промяна: "+error.message);return;}
  if(status==="approved"){
-  const exists=await db.from("sexsi_staff_members").select("id").eq("application_id",app.id).maybeSingle();
-  if(!exists.data){
+  const {data:existing,error:lookupError}=await db.from("sexsi_staff_members").select("id,status").eq("application_id",app.id).maybeSingle();
+  if(lookupError){btn.disabled=false;message("Кандидатурата е одобрена, но проверката на екипа не успя: "+lookupError.message);await loadAll();return;}
+  if(existing){
+   if(["removed","inactive"].includes(existing.status)){
+    const {error:restoreError}=await db.from("sexsi_staff_members").update({status:"active",ended_at:null}).eq("id",existing.id);
+    if(restoreError){btn.disabled=false;message("Кандидатурата е одобрена, но служителят не беше активиран: "+restoreError.message);await loadAll();return;}
+   }
+  }else{
    const {error:staffError}=await db.from("sexsi_staff_members").insert({user_id:app.applicant_id,application_id:app.id,position_id:app.position_id,role_title:app.sexsi_recruitment_positions?.title||"SEXSI Staff",appointed_by:s.session.user.id});
-   if(staffError){message("Кандидатурата е одобрена, но назначаването не се записа: "+staffError.message);await loadApplications();return;}
+   if(staffError){btn.disabled=false;message("Кандидатурата е одобрена, но назначаването не се записа: "+staffError.message);await loadAll();return;}
+  }
+ }else if(status==="rejected"||status==="withdrawn"){
+  const {data:staffRows,error:staffLookupError}=await db.from("sexsi_staff_members").select("id,status").eq("application_id",app.id).in("status",["active","on_leave"]);
+  if(staffLookupError){btn.disabled=false;message("Статусът на кандидатурата е променен, но проверката на екипа не успя: "+staffLookupError.message);await loadAll();return;}
+  if(staffRows?.length){
+   const {error:removeError}=await db.from("sexsi_staff_members").update({status:"removed",ended_at:new Date().toISOString()}).in("id",staffRows.map(x=>x.id));
+   if(removeError){btn.disabled=false;message("Кандидатурата е променена, но служителят не беше освободен: "+removeError.message);await loadAll();return;}
   }
  }
- message("Статусът е обновен.");await loadApplications();
+ btn.disabled=false;message("Статусът е обновен.");await loadAll();
 }
 async function saveNote(app,field,btn){
  const value=field.value.trim();if(!value){message("Напиши бележка преди запис.");return;}
